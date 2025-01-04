@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../../../models/user/speak_language.dart';
+import '../../../../models/user/speak_language_user.dart';
 import '../../../theme/colors.dart';
 
 
 class LanguageCard extends StatefulWidget {
-  final SpeakLanguage speakLanguage ;
+  final SpeakLanguageUser speakLanguage ;
   const LanguageCard({super.key, required this.speakLanguage});
 
   @override

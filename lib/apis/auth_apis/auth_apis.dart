@@ -1,15 +1,15 @@
+import 'package:connect_with/apis/init/config.dart';
 import 'package:connect_with/models/common/address_info.dart';
 import 'package:connect_with/models/organization/organization.dart';
 import 'package:connect_with/models/user/contact_info.dart';
 import 'package:connect_with/models/common/custom_button.dart';
 import 'package:connect_with/models/user/user.dart';
+import 'package:connect_with/screens/home_screens/home_main_screen.dart';
+import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../screens/home_screens/home_main_screen.dart';
-import '../../side_transitions/left_right.dart';
-import '../init/config.dart';
 
 class AuthApi {
   static Future<void> signIn(BuildContext context, String email,

@@ -1,23 +1,24 @@
+import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/education.dart';
-import 'package:connect_with/models/user/speak_language.dart';
+import 'package:connect_with/models/user/speak_language_user.dart';
 import 'package:connect_with/models/user/test_score.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/home_screens/home_main_screen.dart';
+import 'package:connect_with/screens/home_screens/profile_screen/add_experience_screen.dart';
+import 'package:connect_with/screens/home_screens/profile_screen/edit_experience.dart';
+import 'package:connect_with/screens/home_screens/profile_screen/edit_profile.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/theme/colors.dart';
-import 'package:flutter/material.dart';
+import 'package:connect_with/utils/widgets/buttons/profile_screen_buttons/profile_custom_button.dart';
+import 'package:connect_with/utils/widgets/custom_containers/profile_screen_container/analytics_tool_container.dart';
+import 'package:connect_with/utils/widgets/custom_containers/profile_screen_container/education_card.dart';
+import 'package:connect_with/utils/widgets/custom_containers/profile_screen_container/experience_card.dart';
+import 'package:connect_with/utils/widgets/custom_containers/profile_screen_container/language_card.dart';
+import 'package:connect_with/utils/widgets/custom_containers/profile_screen_container/test_score_card.dart';
+import 'package:flutter/material.dart' ;
 import 'package:provider/provider.dart';
-import '../../../main.dart';
-import '../../../utils/widgets/buttons/profile_screen_buttons/profile_custom_button.dart';
-import '../../../utils/widgets/custom_containers/profile_screen_container/analytics_tool_container.dart';
-import '../../../utils/widgets/custom_containers/profile_screen_container/education_card.dart';
-import '../../../utils/widgets/custom_containers/profile_screen_container/experience_card.dart';
-import '../../../utils/widgets/custom_containers/profile_screen_container/language_card.dart';
-import '../../../utils/widgets/custom_containers/profile_screen_container/test_score_card.dart';
-import 'add_experience_screen.dart';
-import 'edit_experience.dart';
-import 'edit_profile.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -646,25 +647,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 10,
                       ),
                       LanguageCard(
-                        speakLanguage: SpeakLanguage(
+                        speakLanguage: SpeakLanguageUser(
                             name: "English",
                             proficiency: "Full professional proficiency"),
                       ),
                       LanguageCard(
-                        speakLanguage: SpeakLanguage(
+                        speakLanguage: SpeakLanguageUser(
                             name: "Gujarati",
                             proficiency: "Full professional proficiency"),
                       ),
                       LanguageCard(
-                        speakLanguage: SpeakLanguage(
+                        speakLanguage: SpeakLanguageUser(
                             name: "Hindi",
                             proficiency: "Full professional proficiency"),
                       ),
                     ],
                   ),
                 ),
-
-
                 SizedBox(
                   height: 40,
                 ),

@@ -1,10 +1,9 @@
 import 'dart:developer';
+import 'package:connect_with/apis/auth_apis/fetch_user_info.dart';
+import 'package:connect_with/apis/init/config.dart';
+import 'package:connect_with/models/user/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../apis/auth_apis/fetch_user_info.dart';
-import '../apis/init/config.dart';
-import '../models/user/user.dart';
 
 class AppUserProvider extends ChangeNotifier {
   AppUser? user;

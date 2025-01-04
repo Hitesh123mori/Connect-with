@@ -7,11 +7,11 @@ import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
+import 'package:connect_with/utils/widgets/buttons/auth_buttons/button_1.dart';
 import 'package:connect_with/utils/widgets/text_feilds/text_feild_1.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import '../../utils/widgets/buttons/auth_buttons/button_1.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});

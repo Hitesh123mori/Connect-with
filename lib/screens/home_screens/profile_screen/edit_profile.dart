@@ -1,17 +1,18 @@
+import 'package:connect_with/apis/auth_apis/fetch_user_info.dart';
+import 'package:connect_with/main.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/profile_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/buttons/auth_buttons/button_1.dart';
 import 'package:connect_with/utils/widgets/custom_containers/image_uploader.dart';
 import 'package:connect_with/utils/widgets/text_feilds/text_feild_1.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../apis/auth_apis/fetch_user_info.dart';
-import '../../../main.dart';
-import '../../../utils/theme/colors.dart';
-import 'dart:io';
+
+
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});

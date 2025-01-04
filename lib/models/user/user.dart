@@ -1,3 +1,4 @@
+import 'package:connect_with/models/common/address_info.dart';
 import 'package:connect_with/models/user/contact_info.dart';
 import 'package:connect_with/models/user/course_and_liecence.dart';
 import 'package:connect_with/models/common/custom_button.dart';
@@ -5,9 +6,9 @@ import 'package:connect_with/models/user/education.dart';
 import 'package:connect_with/models/user/experience.dart';
 import 'package:connect_with/models/user/project.dart';
 import 'package:connect_with/models/user/skills.dart';
-import 'package:connect_with/models/user/speak_language.dart';
+import 'package:connect_with/models/user/speak_language_user.dart';
 import 'package:connect_with/models/user/test_score.dart';
-import '../common/address_info.dart';
+
 
 class AppUser {
   String? userID;
@@ -33,7 +34,7 @@ class AppUser {
   List<TestScores>? testScores;
   List<Skill>? skills;
   List<Project>? projects;
-  List<SpeakLanguage>? language;
+  List<SpeakLanguageUser>? language;
   List<Experience>? experiences;
   List<Education>? educations;
   CustomButton? button;
@@ -167,7 +168,7 @@ class AppUser {
           ? (json['projects'] as List).map((e) => Project.fromJson(e)).toList()
           : [],
       language: json['language'] != null
-          ? (json['language'] as List).map((e) => SpeakLanguage.fromJson(e)).toList()
+          ? (json['language'] as List).map((e) => SpeakLanguageUser.fromJson(e)).toList()
           : [],
       experiences: json['experiences'] != null
           ? (json['experiences'] as List).map((e) => Experience.fromJson(e)).toList()

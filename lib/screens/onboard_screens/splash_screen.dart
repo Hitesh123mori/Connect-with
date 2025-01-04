@@ -1,14 +1,15 @@
 import 'package:connect_with/apis/auth_apis/auth_apis.dart';
 import 'package:connect_with/apis/init/config.dart';
+import 'package:connect_with/main.dart';
+import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/screens/auth_screens/login_screen.dart';
+import 'package:connect_with/screens/home_screens/home_main_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../main.dart';
-import '../../providers/current_user_provider.dart';
-import '../../utils/theme/colors.dart';
-import '../auth_screens/login_screen.dart';
-import '../home_screens/home_main_screen.dart';
+
 
 class SplashScreen extends StatefulWidget {
   final AppUserProvider appUser;

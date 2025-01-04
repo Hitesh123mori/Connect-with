@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/auth_screens/login_screen.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/profile_screen.dart';
@@ -12,10 +9,10 @@ import 'package:connect_with/screens/home_screens/tabs/post/post_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/theme/colors.dart';
+import 'package:connect_with/utils/widgets/custom_containers/drawer_container/drawer_container.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../utils/theme/colors.dart';
-import '../../utils/widgets/custom_containers/drawer_container/drawer_container.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

@@ -2,9 +2,9 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connect_with/apis/init/config.dart';
+import 'package:connect_with/models/user/experience.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import '../../models/user/experience.dart';
 
 
 class UserProfile {

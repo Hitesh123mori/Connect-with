@@ -1,9 +1,9 @@
-class SpeakLanguage {
+class SpeakLanguageUser{
   String? name;
   String? proficiency;
 
 
-  SpeakLanguage({
+  SpeakLanguageUser({
     this.name,
     this.proficiency,
   });
@@ -16,8 +16,8 @@ class SpeakLanguage {
     return map;
   }
 
-  factory SpeakLanguage.fromJson(dynamic json) {
-    return SpeakLanguage(
+  factory SpeakLanguageUser.fromJson(dynamic json) {
+    return SpeakLanguageUser(
       name: json['name'],
       proficiency: json['proficiency'],
     );

@@ -1,6 +1,6 @@
+import 'package:connect_with/models/common/address_info.dart';
 import 'package:connect_with/models/common/custom_button.dart';
 import 'package:connect_with/models/user/user.dart';
-import '../common/address_info.dart';
 
 class Organization {
   String? organizationId;
