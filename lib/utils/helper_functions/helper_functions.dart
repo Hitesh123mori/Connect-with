@@ -97,6 +97,9 @@ class HelperFunctions{
     return initials.toUpperCase();
   }
 
+
+
+
 }
 
 

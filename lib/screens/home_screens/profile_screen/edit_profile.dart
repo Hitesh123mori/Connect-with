@@ -3,14 +3,15 @@ import 'package:connect_with/screens/home_screens/profile_screen/profile_screen.
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/widgets/buttons/auth_buttons/button_1.dart';
+import 'package:connect_with/utils/widgets/custom_containers/image_uploader.dart';
 import 'package:connect_with/utils/widgets/text_feilds/text_feild_1.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../apis/auth_apis/fetch_user_info.dart';
 import '../../../main.dart';
 import '../../../utils/theme/colors.dart';
 import 'dart:io';
-
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -32,8 +33,7 @@ class _EditProfileState extends State<EditProfile> {
   String? _pronoun;
   bool isLoading = false;
 
-
-  String? _phoneNumber ;
+  String? _phoneNumber;
 
   // Additional toggles
   bool showExperience = false;
@@ -58,7 +58,6 @@ class _EditProfileState extends State<EditProfile> {
     showLanguage = appUserProvider.user?.showLanguage ?? false;
     showButton = appUserProvider.user?.button?.display ?? false;
   }
-
 
   Future<void> _saveProfile(AppUserProvider appUserProvider) async {
     if (_formKey.currentState?.validate() ?? false) {
@@ -86,10 +85,15 @@ class _EditProfileState extends State<EditProfile> {
             'countryName': _countryName,
             'stateName': _stateName,
           },
-          'info' :{
-             'address' :  ((_cityName ?? "") + "," + (_stateName ?? "") + "," + (_countryName ?? "") + ".") ,
-             'phoneNumber' :_phoneNumber,
-             'website' : _link,
+          'info': {
+            'address': ((_cityName ?? "") +
+                "," +
+                (_stateName ?? "") +
+                "," +
+                (_countryName ?? "") +
+                "."),
+            'phoneNumber': _phoneNumber,
+            'website': _link,
           },
         },
       );
@@ -153,8 +157,7 @@ class _EditProfileState extends State<EditProfile> {
                       // Basic Information
                       Container(
                         decoration: BoxDecoration(
-                          color:
-                              AppColors.theme['secondaryColor'],
+                          color: AppColors.theme['secondaryColor'],
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Padding(
@@ -162,16 +165,23 @@ class _EditProfileState extends State<EditProfile> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 10,),
+                              SizedBox(
+                                height: 10,
+                              ),
                               Center(
                                 child: Text(
                                   "Basic Information",
                                   style: TextStyle(
-                                      fontSize:18, fontWeight: FontWeight.bold),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              Divider(color: AppColors.theme['primaryColor'],),
-                              SizedBox(height: 10,),
+                              Divider(
+                                color: AppColors.theme['primaryColor'],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
                               // Headline field
                               Text(
                                 "Headline",
@@ -253,12 +263,11 @@ class _EditProfileState extends State<EditProfile> {
                                 isNumber: true,
                                 prefixicon: Icon(Icons.numbers_sharp),
                                 obsecuretext: false,
-                                initialText: appUserProvider.user?.info?.phoneNumber,
+                                initialText:
+                                    appUserProvider.user?.info?.phoneNumber,
                                 onSaved: (value) => _phoneNumber = value,
                               ),
                               SizedBox(height: 10),
-
-
                             ],
                           ),
                         ),
@@ -269,25 +278,31 @@ class _EditProfileState extends State<EditProfile> {
                       // Button field
                       Container(
                         decoration: BoxDecoration(
-                          color:
-                          AppColors.theme['secondaryColor'],
+                          color: AppColors.theme['secondaryColor'],
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child:Padding(
+                        child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 10,),
+                              SizedBox(
+                                height: 10,
+                              ),
                               Center(
                                 child: Text(
                                   "Custom Button Information",
                                   style: TextStyle(
-                                      fontSize: 18, fontWeight: FontWeight.bold),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              Divider(color: AppColors.theme['primaryColor'],),
-                              SizedBox(height: 10,),
+                              Divider(
+                                color: AppColors.theme['primaryColor'],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
                               // link
                               Text(
                                 "Link",
@@ -319,7 +334,8 @@ class _EditProfileState extends State<EditProfile> {
                                 isNumber: false,
                                 prefixicon: Icon(Icons.text_format_outlined),
                                 obsecuretext: false,
-                                initialText: appUserProvider.user?.button?.linkText,
+                                initialText:
+                                    appUserProvider.user?.button?.linkText,
                                 onSaved: (value) => _buttonText = value,
                               ),
                               SizedBox(height: 10),
@@ -333,25 +349,31 @@ class _EditProfileState extends State<EditProfile> {
                       // Address field
                       Container(
                         decoration: BoxDecoration(
-                          color:
-                          AppColors.theme['secondaryColor'],
+                          color: AppColors.theme['secondaryColor'],
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child:Padding(
+                        child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 10,),
+                              SizedBox(
+                                height: 10,
+                              ),
                               Center(
                                 child: Text(
                                   "Address Information",
                                   style: TextStyle(
-                                      fontSize: 18, fontWeight: FontWeight.bold),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              Divider(color: AppColors.theme['primaryColor'],),
-                              SizedBox(height: 10,),
+                              Divider(
+                                color: AppColors.theme['primaryColor'],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
                               // city name
                               Text(
                                 "City Name",
@@ -365,7 +387,8 @@ class _EditProfileState extends State<EditProfile> {
                                 isNumber: false,
                                 prefixicon: Icon(Icons.text_format_outlined),
                                 obsecuretext: false,
-                                initialText: appUserProvider.user?.address?.cityName,
+                                initialText:
+                                    appUserProvider.user?.address?.cityName,
                                 onSaved: (value) => _cityName = value,
                               ),
                               SizedBox(height: 10),
@@ -383,7 +406,8 @@ class _EditProfileState extends State<EditProfile> {
                                 isNumber: false,
                                 prefixicon: Icon(Icons.text_format_outlined),
                                 obsecuretext: false,
-                                initialText: appUserProvider.user?.address?.stateName,
+                                initialText:
+                                    appUserProvider.user?.address?.stateName,
                                 onSaved: (value) => _stateName = value,
                               ),
                               SizedBox(height: 10),
@@ -401,11 +425,122 @@ class _EditProfileState extends State<EditProfile> {
                                 isNumber: false,
                                 prefixicon: Icon(Icons.text_format_outlined),
                                 obsecuretext: false,
-                                initialText: appUserProvider.user?.address?.countryName,
+                                initialText:
+                                    appUserProvider.user?.address?.countryName,
                                 onSaved: (value) => _countryName = value,
                               ),
                               SizedBox(height: 10),
+                            ],
+                          ),
+                        ),
+                      ),
 
+                      SizedBox(height: 10),
+
+                      // image picker
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.theme['secondaryColor'],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Center(
+                                child: Text(
+                                  "Profile and Cover Picture",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Divider(
+                                color: AppColors.theme['primaryColor'],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Cover Image",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              ImageUploader(
+                                parHeight: 120,
+                                parWidth: mq.width * 1,
+                                childHeight: 80,
+                                childWidth: mq.width * 0.5,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Profile Image",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              ImageUploader(parHeight: 200, parWidth: 200, childHeight: 150, childWidth: 150),
+                              Center(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: AppColors.theme['backgroundColor']
+                                          .withOpacity(0.5)),
+                                  height: 200,
+                                  width: 200,
+                                  child: Center(
+                                    child: DottedBorder(
+                                      borderType: BorderType.RRect,
+                                      radius: Radius.circular(10),
+                                      dashPattern: [8, 4],
+                                      color: AppColors.theme['primaryColor'],
+                                      child: Container(
+                                        height: 150,
+                                        width: 150,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.camera_alt_outlined,
+                                                size: 40,
+                                              ),
+                                              Text(
+                                                "Click here to upload",
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 20),
                             ],
                           ),
                         ),
@@ -416,32 +551,33 @@ class _EditProfileState extends State<EditProfile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildToggleOption("Show Custom Button", showButton,
-                                  (value) {
-                                setState(() => showButton = value);
-                              }),
-
+                              (value) {
+                            setState(() => showButton = value);
+                          }),
                           _buildToggleOption("Show Experience", showExperience,
-                                  (value) {
-                                setState(() => showExperience = value);
-                              }),
+                              (value) {
+                            setState(() => showExperience = value);
+                          }),
                           _buildToggleOption("Show Education", showEducation,
-                                  (value) {
-                                setState(() => showEducation = value);
-                              }),
+                              (value) {
+                            setState(() => showEducation = value);
+                          }),
                           _buildToggleOption("Show Projects", showProjects,
-                                  (value) {
-                                setState(() => showProjects = value);
-                              }),
-                          _buildToggleOption("Show Skills", showSkills, (value) {
+                              (value) {
+                            setState(() => showProjects = value);
+                          }),
+                          _buildToggleOption("Show Skills", showSkills,
+                              (value) {
                             setState(() => showSkills = value);
                           }),
-                          _buildToggleOption("Show Scores", showScores, (value) {
+                          _buildToggleOption("Show Scores", showScores,
+                              (value) {
                             setState(() => showScores = value);
                           }),
                           _buildToggleOption("Show Language", showLanguage,
-                                  (value) {
-                                setState(() => showLanguage = value);
-                              }),
+                              (value) {
+                            setState(() => showLanguage = value);
+                          }),
                         ],
                       ),
 
