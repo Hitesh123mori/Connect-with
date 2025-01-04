@@ -61,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: SafeArea(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   InkWell(
                     onTap: () {
@@ -74,8 +75,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Row(
                           children: [
                             CircleAvatar(
+                              backgroundColor: AppColors.theme['primaryColor'],
                               backgroundImage:
-                                  AssetImage("assets/other_images/photo.jpg"),
+                                  appUserProvider.user?.profilePath!=""  ? NetworkImage(appUserProvider.user?.profilePath ?? "") : AssetImage("assets/other_images/photo.png"),
                             ),
                             SizedBox(
                               width: 10,
@@ -165,8 +167,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.only(
                             left: 5.0, top: 10, bottom: 10),
                         child: CircleAvatar(
+                          backgroundColor: AppColors.theme['backgroundColor'].withOpacity(0.3),
                           backgroundImage:
-                              AssetImage("assets/other_images/photo.jpg"),
+                              appUserProvider.user?.profilePath!="" ? NetworkImage(appUserProvider.user!.profilePath ?? "") : AssetImage("assets/other_images/photo.png"),
                           // backgroundColor: AppColors.theme['secondaryColor'].withOpacity(0.5),
                           radius: 20,
                           // child: Center(child: Text(appUserProvider.user?.userName?[0] ?? "U",style: TextStyle(color:

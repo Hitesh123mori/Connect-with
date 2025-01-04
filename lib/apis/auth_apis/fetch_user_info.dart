@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connect_with/apis/init/config.dart';
 import 'package:connect_with/models/user/experience.dart';
+import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart';
 
 
 
@@ -12,42 +14,45 @@ class UserProfile {
   static final _collectionRef = Config.firestore.collection("users");
 
 
-  static Future<void> updatePicture(File file,String path,bool isProfile) async {
-    //getting image file extension
-    final ext = file.path.split('.').last;
-    log('Extension: $ext');
+  static Future<void> updatePicture(File file, String path, bool isProfile, AppUserProvider provider) async {
 
-    //storage file ref with path
-    final ref = Config.storage.ref().child('${path}/${Config.curUser?.userID}.$ext');
-
-    //uploading image
-    await ref
-        .putFile(file, SettableMetadata(contentType: 'image/$ext'))
-        .then((p0) {
-      log('Data Transferred: ${p0.bytesTransferred / 1000} kb');
-    });
-
-    //updating image in firestore database
-
-
-    if(isProfile){
-      Config.curUser?.profilePath = await ref.getDownloadURL();
-      await Config.firestore
-          .collection('users')
-          .doc(Config.curUser?.userID)
-          .update({
-            'profilePath': Config.curUser?.profilePath,
-        });
-    }else{
-      Config.curUser?.coverPath = await ref.getDownloadURL();
-      await Config.firestore
-          .collection('users')
-          .doc(Config.curUser?.userID)
-          .update({
-          'coverPath': Config.curUser?.coverPath,
-      });
+    final currentUser = provider.user;
+    if (currentUser == null) {
+      log('User is not logged in.');
+      return;
     }
 
+    final fileName = basename(file.path);
+    final ext = fileName.split('.').last;
+
+    log('Uploading file: $fileName, extension: $ext');
+
+    final ref = Config.storage.ref().child('connect_with_images/${currentUser.userID}${isProfile ? "/profile" : "/cover"}/$fileName');
+
+    try {
+
+      final uploadTask = await ref.putFile(file, SettableMetadata(contentType: 'image/$ext'));
+      log('Data Transferred: ${uploadTask.bytesTransferred / 1000} kb');
+
+      final downloadUrl = await ref.getDownloadURL();
+
+      if (isProfile) {
+        currentUser.profilePath = downloadUrl;
+        await Config.firestore.collection('users').doc(currentUser.userID).update({
+          'profilePath': currentUser.profilePath,
+        });
+      } else {
+        currentUser.coverPath = downloadUrl;
+        await Config.firestore.collection('users').doc(currentUser.userID).update({
+          'coverPath': currentUser.coverPath,
+        });
+      }
+      await provider.initUser();
+      log('Image uploaded successfully: $downloadUrl');
+
+    } catch (e) {
+      log('Error uploading image: $e');
+    }
   }
 
 

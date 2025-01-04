@@ -12,8 +12,6 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
-
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
 
@@ -480,7 +478,8 @@ class _EditProfileState extends State<EditProfile> {
                                 parHeight: 120,
                                 parWidth: mq.width * 1,
                                 childHeight: 80,
-                                childWidth: mq.width * 0.5,
+                                childWidth: mq.width * 0.7,
+                                isProfile: false,
                               ),
                               SizedBox(
                                 height: 10,
@@ -495,52 +494,14 @@ class _EditProfileState extends State<EditProfile> {
                               SizedBox(
                                 height: 10,
                               ),
-                              ImageUploader(parHeight: 200, parWidth: 200, childHeight: 150, childWidth: 150),
                               Center(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: AppColors.theme['backgroundColor']
-                                          .withOpacity(0.5)),
-                                  height: 200,
-                                  width: 200,
-                                  child: Center(
-                                    child: DottedBorder(
-                                      borderType: BorderType.RRect,
-                                      radius: Radius.circular(10),
-                                      dashPattern: [8, 4],
-                                      color: AppColors.theme['primaryColor'],
-                                      child: Container(
-                                        height: 150,
-                                        width: 150,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Center(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(
-                                                Icons.camera_alt_outlined,
-                                                size: 40,
-                                              ),
-                                              Text(
-                                                "Click here to upload",
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                                  child: ImageUploader(
+                                parHeight: 200,
+                                parWidth: 200,
+                                childHeight: 150,
+                                childWidth: 150,
+                                isProfile: true,
+                              )),
                               SizedBox(height: 20),
                             ],
                           ),
