@@ -68,10 +68,15 @@ class _ImageUploaderState extends State<ImageUploader> {
                       child: Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            CircularProgressIndicator(
-                                strokeWidth: 4.0,
-                                color: AppColors.theme['primaryColor']),
+                            Container(
+                              height: 30,
+                              width: 30,
+                              child: CircularProgressIndicator(
+                                  strokeWidth: 4.0,
+                                  color: AppColors.theme['primaryColor']),
+                            ),
                             SizedBox(width: 20),
                             Text("Uploading...", style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,)),
                           ],
