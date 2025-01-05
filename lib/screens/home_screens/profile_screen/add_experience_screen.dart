@@ -120,8 +120,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                 toolbarHeight: 50,
                 leading: IconButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                        context, LeftToRight(ProfileScreen()));
+                    Navigator.pop(context);
                   },
                   icon: Icon(
                     Icons.keyboard_arrow_left_rounded,

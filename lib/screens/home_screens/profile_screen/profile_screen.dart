@@ -53,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             toolbarHeight: 50,
             leading: IconButton(
               onPressed: () {
-                Navigator.pushReplacement(context, RightToLeft(HomeScreen()));
+                Navigator.pop(context);
               },
               icon: Icon(
                 Icons.keyboard_arrow_left_rounded,

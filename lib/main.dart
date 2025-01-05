@@ -3,6 +3,7 @@ import 'package:connect_with/screens/onboard_screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' ;
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'firebase/project_1.dart';
 
@@ -10,6 +11,9 @@ late Size mq ;
 void main()async{
 
   WidgetsFlutterBinding.ensureInitialized() ;
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]).then((value){
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky) ;
+  });
   await _intializeFirebase() ;
   runApp(MultiProvider(
       providers: [
