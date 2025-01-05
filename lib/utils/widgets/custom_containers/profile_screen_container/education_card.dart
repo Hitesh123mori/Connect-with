@@ -1,3 +1,4 @@
+import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/education.dart';
 import 'package:flutter/material.dart';
 import '../../../theme/colors.dart';
@@ -13,6 +14,7 @@ class EducationCard extends StatefulWidget {
 class _EducationCardState extends State<EducationCard> {
   @override
   Widget build(BuildContext context) {
+    mq = MediaQuery.of(context).size;
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -41,6 +43,10 @@ class _EducationCardState extends State<EducationCard> {
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     Text(
+                      (widget.education.location ?? "location"),
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    Text(
                       widget.education.fieldOfStudy ?? "Degree",
                       style: TextStyle(fontSize: 14),
                     ),
@@ -50,6 +56,7 @@ class _EducationCardState extends State<EducationCard> {
                           (widget.education.endDate ?? "End"),
                       style: TextStyle(fontSize: 14),
                     ),
+
                     if(widget.education.grade!.isNotEmpty)
                       Text(
                         "Grade: " + (widget.education.grade ?? "Grade"),
@@ -58,7 +65,8 @@ class _EducationCardState extends State<EducationCard> {
 
                     // Allow description to wrap properly
                     if(widget.education.description!.isNotEmpty)
-                       SizedBox(height: 20),
+                       SizedBox(height: 10),
+                    if(widget.education.description!.isNotEmpty)
                        Text(
                       widget.education.description ?? "Description here",
                       style: TextStyle(fontSize: 14,),
@@ -67,6 +75,7 @@ class _EducationCardState extends State<EducationCard> {
 
                     if(widget.education.skills!.isNotEmpty)
                        SizedBox(height: 10),
+                    if(widget.education.skills!.isNotEmpty)
                        Wrap(
                       children: widget.education.skills!.asMap().entries.map((entry) {
                         final index = entry.key;
@@ -98,6 +107,73 @@ class _EducationCardState extends State<EducationCard> {
                         );
                       }).toList(),
                     ),
+
+                    SizedBox(height: 10,),
+                    if (widget.education.media != "")
+                        InkWell(
+                        child: Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: AppColors.theme['primaryColor']
+                                .withOpacity(0.2),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              widget.education.media!,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor:
+                                AppColors.theme['backgroundColor'],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                title: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Media Image",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: AppColors
+                                            .theme['primaryTextColor'],
+                                      ),
+                                    ),
+                                    IconButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        icon: Icon(Icons.close))
+                                  ],
+                                ),
+                                content: SizedBox(
+                                  // height: mq.height * 1,
+                                  width: mq.width * 1,
+                                  child: Container(
+                                    child: widget.education.media != ""
+                                        ? Image.network(
+                                      widget.education.media!,
+                                      // fit: BoxFit.,
+                                    )
+                                        : Container(),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      )
                   ],
                 ),
               ),

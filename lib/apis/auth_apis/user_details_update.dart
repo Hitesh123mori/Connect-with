@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connect_with/apis/init/config.dart';
+import 'package:connect_with/models/user/education.dart';
 import 'package:connect_with/models/user/experience.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -135,6 +136,33 @@ class UserProfile {
       return false;
     }
   }
+
+  // adding education
+  static Future<bool> addEducation(String? userId, Education education) async {
+    try {
+      DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
+
+      if (userDoc.exists) {
+        List<dynamic> existingEducations = userDoc['educations'] ?? [];
+
+        existingEducations.add(education.toJson());
+
+        await _collectionRef.doc(userId).update({
+          'educations': existingEducations,
+        });
+
+        log("#Education added successfully");
+        return true;
+      } else {
+        log("#User not found");
+        return false;
+      }
+    } catch (error, stackTrace) {
+      log("#addEducation error: $error, $stackTrace");
+      return false;
+    }
+  }
+
 
 
 

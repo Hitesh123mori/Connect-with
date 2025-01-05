@@ -157,7 +157,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                         ),
                         TextFeild1(
                             controller: titleController,
-                            hintText: 'Enter Title',
+                            hintText: 'Ex. Software Developer',
                             isNumber: false,
                             prefixicon: Icon(Icons.title),
                             obsecuretext: false,

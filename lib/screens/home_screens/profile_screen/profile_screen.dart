@@ -4,6 +4,7 @@ import 'package:connect_with/models/user/speak_language_user.dart';
 import 'package:connect_with/models/user/test_score.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/home_screens/home_main_screen.dart';
+import 'package:connect_with/screens/home_screens/profile_screen/add_education.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/add_experience_screen.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/edit_experience.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/edit_profile.dart';
@@ -428,7 +429,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               children: [
                                 IconButton(
                                   icon: Icon(Icons.add),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(context, LeftToRight(AddEducation())) ;
+                                  },
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.edit),
@@ -441,36 +444,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        EducationCard(
-                          education: Education(
-                            school: "Nirma University",
-                            fieldOfStudy: "B-Tech CSE",
-                            startDate: "June 2022",
-                            endDate: "June 2026",
-                            grade: "7.65",
-                            description:
-                                "I am currently pursuing B-Tech from this university",
-                            skills: [
-                              "Data Structure",
-                              "Operating System",
-                              "DBMS",
-                              "Computer Networks"
-                            ],
-                            media: "",
+
+                        if (appUserProvider.user?.educations?.length == 0)
+                          Center(
+                            child: Text(
+                              "No education added yet.",
+                              style: TextStyle(color: Colors.grey,fontSize: 16),
+                            ),
                           ),
-                        ),
-                        EducationCard(
-                          education: Education(
-                            school: "Dholakiya School",
-                            fieldOfStudy: "11th-12th Science",
-                            startDate: "May 2020",
-                            endDate: "April 2022",
-                            grade: "91%",
-                            description: "",
-                            skills: [],
-                            media: "",
+                        if (appUserProvider.user?.educations != null)
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount:
+                            appUserProvider.user?.educations?.length,
+                            itemBuilder: (context, index) {
+                              return EducationCard(
+                                  education: appUserProvider
+                                      .user!.educations![index]);
+                            },
                           ),
-                        )
                       ],
                     ),
                   ),
