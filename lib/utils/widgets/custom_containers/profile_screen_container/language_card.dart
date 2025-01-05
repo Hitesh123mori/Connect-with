@@ -15,6 +15,7 @@ class LanguageCard extends StatefulWidget {
 class _LanguageCardState extends State<LanguageCard> {
   @override
   Widget build(BuildContext context) {
+    print("speakLanguage : ${widget.speakLanguage.name}");
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -24,8 +25,8 @@ class _LanguageCardState extends State<LanguageCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.speakLanguage?.name ?? "Language Name",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
-          Text(widget.speakLanguage?.proficiency ?? "Proficiency",style: TextStyle(fontSize: 14),),
+          Text(widget.speakLanguage.name ?? "Language Name",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+          Text(widget.speakLanguage.proficiency ?? "Proficiency",style: TextStyle(fontSize: 14),),
         ],
       ),
     );

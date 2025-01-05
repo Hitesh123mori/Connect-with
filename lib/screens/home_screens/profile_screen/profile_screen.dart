@@ -6,6 +6,7 @@ import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/home_screens/home_main_screen.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/add_education.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/add_experience_screen.dart';
+import 'package:connect_with/screens/home_screens/profile_screen/add_speak_language.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/edit_experience.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/edit_profile.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
@@ -38,6 +39,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         appUserProvider.initUser();
         isfirst = false;
       }
+      print("lan  : ${appUserProvider.user?.languages}") ;
+
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -387,7 +390,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               style: TextStyle(color: Colors.grey,fontSize: 16),
                             ),
                           ),
-                        if (appUserProvider.user?.experiences != null)
+                        if (appUserProvider.user?.experiences?.length!=0)
                           ListView.builder(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
@@ -452,7 +455,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               style: TextStyle(color: Colors.grey,fontSize: 16),
                             ),
                           ),
-                        if (appUserProvider.user?.educations != null)
+                        if (appUserProvider.user?.educations?.length!=0)
                           ListView.builder(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
@@ -635,34 +638,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               children: [
                                 IconButton(
                                   icon: Icon(Icons.add),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(context, LeftToRight(AddSpeakLanguage())) ;
+                                  },
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.edit),
-                                  onPressed: () {},
+                                  onPressed: () {
+
+                                  },
                                 )
                               ],
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        LanguageCard(
-                          speakLanguage: SpeakLanguageUser(
-                              name: "English",
-                              proficiency: "Full professional proficiency"),
-                        ),
-                        LanguageCard(
-                          speakLanguage: SpeakLanguageUser(
-                              name: "Gujarati",
-                              proficiency: "Full professional proficiency"),
-                        ),
-                        LanguageCard(
-                          speakLanguage: SpeakLanguageUser(
-                              name: "Hindi",
-                              proficiency: "Full professional proficiency"),
-                        ),
+
+                        if (appUserProvider.user?.languages == null || appUserProvider.user!.languages!.isEmpty)
+                          Center(
+                            child: Text(
+                              "No language added yet.",
+                              style: TextStyle(color: Colors.grey, fontSize: 16),
+                            ),
+                          )
+                        else
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: appUserProvider.user!.languages!.length,
+                            itemBuilder: (context, index) {
+                              return LanguageCard(
+                                speakLanguage: appUserProvider.user!.languages![index],
+                              );
+                            },
+                          ),
                       ],
                     ),
                   ),

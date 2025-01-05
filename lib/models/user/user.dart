@@ -34,7 +34,7 @@ class AppUser {
   List<TestScores>? testScores;
   List<Skill>? skills;
   List<Project>? projects;
-  List<SpeakLanguageUser>? language;
+  List<SpeakLanguageUser>? languages;
   List<Experience>? experiences;
   List<Education>? educations;
   CustomButton? button;
@@ -66,7 +66,7 @@ class AppUser {
     this.testScores,
     this.skills,
     this.projects,
-    this.language,
+    this.languages,
     this.experiences,
     this.educations,
     this.button,
@@ -110,8 +110,8 @@ class AppUser {
     if (projects != null) {
       map['projects'] = projects!.map((e) => e.toJson()).toList();
     }
-    if (language != null) {
-      map['languages'] = language!.map((e) => e.toJson()).toList();
+    if (languages != null) {
+      map['languages'] = languages!.map((e) => e.toJson()).toList();
     }
     if (experiences != null) {
       map['experiences'] = experiences!.map((e) => e.toJson()).toList();
@@ -167,8 +167,8 @@ class AppUser {
       projects: json['projects'] != null
           ? (json['projects'] as List).map((e) => Project.fromJson(e)).toList()
           : [],
-      language: json['language'] != null
-          ? (json['language'] as List).map((e) => SpeakLanguageUser.fromJson(e)).toList()
+      languages: json['languages'] != null
+          ? (json['languages'] as List).map((e) => SpeakLanguageUser.fromJson(e)).toList()
           : [],
       experiences: json['experiences'] != null
           ? (json['experiences'] as List).map((e) => Experience.fromJson(e)).toList()

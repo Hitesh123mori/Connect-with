@@ -127,7 +127,7 @@ class AuthApi {
         testScores: [],
         skills: [],
         lacertificate: [],
-        language: [],
+        languages: [],
         projects: [],
         experiences: [],
         educations: [],
