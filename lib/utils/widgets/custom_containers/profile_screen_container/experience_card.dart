@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/experience.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +16,7 @@ class ExperienceCard extends StatefulWidget {
 class _ExperienceCardState extends State<ExperienceCard> {
   @override
   Widget build(BuildContext context) {
+    mq = MediaQuery.of(context).size ;
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -28,8 +32,10 @@ class _ExperienceCardState extends State<ExperienceCard> {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundColor: AppColors.theme['primaryColor']?.withOpacity(0.2),
-                child: Icon(Icons.business, color: AppColors.theme['primaryColor']),
+                backgroundColor:
+                    AppColors.theme['primaryColor']?.withOpacity(0.2),
+                child: Icon(Icons.business,
+                    color: AppColors.theme['primaryColor']),
               ),
               SizedBox(width: 10),
               // Company name and total duration
@@ -39,7 +45,8 @@ class _ExperienceCardState extends State<ExperienceCard> {
                   children: [
                     Text(
                       widget.experience.companyName ?? "Company Name",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "${_calculateTotalDuration()}",
@@ -77,7 +84,8 @@ class _ExperienceCardState extends State<ExperienceCard> {
                             Container(
                               width: 2,
                               height: 50,
-                              color: AppColors.theme['primaryColor']?.withOpacity(0.5),
+                              color: AppColors.theme['primaryColor']
+                                  ?.withOpacity(0.5),
                             ),
                         ],
                       ),
@@ -90,19 +98,34 @@ class _ExperienceCardState extends State<ExperienceCard> {
                         children: [
                           Text(
                             position.title ?? "Position Name",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            "${position.startDate ?? "Start Date"} - ${position.endDate ?? "End Date"} - ${_calculateDuration((position.startDate ?? "") , (position.endDate ?? ""))}",
+                            "${position.startDate ?? "Start Date"} - ${position.endDate ?? "End Date"} - ${_calculateDuration((position.startDate ?? ""), (position.endDate ?? ""))}",
                             style: TextStyle(fontSize: 14, color: Colors.grey),
                           ),
                           Text(
                             position.location ?? "Location",
                             style: TextStyle(fontSize: 14, color: Colors.grey),
                           ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            position.description ?? "Description",
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          if (position.description != "")
+                            SizedBox(
+                              height: 10,
+                            ),
                           if (position.skills != null)
                             Wrap(
-                              children: position.skills!.asMap().entries.map((entry) {
+                              children:
+                                  position.skills!.asMap().entries.map((entry) {
                                 final index = entry.key;
                                 final skill = entry.value;
                                 return Padding(
@@ -118,7 +141,8 @@ class _ExperienceCardState extends State<ExperienceCard> {
                                       ),
                                       if (index != position.skills!.length - 1)
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 4.0),
                                           child: Text(
                                             "•", // Dot separator
                                             style: TextStyle(
@@ -132,6 +156,74 @@ class _ExperienceCardState extends State<ExperienceCard> {
                                 );
                               }).toList(),
                             ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          if (position.media != "")
+                            InkWell(
+                              child: Container(
+                                height: 100,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: AppColors.theme['primaryColor']
+                                      .withOpacity(0.2),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    position.media!,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      backgroundColor:
+                                          AppColors.theme['backgroundColor'],
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      title: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Media Image",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                              color: AppColors
+                                                  .theme['primaryTextColor'],
+                                            ),
+                                          ),
+                                          IconButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              icon: Icon(Icons.close))
+                                        ],
+                                      ),
+                                      content: SizedBox(
+                                        // height: mq.height * 1,
+                                        width: mq.width * 1,
+                                        child: Container(
+                                          child: position.media != ""
+                                              ? Image.network(
+                                                  position.media!,
+                                                  // fit: BoxFit.,
+                                                )
+                                              : Container(),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            )
                         ],
                       ),
                     ),
@@ -179,9 +271,7 @@ class _ExperienceCardState extends State<ExperienceCard> {
     final years = duration.inDays ~/ 365;
     final months = (duration.inDays % 365) ~/ 30;
 
-
     return "${years > 0 ? "$years yr " : ""}${months >= 0 ? "$months mos" : ""}";
-
   }
 
   DateTime? _parseDate(String date) {

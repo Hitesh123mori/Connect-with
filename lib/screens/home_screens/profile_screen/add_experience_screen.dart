@@ -1,4 +1,6 @@
-import 'package:connect_with/apis/auth_apis/fetch_user_info.dart';
+import 'dart:io';
+
+import 'package:connect_with/apis/auth_apis/user_details_update.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/experience.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
@@ -9,7 +11,9 @@ import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/buttons/auth_buttons/button_1.dart';
 import 'package:connect_with/utils/widgets/text_feilds/text_feild_1.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -23,33 +27,37 @@ class AddExperienceScreen extends StatefulWidget {
 class _AddExperienceScreenState extends State<AddExperienceScreen> {
   final _formKey = GlobalKey<FormState>();
   String? selectedEmploymentType;
-  bool isLoading  = false;
+  bool isLoading = false;
   bool isCurrentlyWorking = false;
   DateTime? startDate;
   DateTime? endDate;
   List<String> skills = [];
   TextEditingController skillController = TextEditingController();
-  TextEditingController titleController = TextEditingController() ;
-  TextEditingController descriptionController = TextEditingController() ;
-  TextEditingController companyNameController = TextEditingController() ;
-  TextEditingController locationController = TextEditingController() ;
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController companyNameController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
+  String? _mediaImage = "";
+  late BuildContext dialogContext;
+  late File file;
 
-
-  Future<void> _saveExperience() async {
+  Future<void> _saveExperience(String downloadUrl) async {
     if (_formKey.currentState!.validate()) {
-
       Positions newPosition = Positions(
         title: titleController.text.trim(),
-        location: locationController.text.isEmpty ? "" : locationController.text.trim(),
-        startDate: startDate == null
+        location: locationController.text.isEmpty
             ? ""
-            : DateFormat('MMM yyyy').format(startDate!),
+            : locationController.text.trim(),
+        startDate:
+            startDate == null ? "" : DateFormat('MMM yyyy').format(startDate!),
         endDate: isCurrentlyWorking
             ? "Present"
             : (endDate == null ? "" : DateFormat('MMM yyyy').format(endDate!)),
-        description: descriptionController.text.isEmpty ? "" : descriptionController.text.trim(),
+        description: descriptionController.text.isEmpty
+            ? ""
+            : descriptionController.text.trim(),
         skills: skills.isEmpty ? [] : skills,
-        media: null,
+        media: downloadUrl,
       );
 
       Experience experience = Experience(
@@ -58,21 +66,15 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
         positions: [newPosition],
       );
 
-
-
       bool isAdded = await UserProfile.addExperience(
-          context.read<AppUserProvider>().user?.userID,
-          experience
-      );
-
+          context.read<AppUserProvider>().user?.userID, experience);
 
       if (isAdded) {
-        HelperFunctions.showToast("Experience added successfully") ;
+        HelperFunctions.showToast("Experience added successfully");
       } else {
-        HelperFunctions.showToast("Failed to update experience.") ;
+        HelperFunctions.showToast("Failed to update experience.");
         Navigator.pop(context);
       }
-
     }
   }
 
@@ -188,9 +190,24 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
 
                         SizedBox(height: 10),
 
+                        // Title
+                        Text(
+                          "Location",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        TextFeild1(
+                            controller: locationController,
+                            hintText: 'Ex.Ahmedabad,Gujarat,India',
+                            isNumber: false,
+                            prefixicon: Icon(Icons.title),
+                            obsecuretext: false,
+                            ),
+                        SizedBox(height: 10),
+
                         // Employment type dropdown
                         Text(
-                          "Employment Type*",
+                          "Employment Type",
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
@@ -218,8 +235,8 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                             icon: Icon(Icons.arrow_drop_down,
                                 color: AppColors.theme['primaryColor']),
                             dropdownColor: AppColors.theme['backgroundColor'],
-                            style:
-                                TextStyle(color: AppColors.theme['primaryColor']),
+                            style: TextStyle(
+                                color: AppColors.theme['primaryColor']),
                             items: [
                               'Full Time',
                               'Part-Time',
@@ -340,11 +357,12 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         TextFeild1(
-                            hintText: 'Ex. I am currently working..',
-                            isNumber: false,
-                            prefixicon: Icon(Icons.description),
-                            obsecuretext: false,
-                            ),
+                          controller: descriptionController,
+                          hintText: 'Ex. I am currently working..',
+                          isNumber: false,
+                          prefixicon: Icon(Icons.description),
+                          obsecuretext: false,
+                        ),
 
                         // Skills
                         SizedBox(height: 10),
@@ -383,7 +401,8 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                                 style: ButtonStyle(
                                     side: MaterialStateProperty.all(BorderSide(
                                         width: 1,
-                                        color: AppColors.theme['primaryColor']!)),
+                                        color:
+                                            AppColors.theme['primaryColor']!)),
                                     shape: MaterialStateProperty.all(
                                         RoundedRectangleBorder(
                                             borderRadius:
@@ -421,43 +440,269 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                             );
                           }).toList(),
                         ),
-
                         // Submit button
                         SizedBox(height: 10),
+                        Text(
+                          "Media",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 10),
+
+                        _mediaImage == ""
+                            ? InkWell(
+                                onTap: () async {
+                                  final ImagePicker picker = ImagePicker();
+                                  final XFile? image = await picker.pickImage(
+                                      source: ImageSource.gallery);
+
+                                  if (image != null) {
+                                    setState(() {
+                                      _mediaImage = image.path;
+                                    });
+
+                                    file = File(image.path);
+
+                                    // showDialog(
+                                    //   barrierDismissible: false,
+                                    //   context: context,
+                                    //   builder: (BuildContext context) {
+                                    //     dialogContext = context;
+                                    //     return AlertDialog(
+                                    //       backgroundColor: Colors.white,
+                                    //       shape: RoundedRectangleBorder(
+                                    //         borderRadius: BorderRadius.circular(20),
+                                    //       ),
+                                    //       content: Container(
+                                    //         decoration: BoxDecoration(
+                                    //           color: Colors.white,
+                                    //         ),
+                                    //         height: 40,
+                                    //         width: 60,
+                                    //         child: Center(
+                                    //           child: Row(
+                                    //             mainAxisAlignment:
+                                    //                 MainAxisAlignment.center,
+                                    //             crossAxisAlignment:
+                                    //                 CrossAxisAlignment.center,
+                                    //             children: [
+                                    //               Container(
+                                    //                 height: 30,
+                                    //                 width: 30,
+                                    //                 child: CircularProgressIndicator(
+                                    //                     strokeWidth: 4.0,
+                                    //                     color: AppColors
+                                    //                         .theme['primaryColor']),
+                                    //               ),
+                                    //               SizedBox(width: 20),
+                                    //               Text("Uploading...",
+                                    //                   style: TextStyle(
+                                    //                     fontSize: 18,
+                                    //                     fontWeight: FontWeight.bold,
+                                    //                   )),
+                                    //             ],
+                                    //           ),
+                                    //         ),
+                                    //       ),
+                                    //     );
+                                    //   },
+                                    // );
+                                    //
+                                    // Navigator.pop(dialogContext);
+                                  }
+                                },
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: AppColors.theme['backgroundColor']!
+                                          .withOpacity(0.5),
+                                    ),
+                                    height: 100,
+                                    width: mq.width * 1,
+                                    child: Center(
+                                      child: DottedBorder(
+                                        borderType: BorderType.RRect,
+                                        radius: Radius.circular(10),
+                                        dashPattern: [8, 4],
+                                        color: AppColors.theme['primaryColor']!,
+                                        child: Container(
+                                          height: 70,
+                                          width: mq.width * 0.6,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Center(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.camera_alt_outlined,
+                                                  size: 40,
+                                                ),
+                                                Text(
+                                                  "Click here to upload",
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )))
+                            : Container(
+                                height: 80,
+                                width: mq.width * 1,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: AppColors.theme["primaryColor"]
+                                      .withOpacity(0.2),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Media image uploaded",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Container(
+                                          height: 40,
+                                          width: 80,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color:
+                                                AppColors.theme['primaryColor'],
+                                          ),
+                                          child: InkWell(
+                                            onTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    backgroundColor:
+                                                        AppColors.theme[
+                                                            'backgroundColor'],
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20),
+                                                    ),
+                                                    title: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          "Media Image",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 18,
+                                                            color: AppColors
+                                                                    .theme[
+                                                                'primaryTextColor'],
+                                                          ),
+                                                        ),
+                                                        IconButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(context);
+                                                            },
+                                                            icon:
+                                                            Icon(Icons.close))
+                                                      ],
+                                                    ),
+                                                    content: SizedBox(
+                                                      // height: mq.height * 1,
+                                                      width: mq.width * 1,
+                                                      child: Container(
+                                                        child: _mediaImage != ""
+                                                            ? Image.file(
+                                                                File(
+                                                                    _mediaImage!),
+                                                                // fit: BoxFit
+                                                                //     .cover,
+                                                              )
+                                                            : Container(),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                            child: Center(
+                                              child: Text(
+                                                "View",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  color: AppColors
+                                                      .theme['secondaryColor'],
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                        SizedBox(
+                          height: 20,
+                        ),
                         Center(
                           child: Button1(
                             isLoading: isLoading,
                             height: 50,
-                            loadWidth : mq.width*0.5,
+                            loadWidth: mq.width * 0.5,
                             width: mq.width * 1,
                             textColor: AppColors.theme['secondaryColor'],
                             bgColor: AppColors.theme['primaryColor'],
-                            onTap: ()async{
+                            onTap: () async {
                               if (_formKey.currentState!.validate()) {
-                                print("selectedEmploymentType : " + selectedEmploymentType!) ;
-                                print("isCurrentlyWorking : " + isCurrentlyWorking.toString()) ;
-                                print("startDate : " + startDate.toString()) ;
-                                print("endDate :" + endDate.toString()) ;
-                                for(int i = 0 ; i < skills.length ; i++){
-                                  print("Skills : " +  i.toString() + skills[i]) ;
+                                print("selectedEmploymentType : " +
+                                    selectedEmploymentType!);
+                                print("isCurrentlyWorking : " +
+                                    isCurrentlyWorking.toString());
+                                print("startDate : " + startDate.toString());
+                                print("endDate :" + endDate.toString());
+                                for (int i = 0; i < skills.length; i++) {
+                                  print("Skills : " + i.toString() + skills[i]);
                                 }
 
-                                print(appUserProvider.user?.userID) ;
-
+                                print(appUserProvider.user?.userID);
 
                                 setState(() {
                                   isLoading = true;
                                 });
 
-                                await _saveExperience() ;
-
+                                String? downloadUrl =
+                                    await UserProfile.uploadMedia(
+                                        file,
+                                        _mediaImage ?? "",
+                                        appUserProvider.user?.userID ?? "");
+                                await _saveExperience(downloadUrl ?? "");
                                 setState(() {
                                   isLoading = false;
                                 });
 
-                                await appUserProvider.initUser() ;
+                                await appUserProvider.initUser();
 
-                                Navigator.pop(context) ;
+                                Navigator.pop(context);
                               }
                             },
                             title: 'Save Experience',

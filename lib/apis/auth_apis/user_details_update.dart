@@ -13,6 +13,29 @@ class UserProfile {
 
   static final _collectionRef = Config.firestore.collection("users");
 
+  static Future<String?> uploadMedia(File file, String path, String userId) async {
+    final fileName = basename(file.path);
+    final ext = fileName.split('.').last;
+
+    log('Uploading media file: $fileName, extension: $ext');
+
+    final ref = Config.storage.ref().child('connect_with_images/$userId/media/$fileName');
+
+    try {
+      final uploadTask = await ref.putFile(file, SettableMetadata(contentType: 'image/$ext'));
+      log('Data Transferred: ${uploadTask.bytesTransferred / 1000} kb');
+
+      final downloadUrl = await ref.getDownloadURL();
+      log('Media uploaded successfully: $downloadUrl');
+
+      return downloadUrl;
+
+    } catch (e) {
+      log('Error uploading media: $e');
+      return null;
+    }
+  }
+
 
   static Future<void> updatePicture(File file, String path, bool isProfile, AppUserProvider provider) async {
 

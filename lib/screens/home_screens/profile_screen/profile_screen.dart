@@ -74,7 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
-          backgroundColor: AppColors.theme['backgroundColor'],
+          backgroundColor: AppColors.theme['secondaryColor'],
           body: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -379,11 +379,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        // Check if the user has experiences
-                        if (appUserProvider.user?.experiences == null)
-                          Text(
-                            "No experiences added yet.",
-                            style: TextStyle(color: Colors.grey),
+                        if (appUserProvider.user?.experiences?.length == 0)
+                          Center(
+                            child: Text(
+                              "No experiences added yet.",
+                              style: TextStyle(color: Colors.grey,fontSize: 16),
+                            ),
                           ),
                         if (appUserProvider.user?.experiences != null)
                           ListView.builder(

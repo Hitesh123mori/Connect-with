@@ -1,4 +1,4 @@
-import 'package:connect_with/apis/auth_apis/fetch_user_info.dart';
+import 'package:connect_with/apis/auth_apis/user_details_update.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/profile_screen.dart';
@@ -47,7 +47,7 @@ class _EditProfileState extends State<EditProfile> {
   void initState() {
     super.initState();
     final appUserProvider =
-        Provider.of<AppUserProvider>(context, listen: false);
+    Provider.of<AppUserProvider>(context, listen: false);
 
     showExperience = appUserProvider.user?.showExperience ?? false;
     showEducation = appUserProvider.user?.showEducation ?? false;
@@ -111,475 +111,475 @@ class _EditProfileState extends State<EditProfile> {
     mq = MediaQuery.of(context).size;
     return Consumer<AppUserProvider>(
         builder: (context, appUserProvider, child) {
-      return GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: Scaffold(
-            backgroundColor: AppColors.theme['backgroundColor'],
-            appBar: AppBar(
-              title: Text(
-                "Edit Profile",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+          return GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              home: Scaffold(
+                backgroundColor: AppColors.theme['backgroundColor'],
+                appBar: AppBar(
+                  title: Text(
+                    "Edit Profile",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  centerTitle: true,
+                  backgroundColor: AppColors.theme['primaryColor'],
+                  toolbarHeight: 50,
+                  leading: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(
+                      Icons.keyboard_arrow_left_rounded,
+                      size: 35,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
-              centerTitle: true,
-              backgroundColor: AppColors.theme['primaryColor'],
-              toolbarHeight: 50,
-              leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.keyboard_arrow_left_rounded,
-                  size: 35,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            body: Padding(
-              padding:
+                body: Padding(
+                  padding:
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
-              child: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20),
-
-                      // Basic Information
-                      Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.theme['secondaryColor'],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Center(
-                                child: Text(
-                                  "Basic Information",
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Divider(
-                                color: AppColors.theme['primaryColor'],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              // Headline field
-                              Text(
-                                "Headline",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextFeild1(
-                                hintText: "Enter Headline",
-                                isNumber: false,
-                                prefixicon: Icon(Icons.text_format_outlined),
-                                obsecuretext: false,
-                                initialText: appUserProvider.user?.headLine,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Headline cannot be empty";
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) => _headline = value,
-                              ),
-                              SizedBox(height: 10),
-
-                              // About field
-                              Text(
-                                "About",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextFeild1(
-                                hintText: "Enter About",
-                                isNumber: false,
-                                prefixicon: Icon(Icons.info_outline),
-                                obsecuretext: false,
-                                initialText: appUserProvider.user?.about,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "About cannot be empty";
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) => _about = value,
-                              ),
-                              SizedBox(height: 10),
-
-                              // pronoun field
-                              Text(
-                                "Pronoun",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextFeild1(
-                                hintText: "Enter pronoun",
-                                isNumber: false,
-                                prefixicon: Icon(Icons.text_format_outlined),
-                                obsecuretext: false,
-                                initialText: appUserProvider.user?.pronoun,
-                                onSaved: (value) => _pronoun = value,
-                              ),
-                              SizedBox(height: 10),
-
-                              //  phone number
-
-                              // pronoun field
-                              Text(
-                                "Phone Number",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextFeild1(
-                                hintText: "Enter number",
-                                isNumber: true,
-                                prefixicon: Icon(Icons.numbers_sharp),
-                                obsecuretext: false,
-                                initialText:
-                                    appUserProvider.user?.info?.phoneNumber,
-                                onSaved: (value) => _phoneNumber = value,
-                              ),
-                              SizedBox(height: 10),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 10),
-
-                      // Button field
-                      Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.theme['secondaryColor'],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Center(
-                                child: Text(
-                                  "Custom Button Information",
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Divider(
-                                color: AppColors.theme['primaryColor'],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              // link
-                              Text(
-                                "Link",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextFeild1(
-                                hintText: "Enter link",
-                                isNumber: false,
-                                prefixicon: Icon(Icons.text_format_outlined),
-                                obsecuretext: false,
-                                initialText: appUserProvider.user?.button?.link,
-                                onSaved: (value) => _link = value,
-                              ),
-                              SizedBox(height: 10),
-
-                              // linktext
-                              Text(
-                                "Button Name",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextFeild1(
-                                hintText: "Enter Button Name",
-                                isNumber: false,
-                                prefixicon: Icon(Icons.text_format_outlined),
-                                obsecuretext: false,
-                                initialText:
-                                    appUserProvider.user?.button?.linkText,
-                                onSaved: (value) => _buttonText = value,
-                              ),
-                              SizedBox(height: 10),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 10),
-
-                      // Address field
-                      Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.theme['secondaryColor'],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Center(
-                                child: Text(
-                                  "Address Information",
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Divider(
-                                color: AppColors.theme['primaryColor'],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              // city name
-                              Text(
-                                "City Name",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextFeild1(
-                                hintText: "Enter CityName",
-                                isNumber: false,
-                                prefixicon: Icon(Icons.text_format_outlined),
-                                obsecuretext: false,
-                                initialText:
-                                    appUserProvider.user?.address?.cityName,
-                                onSaved: (value) => _cityName = value,
-                              ),
-                              SizedBox(height: 10),
-
-                              // state name
-                              Text(
-                                "State Name",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextFeild1(
-                                hintText: "Enter StateName",
-                                isNumber: false,
-                                prefixicon: Icon(Icons.text_format_outlined),
-                                obsecuretext: false,
-                                initialText:
-                                    appUserProvider.user?.address?.stateName,
-                                onSaved: (value) => _stateName = value,
-                              ),
-                              SizedBox(height: 10),
-
-                              // country name
-                              Text(
-                                "Country Name",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextFeild1(
-                                hintText: "Enter CountryName",
-                                isNumber: false,
-                                prefixicon: Icon(Icons.text_format_outlined),
-                                obsecuretext: false,
-                                initialText:
-                                    appUserProvider.user?.address?.countryName,
-                                onSaved: (value) => _countryName = value,
-                              ),
-                              SizedBox(height: 10),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 10),
-
-                      // image picker
-                      Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.theme['secondaryColor'],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Center(
-                                child: Text(
-                                  "Profile and Cover Picture",
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Divider(
-                                color: AppColors.theme['primaryColor'],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "Cover Image",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              ImageUploader(
-                                parHeight: 120,
-                                parWidth: mq.width * 1,
-                                childHeight: 80,
-                                childWidth: mq.width * 0.7,
-                                isProfile: false,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "Profile Image",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Center(
-                                  child: ImageUploader(
-                                parHeight: 200,
-                                parWidth: 200,
-                                childHeight: 150,
-                                childWidth: 150,
-                                isProfile: true,
-                              )),
-                              SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      // Toggle options
-                      Column(
+                  child: Form(
+                    key: _formKey,
+                    child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildToggleOption("Show Custom Button", showButton,
-                              (value) {
-                            setState(() => showButton = value);
-                          }),
-                          _buildToggleOption("Show Experience", showExperience,
-                              (value) {
-                            setState(() => showExperience = value);
-                          }),
-                          _buildToggleOption("Show Education", showEducation,
-                              (value) {
-                            setState(() => showEducation = value);
-                          }),
-                          _buildToggleOption("Show Projects", showProjects,
-                              (value) {
-                            setState(() => showProjects = value);
-                          }),
-                          _buildToggleOption("Show Skills", showSkills,
-                              (value) {
-                            setState(() => showSkills = value);
-                          }),
-                          _buildToggleOption("Show Scores", showScores,
-                              (value) {
-                            setState(() => showScores = value);
-                          }),
-                          _buildToggleOption("Show Language", showLanguage,
-                              (value) {
-                            setState(() => showLanguage = value);
-                          }),
+                          SizedBox(height: 20),
+
+                          // Basic Information
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.theme['secondaryColor'],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      "Basic Information",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Divider(
+                                    color: AppColors.theme['primaryColor'],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  // Headline field
+                                  Text(
+                                    "Headline",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextFeild1(
+                                    hintText: "Enter Headline",
+                                    isNumber: false,
+                                    prefixicon: Icon(Icons.text_format_outlined),
+                                    obsecuretext: false,
+                                    initialText: appUserProvider.user?.headLine,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "Headline cannot be empty";
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) => _headline = value,
+                                  ),
+                                  SizedBox(height: 10),
+
+                                  // About field
+                                  Text(
+                                    "About",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextFeild1(
+                                    hintText: "Enter About",
+                                    isNumber: false,
+                                    prefixicon: Icon(Icons.info_outline),
+                                    obsecuretext: false,
+                                    initialText: appUserProvider.user?.about,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "About cannot be empty";
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) => _about = value,
+                                  ),
+                                  SizedBox(height: 10),
+
+                                  // pronoun field
+                                  Text(
+                                    "Pronoun",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextFeild1(
+                                    hintText: "Enter pronoun",
+                                    isNumber: false,
+                                    prefixicon: Icon(Icons.text_format_outlined),
+                                    obsecuretext: false,
+                                    initialText: appUserProvider.user?.pronoun,
+                                    onSaved: (value) => _pronoun = value,
+                                  ),
+                                  SizedBox(height: 10),
+
+                                  //  phone number
+
+                                  // pronoun field
+                                  Text(
+                                    "Phone Number",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextFeild1(
+                                    hintText: "Enter number",
+                                    isNumber: true,
+                                    prefixicon: Icon(Icons.numbers_sharp),
+                                    obsecuretext: false,
+                                    initialText:
+                                    appUserProvider.user?.info?.phoneNumber,
+                                    onSaved: (value) => _phoneNumber = value,
+                                  ),
+                                  SizedBox(height: 10),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 10),
+
+                          // Button field
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.theme['secondaryColor'],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      "Custom Button Information",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Divider(
+                                    color: AppColors.theme['primaryColor'],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  // link
+                                  Text(
+                                    "Link",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextFeild1(
+                                    hintText: "Enter link",
+                                    isNumber: false,
+                                    prefixicon: Icon(Icons.text_format_outlined),
+                                    obsecuretext: false,
+                                    initialText: appUserProvider.user?.button?.link,
+                                    onSaved: (value) => _link = value,
+                                  ),
+                                  SizedBox(height: 10),
+
+                                  // linktext
+                                  Text(
+                                    "Button Name",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextFeild1(
+                                    hintText: "Enter Button Name",
+                                    isNumber: false,
+                                    prefixicon: Icon(Icons.text_format_outlined),
+                                    obsecuretext: false,
+                                    initialText:
+                                    appUserProvider.user?.button?.linkText,
+                                    onSaved: (value) => _buttonText = value,
+                                  ),
+                                  SizedBox(height: 10),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 10),
+
+                          // Address field
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.theme['secondaryColor'],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      "Address Information",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Divider(
+                                    color: AppColors.theme['primaryColor'],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  // city name
+                                  Text(
+                                    "City Name",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextFeild1(
+                                    hintText: "Enter CityName",
+                                    isNumber: false,
+                                    prefixicon: Icon(Icons.text_format_outlined),
+                                    obsecuretext: false,
+                                    initialText:
+                                    appUserProvider.user?.address?.cityName,
+                                    onSaved: (value) => _cityName = value,
+                                  ),
+                                  SizedBox(height: 10),
+
+                                  // state name
+                                  Text(
+                                    "State Name",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextFeild1(
+                                    hintText: "Enter StateName",
+                                    isNumber: false,
+                                    prefixicon: Icon(Icons.text_format_outlined),
+                                    obsecuretext: false,
+                                    initialText:
+                                    appUserProvider.user?.address?.stateName,
+                                    onSaved: (value) => _stateName = value,
+                                  ),
+                                  SizedBox(height: 10),
+
+                                  // country name
+                                  Text(
+                                    "Country Name",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextFeild1(
+                                    hintText: "Enter CountryName",
+                                    isNumber: false,
+                                    prefixicon: Icon(Icons.text_format_outlined),
+                                    obsecuretext: false,
+                                    initialText:
+                                    appUserProvider.user?.address?.countryName,
+                                    onSaved: (value) => _countryName = value,
+                                  ),
+                                  SizedBox(height: 10),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 10),
+
+                          // image picker
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.theme['secondaryColor'],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      "Profile and Cover Picture",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Divider(
+                                    color: AppColors.theme['primaryColor'],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "Cover Image",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  ImageUploader(
+                                    parHeight: 120,
+                                    parWidth: mq.width * 1,
+                                    childHeight: 80,
+                                    childWidth: mq.width * 0.7,
+                                    isProfile: false,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "Profile Image",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Center(
+                                      child: ImageUploader(
+                                        parHeight: 200,
+                                        parWidth: 200,
+                                        childHeight: 150,
+                                        childWidth: 150,
+                                        isProfile: true,
+                                      )),
+                                  SizedBox(height: 20),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // Toggle options
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildToggleOption("Show Custom Button", showButton,
+                                      (value) {
+                                    setState(() => showButton = value);
+                                  }),
+                              _buildToggleOption("Show Experience", showExperience,
+                                      (value) {
+                                    setState(() => showExperience = value);
+                                  }),
+                              _buildToggleOption("Show Education", showEducation,
+                                      (value) {
+                                    setState(() => showEducation = value);
+                                  }),
+                              _buildToggleOption("Show Projects", showProjects,
+                                      (value) {
+                                    setState(() => showProjects = value);
+                                  }),
+                              _buildToggleOption("Show Skills", showSkills,
+                                      (value) {
+                                    setState(() => showSkills = value);
+                                  }),
+                              _buildToggleOption("Show Scores", showScores,
+                                      (value) {
+                                    setState(() => showScores = value);
+                                  }),
+                              _buildToggleOption("Show Language", showLanguage,
+                                      (value) {
+                                    setState(() => showLanguage = value);
+                                  }),
+                            ],
+                          ),
+
+                          SizedBox(height: 30),
+
+                          // Save button
+                          Center(
+                            child: Button1(
+                              isLoading: isLoading,
+                              height: 50,
+                              loadWidth: mq.width * 0.5,
+                              width: mq.width * 1,
+                              textColor: AppColors.theme['secondaryColor'],
+                              bgColor: AppColors.theme['primaryColor'],
+                              onTap: () async {
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                await _saveProfile(appUserProvider);
+                                setState(() {
+                                  isLoading = false;
+                                });
+
+                                await appUserProvider.initUser();
+
+                                Navigator.pop(context);
+                              },
+                              title: "Save Profile",
+                            ),
+                          ),
+
+                          SizedBox(height: 30),
                         ],
                       ),
-
-                      SizedBox(height: 30),
-
-                      // Save button
-                      Center(
-                        child: Button1(
-                          isLoading: isLoading,
-                          height: 50,
-                          loadWidth: mq.width * 0.5,
-                          width: mq.width * 1,
-                          textColor: AppColors.theme['secondaryColor'],
-                          bgColor: AppColors.theme['primaryColor'],
-                          onTap: () async {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            await _saveProfile(appUserProvider);
-                            setState(() {
-                              isLoading = false;
-                            });
-
-                            await appUserProvider.initUser();
-
-                            Navigator.pop(context);
-                          },
-                          title: "Save Profile",
-                        ),
-                      ),
-
-                      SizedBox(height: 30),
-                    ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ),
-      );
-    });
+          );
+        });
   }
 
   // Helper method for toggle UI

@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:connect_with/apis/auth_apis/fetch_user_info.dart';
+import 'package:connect_with/apis/auth_apis/user_details_update.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
@@ -40,7 +40,7 @@ class _ImageUploaderState extends State<ImageUploader> {
           onTap: () async {
             final ImagePicker picker = ImagePicker();
             final XFile? image =
-                await picker.pickImage(source: ImageSource.gallery);
+            await picker.pickImage(source: ImageSource.gallery);
 
             if (image != null) {
               setState(() {
@@ -93,7 +93,7 @@ class _ImageUploaderState extends State<ImageUploader> {
               Navigator.pop(dialogContext);
               await appUserProvider.initUser();
 
-              HelperFunctions.showToast("Image Uploaded Successfully!");
+              HelperFunctions.showToast(widget.isProfile ? "Profile picture changed!" : "Cover picture changed!");
 
             }
           },
@@ -105,55 +105,55 @@ class _ImageUploaderState extends State<ImageUploader> {
             height: widget.parHeight,
             width: widget.parWidth,
             child: (widget.isProfile
-                    ? (appUserProvider.user?.profilePath?.isEmpty ?? true)
-                    : (appUserProvider.user?.coverPath?.isEmpty ?? true))
+                ? (appUserProvider.user?.profilePath?.isEmpty ?? true)
+                : (appUserProvider.user?.coverPath?.isEmpty ?? true))
                 ? Center(
-                    child: DottedBorder(
-                      borderType: BorderType.RRect,
-                      radius: Radius.circular(10),
-                      dashPattern: [8, 4],
-                      color: AppColors.theme['primaryColor']!,
-                      child: Container(
-                        height: widget.childHeight,
-                        width: widget.childWidth,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
+              child: DottedBorder(
+                borderType: BorderType.RRect,
+                radius: Radius.circular(10),
+                dashPattern: [8, 4],
+                color: AppColors.theme['primaryColor']!,
+                child: Container(
+                  height: widget.childHeight,
+                  width: widget.childWidth,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.camera_alt_outlined,
+                          size: 40,
                         ),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.camera_alt_outlined,
-                                size: 40,
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                "Click here to upload",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                        SizedBox(height: 8),
+                        Text(
+                          "Click here to upload",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                    ),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: ClipRRect(
-                      child: Image.network(
-                        widget.isProfile
-                            ? (appUserProvider.user?.profilePath ?? '')
-                            : (appUserProvider.user?.coverPath ?? ''),
-                        fit: BoxFit.cover,
-                        width: widget.parHeight,
-                        height: widget.parWidth,
-                      ),
+                      ],
                     ),
                   ),
+                ),
+              ),
+            )
+                : Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: ClipRRect(
+                child: Image.network(
+                  widget.isProfile
+                      ? (appUserProvider.user?.profilePath ?? '')
+                      : (appUserProvider.user?.coverPath ?? ''),
+                  fit: BoxFit.cover,
+                  width: widget.parHeight,
+                  height: widget.parWidth,
+                ),
+              ),
+            ),
           ),
         );
       },
