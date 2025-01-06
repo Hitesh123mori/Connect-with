@@ -15,7 +15,7 @@ class LanguageCard extends StatefulWidget {
 class _LanguageCardState extends State<LanguageCard> {
   @override
   Widget build(BuildContext context) {
-    print("speakLanguage : ${widget.speakLanguage.name}");
+    // print("speakLanguage : ${widget.speakLanguage.name}");
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(

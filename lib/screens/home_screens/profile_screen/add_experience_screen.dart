@@ -39,7 +39,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
   TextEditingController locationController = TextEditingController();
   String? _mediaImage = "";
   late BuildContext dialogContext;
-  late File file;
+   File? file;
 
   Future<void> _saveExperience(String downloadUrl) async {
     if (_formKey.currentState!.validate()) {
@@ -690,11 +690,16 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                                   isLoading = true;
                                 });
 
-                                String? downloadUrl =
-                                    await UserProfile.uploadMedia(
-                                        file,
-                                        _mediaImage ?? "",
-                                        appUserProvider.user?.userID ?? "");
+
+                                String? downloadUrl = "" ;
+                                if(file!=null){
+                                  downloadUrl =
+                                  await UserProfile.uploadMedia(
+                                      file!,
+                                      _mediaImage ?? "",
+                                      appUserProvider.user?.userID ?? "");
+                                }
+
                                 await _saveExperience(downloadUrl ?? "");
                                 setState(() {
                                   isLoading = false;

@@ -7,8 +7,12 @@ import 'package:connect_with/screens/home_screens/home_main_screen.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/add_education.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/add_experience_screen.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/add_speak_language.dart';
+import 'package:connect_with/screens/home_screens/profile_screen/add_testscore.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/edit_experience.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/edit_profile.dart';
+import 'package:connect_with/screens/home_screens/profile_screen/show_more_education.dart';
+import 'package:connect_with/screens/home_screens/profile_screen/show_more_experience_screen.dart';
+import 'package:connect_with/screens/home_screens/profile_screen/show_more_testscore.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/theme/colors.dart';
@@ -39,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         appUserProvider.initUser();
         isfirst = false;
       }
-      print("lan  : ${appUserProvider.user?.languages}") ;
+      // print("lan  : ${appUserProvider.user?.languages}");
 
       return MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -83,6 +87,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+
+                // profile and cover pic
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
@@ -148,7 +154,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     child: appUserProvider.user?.profilePath !=
                                             ""
                                         ? Image.network(
-                                            appUserProvider.user?.profilePath ?? "",fit: BoxFit.cover,)
+                                            appUserProvider.user?.profilePath ??
+                                                "",
+                                            fit: BoxFit.cover,
+                                          )
                                         : Image.asset(
                                             "assets/other_images/photo.png",
                                             fit: BoxFit.cover,
@@ -166,13 +175,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ? NetworkImage(
                                       appUserProvider.user?.profilePath ?? "")
                                   : AssetImage("assets/other_images/photo.png"),
-                          backgroundColor: AppColors.theme['backgroundColor'].withOpacity(0.5),
+                          backgroundColor: AppColors.theme['backgroundColor']
+                              .withOpacity(0.5),
                         ),
                       ),
                     ),
                   ],
                 ),
+
                 SizedBox(height: 40),
+
+                // name description etc..
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: 20.0, horizontal: 10),
@@ -253,10 +266,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
+
+
                 Divider(
                   thickness: 1,
                   color: AppColors.theme['primaryColor'].withOpacity(0.2),
                 ),
+
+
                 // analitics and tools
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -303,10 +320,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
+
+
+
+
+
                 Divider(
                   thickness: 1,
                   color: AppColors.theme['primaryColor'].withOpacity(0.2),
                 ),
+
+
+
+
                 //about
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -332,348 +358,480 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
+
                 //Experience
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (appUserProvider.user?.showExperience != false)
+                      Divider(
+                        thickness: 1,
+                        color: AppColors.theme['primaryColor'].withOpacity(0.2),
+                      ),
 
-                if (appUserProvider.user?.showExperience != false)
-                  Divider(
-                    thickness: 1,
-                    color: AppColors.theme['primaryColor'].withOpacity(0.2),
-                  ),
-
-                if (appUserProvider.user?.showExperience != false)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    if (appUserProvider.user?.showExperience != false)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Experience",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                IconButton(
-                                  icon: Icon(Icons.add),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      LeftToRight(AddExperienceScreen()),
-                                    );
-                                  },
+                                Text(
+                                  "Experience",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
                                 ),
-                                IconButton(
-                                  icon: Icon(Icons.edit),
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context, LeftToRight(EditExperience()));
-                                  },
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.add),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          LeftToRight(AddExperienceScreen()),
+                                        );
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context, LeftToRight(EditExperience()));
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            if (appUserProvider.user?.experiences?.length == 0)
+                              Center(
+                                child: Text(
+                                  "No experiences added yet.",
+                                  style:
+                                  TextStyle(color: Colors.grey, fontSize: 16),
+                                ),
+                              ),
+                            if (appUserProvider.user?.experiences?.length != 0)
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount:
+                                (appUserProvider.user?.experiences!.length ?? 0) > 2 ? 2 : appUserProvider.user?.experiences?.length,
+                                itemBuilder: (context, index) {
+                                  return ExperienceCard(
+                                      experience: appUserProvider
+                                          .user!.experiences![index]);
+                                },
+                              ),
+
+                            if ((appUserProvider.user?.experiences?.length ?? 0 ) > 2)
+                              InkWell(
+                                onTap: (){
+                                  Navigator.push(context, LeftToRight(ShowMoreExperienceScreen()));
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: AppColors.theme['backgroundColor'],
+                                  ),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text("Show More",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                                          SizedBox(width: 5,),
+                                          Icon(Icons.arrow_right_alt_outlined)
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+
+
                           ],
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        if (appUserProvider.user?.experiences?.length == 0)
-                          Center(
-                            child: Text(
-                              "No experiences added yet.",
-                              style: TextStyle(color: Colors.grey,fontSize: 16),
-                            ),
-                          ),
-                        if (appUserProvider.user?.experiences?.length!=0)
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount:
-                                appUserProvider.user?.experiences?.length,
-                            itemBuilder: (context, index) {
-                              return ExperienceCard(
-                                  experience: appUserProvider
-                                      .user!.experiences![index]);
-                            },
-                          ),
-                      ],
-                    ),
-                  ),
+                      ),
+                  ],
+                ),
+
 
                 //Education
-                if (appUserProvider.user?.showEducation != false)
-                  Divider(
-                    thickness: 1,
-                    color: AppColors.theme['primaryColor'].withOpacity(0.2),
-                  ),
-                if (appUserProvider.user?.showEducation != false)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Education",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
-                            ),
-                            Row(
-                              children: [
-                                IconButton(
-                                  icon: Icon(Icons.add),
-                                  onPressed: () {
-                                    Navigator.push(context, LeftToRight(AddEducation())) ;
-                                  },
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.edit),
-                                  onPressed: () {},
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
+               Column(
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+                   if (appUserProvider.user?.showEducation != false)
+                     Divider(
+                       thickness: 1,
+                       color: AppColors.theme['primaryColor'].withOpacity(0.2),
+                     ),
+                   if (appUserProvider.user?.showEducation != false)
+                     Padding(
+                       padding: const EdgeInsets.symmetric(
+                         horizontal: 10.0,
+                       ),
+                       child: Column(
+                         crossAxisAlignment: CrossAxisAlignment.start,
+                         children: [
+                           Row(
+                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                             children: [
+                               Text(
+                                 "Education",
+                                 style: TextStyle(
+                                     fontWeight: FontWeight.bold, fontSize: 18),
+                               ),
+                               Row(
+                                 children: [
+                                   IconButton(
+                                     icon: Icon(Icons.add),
+                                     onPressed: () {
+                                       Navigator.push(
+                                           context, LeftToRight(AddEducation()));
+                                     },
+                                   ),
+                                   IconButton(
+                                     icon: Icon(Icons.edit),
+                                     onPressed: () {},
+                                   )
+                                 ],
+                               ),
+                             ],
+                           ),
+                           SizedBox(
+                             height: 10,
+                           ),
+                           if (appUserProvider.user?.educations?.length == 0)
+                             Center(
+                               child: Text(
+                                 "No education added yet.",
+                                 style:
+                                 TextStyle(color: Colors.grey, fontSize: 16),
+                               ),
+                             ),
+                           if (appUserProvider.user?.educations?.length != 0)
+                             ListView.builder(
+                               shrinkWrap: true,
+                               physics: NeverScrollableScrollPhysics(),
+                               itemCount: (appUserProvider.user?.educations?.length ?? 0 ) > 2 ? 2 : appUserProvider.user?.educations?.length,
+                               itemBuilder: (context, index) {
+                                 return EducationCard(
+                                     education:
+                                     appUserProvider.user!.educations![index]);
+                               },
+                             ),
 
-                        if (appUserProvider.user?.educations?.length == 0)
-                          Center(
-                            child: Text(
-                              "No education added yet.",
-                              style: TextStyle(color: Colors.grey,fontSize: 16),
-                            ),
-                          ),
-                        if (appUserProvider.user?.educations?.length!=0)
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount:
-                            appUserProvider.user?.educations?.length,
-                            itemBuilder: (context, index) {
-                              return EducationCard(
-                                  education: appUserProvider
-                                      .user!.educations![index]);
-                            },
-                          ),
-                      ],
-                    ),
-                  ),
+                           if ((appUserProvider.user?.educations?.length ?? 0 ) > 2)
+                             InkWell(
+                               onTap: (){
+                                 Navigator.push(context, LeftToRight(ShowMoreEducation()));
+                               },
+                               child: Container(
+                                 decoration: BoxDecoration(
+                                   borderRadius: BorderRadius.circular(5),
+                                   color: AppColors.theme['backgroundColor'],
+                                 ),
+                                 child: Center(
+                                   child: Padding(
+                                     padding: const EdgeInsets.all(5.0),
+                                     child: Row(
+                                       crossAxisAlignment: CrossAxisAlignment.center,
+                                       mainAxisAlignment: MainAxisAlignment.center,
+                                       children: [
+                                         Text("Show More",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                                         SizedBox(width: 5,),
+                                         Icon(Icons.arrow_right_alt_outlined)
+                                       ],
+                                     ),
+                                   ),
+                                 ),
+                               ),
+                             )
+                         ],
+                       ),
+                     ),
+                 ],
+               ),
 
                 //Projects
-                if (appUserProvider.user?.showProject != false)
-                  Divider(
-                    thickness: 1,
-                    color: AppColors.theme['primaryColor'].withOpacity(0.2),
-                  ),
+               Column(
+                 crossAxisAlignment:CrossAxisAlignment.start,
+                 children: [
+                   if (appUserProvider.user?.showProject != false)
+                     Divider(
+                       thickness: 1,
+                       color: AppColors.theme['primaryColor'].withOpacity(0.2),
+                     ),
 
-                if (appUserProvider.user?.showProject != false)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Projects",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
-                            ),
-                            Row(
-                              children: [
-                                IconButton(
-                                  icon: Icon(Icons.add),
-                                  onPressed: () {},
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.edit),
-                                  onPressed: () {},
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    ),
-                  ),
+                   if (appUserProvider.user?.showProject != false)
+                     Padding(
+                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                       child: Column(
+                         crossAxisAlignment: CrossAxisAlignment.start,
+                         children: [
+                           Row(
+                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                             children: [
+                               Text(
+                                 "Projects",
+                                 style: TextStyle(
+                                     fontWeight: FontWeight.bold, fontSize: 18),
+                               ),
+                               Row(
+                                 children: [
+                                   IconButton(
+                                     icon: Icon(Icons.add),
+                                     onPressed: () {},
+                                   ),
+                                   IconButton(
+                                     icon: Icon(Icons.edit),
+                                     onPressed: () {},
+                                   )
+                                 ],
+                               ),
+                             ],
+                           ),
+                           SizedBox(
+                             height: 10,
+                           ),
+                         ],
+                       ),
+                     ),
+                 ],
+               ),
+
+
 
                 //skills
-                if (appUserProvider.user?.showSkill != false)
-                  Divider(
-                    thickness: 1,
-                    color: AppColors.theme['primaryColor'].withOpacity(0.2),
-                  ),
-                if (appUserProvider.user?.showSkill != false)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (appUserProvider.user?.showSkill != false)
+                      Divider(
+                        thickness: 1,
+                        color: AppColors.theme['primaryColor'].withOpacity(0.2),
+                      ),
+                    if (appUserProvider.user?.showSkill != false)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Skills",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
-                            ),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                IconButton(
-                                  icon: Icon(Icons.add),
-                                  onPressed: () {},
+                                Text(
+                                  "Skills",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold, fontSize: 18),
                                 ),
-                                IconButton(
-                                  icon: Icon(Icons.edit),
-                                  onPressed: () {},
-                                )
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.add),
+                                      onPressed: () {
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      onPressed: () {},
+                                    )
+                                  ],
+                                ),
                               ],
+                            ),
+                            SizedBox(
+                              height: 10,
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    ),
-                  ),
+                      ),
 
-                if (appUserProvider.user?.showScore != false)
-                  // Test scores
-                  Divider(
-                    thickness: 1,
-                    color: AppColors.theme['primaryColor'].withOpacity(0.2),
-                  ),
-                if (appUserProvider.user?.showScore != false)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ],
+               ),
+
+
+                // Test scores
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (appUserProvider.user?.showScore != false)
+                      Divider(
+                        thickness: 1,
+                        color: AppColors.theme['primaryColor'].withOpacity(0.2),
+                      ),
+                    if (appUserProvider.user?.showScore != false)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Test Scores",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
-                            ),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                IconButton(
-                                  icon: Icon(Icons.add),
-                                  onPressed: () {},
+                                Text(
+                                  "Test Scores",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold, fontSize: 18),
                                 ),
-                                IconButton(
-                                  icon: Icon(Icons.edit),
-                                  onPressed: () {},
-                                )
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.add),
+                                      onPressed: () {
+                                        Navigator.push(context,
+                                            LeftToRight(AddTestscore()));
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      onPressed: () {},
+                                    )
+                                  ],
+                                ),
                               ],
                             ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            if (appUserProvider.user?.testScores == null ||
+                                appUserProvider.user!.testScores!.isEmpty)
+                              Center(
+                                child: Text(
+                                  "No test scores added yet.",
+                                  style:
+                                  TextStyle(color: Colors.grey, fontSize: 16),
+                                ),
+                              )
+                            else
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: (appUserProvider.user!.testScores!.length ?? 0) > 3 ? 3 : appUserProvider.user!.testScores!.length ,
+                                itemBuilder: (context, index) {
+                                  return TestScoreCard(
+                                      testScores:
+                                      appUserProvider.user!.testScores![index]);
+                                },
+                              ),
+
+
+                            if ((appUserProvider.user?.testScores?.length ?? 0 ) > 3)
+                              InkWell(
+                                onTap: (){
+                                  Navigator.push(context, LeftToRight(ShowMoreTestscore()));
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: AppColors.theme['backgroundColor'],
+                                  ),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text("Show More",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                                          SizedBox(width: 5,),
+                                          Icon(Icons.arrow_right_alt_outlined)
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+
                           ],
                         ),
-                        SizedBox(
-                          height: 10,
+                      ),
+                  ],
+                ),
+
+                //Languages
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (appUserProvider.user?.showLanguage != false)
+                      Divider(
+                        thickness: 1,
+                        color: AppColors.theme['primaryColor'].withOpacity(0.2),
+                      ),
+                    if (appUserProvider.user?.showLanguage != false)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
                         ),
-                        TestScoreCard(
-                            testScores: TestScores(
-                          title: "Board",
-                          score: "91%",
-                          testDate: "March 2022",
-                          description: "I Secured 3rd rank in School",
-                        )),
-                        Divider(),
-                        TestScoreCard(
-                            testScores: TestScores(
-                          title: "Gujcet",
-                          score: "102.5.120",
-                          testDate: "April 2022",
-                          description: "I Secured 3rd rank in School",
-                        )),
-                      ],
-                    ),
-                  ),
-
-                if (appUserProvider.user?.showLanguage != false)
-                  //Languages
-                  Divider(
-                    thickness: 1,
-                    color: AppColors.theme['primaryColor'].withOpacity(0.2),
-                  ),
-                if (appUserProvider.user?.showLanguage != false)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Languages",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
-                            ),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                IconButton(
-                                  icon: Icon(Icons.add),
-                                  onPressed: () {
-                                    Navigator.push(context, LeftToRight(AddSpeakLanguage())) ;
-                                  },
+                                Text(
+                                  "Languages",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold, fontSize: 18),
                                 ),
-                                IconButton(
-                                  icon: Icon(Icons.edit),
-                                  onPressed: () {
-
-                                  },
-                                )
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.add),
+                                      onPressed: () {
+                                        Navigator.push(context,
+                                            LeftToRight(AddSpeakLanguage()));
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      onPressed: () {},
+                                    )
+                                  ],
+                                ),
                               ],
                             ),
+                            if (appUserProvider.user?.languages == null ||
+                                appUserProvider.user!.languages!.isEmpty)
+                              Center(
+                                child: Text(
+                                  "No language added yet.",
+                                  style:
+                                  TextStyle(color: Colors.grey, fontSize: 16),
+                                ),
+                              )
+                            else
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: appUserProvider.user!.languages!.length,
+                                itemBuilder: (context, index) {
+                                  return LanguageCard(
+                                    speakLanguage:
+                                    appUserProvider.user!.languages![index],
+                                  );
+                                },
+                              ),
                           ],
                         ),
+                      ),
+                  ],
+                ),
 
-                        if (appUserProvider.user?.languages == null || appUserProvider.user!.languages!.isEmpty)
-                          Center(
-                            child: Text(
-                              "No language added yet.",
-                              style: TextStyle(color: Colors.grey, fontSize: 16),
-                            ),
-                          )
-                        else
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: appUserProvider.user!.languages!.length,
-                            itemBuilder: (context, index) {
-                              return LanguageCard(
-                                speakLanguage: appUserProvider.user!.languages![index],
-                              );
-                            },
-                          ),
-                      ],
-                    ),
-                  ),
                 SizedBox(
                   height: 40,
                 ),

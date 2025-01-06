@@ -28,7 +28,6 @@ class _TestScoreCardState extends State<TestScoreCard> {
           if(widget.testScores.testDate!.isNotEmpty)
             Text("Date : " + (widget.testScores.testDate ?? "Exam Date"),style: TextStyle(fontSize: 14),),
           if(widget.testScores.description!.isNotEmpty)
-            SizedBox(height: 10),
             Text(
               widget.testScores.description ?? "Description here",
               style: TextStyle(fontSize: 14,),

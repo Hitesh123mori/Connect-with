@@ -37,7 +37,7 @@ class _AddEducationState extends State<AddEducation> {
   List<String> skills = [];
   String? _mediaImage = "";
   late BuildContext dialogContext;
-  late File file;
+  File? file;
 
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
     final DateTime? picked = await showDatePicker(
@@ -652,15 +652,16 @@ class _AddEducationState extends State<AddEducation> {
                               setState(() {
                                 isLoading = true;
                               });
-
-                              String? downloadUrl =
-                              await UserProfile.uploadMedia(
-                                  file,
-                                  _mediaImage ?? "",
-                                  appUserProvider.user?.userID ?? "");
+                              String? downloadUrl = "";
+                              if(file!=null){
+                                downloadUrl =
+                                await UserProfile.uploadMedia(
+                                    file!,
+                                    _mediaImage ?? "",
+                                    appUserProvider.user?.userID ?? "");
+                              }
 
                               await _saveEducation(downloadUrl ?? "");
-
                               setState(() {
                                 isLoading = false;
                               });
