@@ -1,8 +1,7 @@
 import 'package:connect_with/providers/current_user_provider.dart';
-import 'package:connect_with/screens/home_screens/profile_screen/profile_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/theme/colors.dart';
-import 'package:connect_with/utils/widgets/custom_containers/profile_screen_container/experience_card.dart';
+import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/experience_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

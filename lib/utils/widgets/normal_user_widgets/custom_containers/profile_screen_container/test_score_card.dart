@@ -1,7 +1,6 @@
 import 'package:connect_with/models/user/test_score.dart';
+import 'package:connect_with/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
-
-import '../../../theme/colors.dart';
 
 class TestScoreCard extends StatefulWidget {
   final TestScores testScores ;

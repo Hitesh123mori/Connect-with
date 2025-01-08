@@ -1,6 +1,5 @@
+import 'package:connect_with/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../utils/theme/colors.dart';
 
 class PostScreen extends StatelessWidget {
   const PostScreen({super.key});

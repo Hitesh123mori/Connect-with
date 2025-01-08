@@ -1,10 +1,9 @@
 import 'dart:io';
 
-import 'package:connect_with/apis/auth_apis/user_details_update.dart';
+import 'package:connect_with/apis/normal/auth_apis/user_details_update.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/experience.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
-import 'package:connect_with/screens/home_screens/profile_screen/profile_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';

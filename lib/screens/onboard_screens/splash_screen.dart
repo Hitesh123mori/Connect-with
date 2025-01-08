@@ -1,4 +1,4 @@
-import 'package:connect_with/apis/auth_apis/auth_apis.dart';
+import 'package:connect_with/apis/normal/auth_apis/auth_apis.dart';
 import 'package:connect_with/apis/init/config.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/providers/current_user_provider.dart';

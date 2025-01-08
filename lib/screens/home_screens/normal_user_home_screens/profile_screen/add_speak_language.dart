@@ -1,4 +1,4 @@
-import 'package:connect_with/apis/auth_apis/user_details_update.dart';
+import 'package:connect_with/apis/normal/auth_apis/user_details_update.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/speak_language_user.dart';
 import 'package:connect_with/models/user/user.dart';

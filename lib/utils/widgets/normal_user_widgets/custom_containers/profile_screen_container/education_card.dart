@@ -2,8 +2,9 @@ import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/education.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
+import 'package:connect_with/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
-import '../../../theme/colors.dart';
+
 
 class EducationCard extends StatefulWidget {
   final Education education;

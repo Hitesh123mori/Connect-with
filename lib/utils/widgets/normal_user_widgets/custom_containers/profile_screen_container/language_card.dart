@@ -1,7 +1,6 @@
+import 'package:connect_with/models/user/speak_language_user.dart';
+import 'package:connect_with/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../models/user/speak_language_user.dart';
-import '../../../theme/colors.dart';
 
 
 class LanguageCard extends StatefulWidget {

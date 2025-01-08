@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:connect_with/apis/auth_apis/auth_apis.dart';
+import 'package:connect_with/apis/normal/auth_apis/auth_apis.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/auth_screens/login_screen.dart';
 import 'package:connect_with/screens/home_screens/home_main_screen.dart';
