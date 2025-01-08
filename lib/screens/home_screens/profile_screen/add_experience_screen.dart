@@ -8,6 +8,7 @@ import 'package:connect_with/screens/home_screens/profile_screen/profile_screen.
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/helper_functions/photo_view.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/buttons/auth_buttons/button_1.dart';
 import 'package:connect_with/utils/widgets/text_feilds/text_feild_1.dart';
@@ -587,61 +588,13 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                                           ),
                                           child: InkWell(
                                             onTap: () {
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    backgroundColor:
-                                                        AppColors.theme[
-                                                            'backgroundColor'],
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
+                                              Navigator.push(
+                                                  context,
+                                                  LeftToRight(
+                                                    ImageViewScreen(
+                                                      path: _mediaImage ?? "", isFile: true,
                                                     ),
-                                                    title: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          "Media Image",
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 18,
-                                                            color: AppColors
-                                                                    .theme[
-                                                                'primaryTextColor'],
-                                                          ),
-                                                        ),
-                                                        IconButton(
-                                                            onPressed: () {
-                                                              Navigator.pop(context);
-                                                            },
-                                                            icon:
-                                                            Icon(Icons.close))
-                                                      ],
-                                                    ),
-                                                    content: SizedBox(
-                                                      // height: mq.height * 1,
-                                                      width: mq.width * 1,
-                                                      child: Container(
-                                                        child: _mediaImage != ""
-                                                            ? Image.file(
-                                                                File(
-                                                                    _mediaImage!),
-                                                                // fit: BoxFit
-                                                                //     .cover,
-                                                              )
-                                                            : Container(),
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
+                                                  ));
                                             },
                                             child: Center(
                                               child: Text(

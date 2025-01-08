@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/experience.dart';
+import 'package:connect_with/side_transitions/left_right.dart';
+import 'package:connect_with/utils/helper_functions/photo_view.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -178,50 +180,51 @@ class _ExperienceCardState extends State<ExperienceCard> {
                                 ),
                               ),
                               onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      backgroundColor:
-                                          AppColors.theme['backgroundColor'],
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      title: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Media Image",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18,
-                                              color: AppColors
-                                                  .theme['primaryTextColor'],
-                                            ),
-                                          ),
-                                          IconButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              icon: Icon(Icons.close))
-                                        ],
-                                      ),
-                                      content: SizedBox(
-                                        // height: mq.height * 1,
-                                        width: mq.width * 1,
-                                        child: Container(
-                                          child: position.media != ""
-                                              ? Image.network(
-                                                  position.media!,
-                                                  // fit: BoxFit.,
-                                                )
-                                              : Container(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
+                                Navigator.push(context, LeftToRight(ImageViewScreen(path:position.media ?? "", isFile: false,))) ;
+                                // showDialog(
+                                //   context: context,
+                                //   builder: (BuildContext context) {
+                                //     return AlertDialog(
+                                //       backgroundColor:
+                                //           AppColors.theme['backgroundColor'],
+                                //       shape: RoundedRectangleBorder(
+                                //         borderRadius: BorderRadius.circular(20),
+                                //       ),
+                                //       title: Row(
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.spaceBetween,
+                                //         children: [
+                                //           Text(
+                                //             "Media Image",
+                                //             style: TextStyle(
+                                //               fontWeight: FontWeight.bold,
+                                //               fontSize: 18,
+                                //               color: AppColors
+                                //                   .theme['primaryTextColor'],
+                                //             ),
+                                //           ),
+                                //           IconButton(
+                                //               onPressed: () {
+                                //                 Navigator.pop(context);
+                                //               },
+                                //               icon: Icon(Icons.close))
+                                //         ],
+                                //       ),
+                                //       content: SizedBox(
+                                //         // height: mq.height * 1,
+                                //         width: mq.width * 1,
+                                //         child: Container(
+                                //           child: position.media != ""
+                                //               ? Image.network(
+                                //                   position.media!,
+                                //                   // fit: BoxFit.,
+                                //                 )
+                                //               : Container(),
+                                //         ),
+                                //       ),
+                                //     );
+                                //   },
+                                // );
                               },
                             )
                         ],

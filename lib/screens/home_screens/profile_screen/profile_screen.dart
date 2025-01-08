@@ -16,6 +16,7 @@ import 'package:connect_with/screens/home_screens/profile_screen/show_more_langu
 import 'package:connect_with/screens/home_screens/profile_screen/show_more_testscore.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
+import 'package:connect_with/utils/helper_functions/photo_view.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/buttons/profile_screen_buttons/profile_custom_button.dart';
 import 'package:connect_with/utils/widgets/custom_containers/profile_screen_container/analytics_tool_container.dart';
@@ -88,96 +89,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 // profile and cover pic
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    Container(
-                      width: double.infinity,
-                      height: 100,
-                      child: appUserProvider.user?.coverPath != ""
-                          ? Image.network(
-                              appUserProvider.user!.coverPath ?? "",
-                              fit: BoxFit.cover,
-                            )
-                          : Image.asset(
-                              "assets/other_images/bg.png",
-                              fit: BoxFit.cover,
-                            ),
-                      color: AppColors.theme['primaryColor'].withOpacity(0.1),
+                    InkWell(
+                      onTap: (){
+                        Navigator.push(
+                            context,
+                            LeftToRight(
+                              ImageViewScreen(
+                                path: appUserProvider.user?.coverPath ?? "", isFile: false,
+                              ),
+                            ));
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        height: 100,
+                        child: appUserProvider.user?.coverPath != ""
+                            ? Image.network(
+                                appUserProvider.user!.coverPath ?? "",
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                "assets/other_images/bg.png",
+                                fit: BoxFit.cover,
+                              ),
+                        color: AppColors.theme['primaryColor'].withOpacity(0.1),
+                      ),
                     ),
                     Positioned(
                       top: 60,
                       left: 20,
                       child: InkWell(
                         onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                backgroundColor:
-                                    AppColors.theme['backgroundColor'],
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                          Navigator.push(
+                              context,
+                              LeftToRight(
+                                ImageViewScreen(
+                                  path: appUserProvider.user?.profilePath ?? "", isFile: false,
                                 ),
-                                title: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      appUserProvider.user?.userName ?? "Name",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        color:
-                                            AppColors.theme['primaryTextColor'],
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        // Handle edit functionality here
-                                      },
-                                      icon: Icon(
-                                        Icons.edit,
-                                        color:
-                                            AppColors.theme['primaryTextColor'],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                content: SizedBox(
-                                  height: mq.height * 0.25,
-                                  width: mq.width * 0.6,
-                                  child: ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.circular(mq.height * 0.25),
-                                    child: appUserProvider.user?.profilePath !=
-                                            ""
-                                        ? Image.network(
-                                            appUserProvider.user?.profilePath ??
-                                                "",
-                                            fit: BoxFit.cover,
-                                          )
-                                        : Image.asset(
-                                            "assets/other_images/photo.png",
-                                            fit: BoxFit.cover,
-                                          ),
-                                  ),
-                                ),
-                              );
-                            },
-                          );
+                              ));
                         },
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundImage:
-                              appUserProvider.user?.profilePath != ""
-                                  ? NetworkImage(
-                                      appUserProvider.user?.profilePath ?? "")
-                                  : AssetImage("assets/other_images/photo.png"),
-                          backgroundColor: AppColors.theme['backgroundColor']
-                              .withOpacity(0.5),
+                        child: Center(
+                          child: SizedBox(
+                            height:
+                                100,
+                            width:
+                                100,
+                            child: Center(
+                              child: CircleAvatar(
+                                radius: 50,
+                                backgroundImage: appUserProvider
+                                            .user?.profilePath !=
+                                        ""
+                                    ? NetworkImage(
+                                        appUserProvider.user?.profilePath ?? "")
+                                    : AssetImage("assets/other_images/photo.png")
+                                        as ImageProvider,
+                                backgroundColor: AppColors.theme['backgroundColor']
+                                    .withOpacity(0.5),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -268,12 +242,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-
                 Divider(
                   thickness: 1,
                   color: AppColors.theme['primaryColor'].withOpacity(0.2),
                 ),
-
 
                 // analitics and tools
                 Padding(
@@ -322,17 +294,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-
-
-
-
                 Divider(
                   thickness: 1,
                   color: AppColors.theme['primaryColor'].withOpacity(0.2),
                 ),
-
-
-
 
                 //about
                 Padding(
@@ -359,7 +324,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-
                 //Experience
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -369,7 +333,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         thickness: 1,
                         color: AppColors.theme['primaryColor'].withOpacity(0.2),
                       ),
-
                     if (appUserProvider.user?.showExperience != false)
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -402,8 +365,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     IconButton(
                                       icon: Icon(Icons.edit),
                                       onPressed: () {
-                                        Navigator.push(
-                                            context, LeftToRight(EditExperience()));
+                                        Navigator.push(context,
+                                            LeftToRight(EditExperience()));
                                       },
                                     ),
                                   ],
@@ -417,27 +380,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Center(
                                 child: Text(
                                   "No experiences added yet.",
-                                  style:
-                                  TextStyle(color: Colors.grey, fontSize: 16),
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 16),
                                 ),
                               ),
                             if (appUserProvider.user?.experiences?.length != 0)
                               ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount:
-                                (appUserProvider.user?.experiences!.length ?? 0) > 2 ? 2 : appUserProvider.user?.experiences?.length,
+                                itemCount: (appUserProvider
+                                                .user?.experiences!.length ??
+                                            0) >
+                                        2
+                                    ? 2
+                                    : appUserProvider.user?.experiences?.length,
                                 itemBuilder: (context, index) {
                                   return ExperienceCard(
                                       experience: appUserProvider
                                           .user!.experiences![index]);
                                 },
                               ),
-
-                            if ((appUserProvider.user?.experiences?.length ?? 0 ) > 2)
+                            if ((appUserProvider.user?.experiences?.length ??
+                                    0) >
+                                2)
                               InkWell(
-                                onTap: (){
-                                  Navigator.push(context, LeftToRight(ShowMoreExperienceScreen()));
+                                onTap: () {
+                                  Navigator.push(context,
+                                      LeftToRight(ShowMoreExperienceScreen()));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -448,11 +417,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(5.0),
                                       child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          Text("Show More",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
-                                          SizedBox(width: 5,),
+                                          Text(
+                                            "Show More",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
                                           Icon(Icons.arrow_right_alt_outlined)
                                         ],
                                       ),
@@ -460,160 +438,172 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                               )
-
-
                           ],
                         ),
                       ),
                   ],
                 ),
 
-
                 //Education
-               Column(
-                 crossAxisAlignment: CrossAxisAlignment.start,
-                 children: [
-                   if (appUserProvider.user?.showEducation != false)
-                     Divider(
-                       thickness: 1,
-                       color: AppColors.theme['primaryColor'].withOpacity(0.2),
-                     ),
-                   if (appUserProvider.user?.showEducation != false)
-                     Padding(
-                       padding: const EdgeInsets.symmetric(
-                         horizontal: 10.0,
-                       ),
-                       child: Column(
-                         crossAxisAlignment: CrossAxisAlignment.start,
-                         children: [
-                           Row(
-                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                             children: [
-                               Text(
-                                 "Education",
-                                 style: TextStyle(
-                                     fontWeight: FontWeight.bold, fontSize: 18),
-                               ),
-                               Row(
-                                 children: [
-                                   IconButton(
-                                     icon: Icon(Icons.add),
-                                     onPressed: () {
-                                       Navigator.push(
-                                           context, LeftToRight(AddEducation()));
-                                     },
-                                   ),
-                                   IconButton(
-                                     icon: Icon(Icons.edit),
-                                     onPressed: () {},
-                                   )
-                                 ],
-                               ),
-                             ],
-                           ),
-                           SizedBox(
-                             height: 10,
-                           ),
-                           if (appUserProvider.user?.educations?.length == 0)
-                             Center(
-                               child: Text(
-                                 "No education added yet.",
-                                 style:
-                                 TextStyle(color: Colors.grey, fontSize: 16),
-                               ),
-                             ),
-                           if (appUserProvider.user?.educations?.length != 0)
-                             ListView.builder(
-                               shrinkWrap: true,
-                               physics: NeverScrollableScrollPhysics(),
-                               itemCount: (appUserProvider.user?.educations?.length ?? 0 ) > 2 ? 2 : appUserProvider.user?.educations?.length,
-                               itemBuilder: (context, index) {
-                                 return EducationCard(
-                                     education:
-                                     appUserProvider.user!.educations![index]);
-                               },
-                             ),
-
-                           if ((appUserProvider.user?.educations?.length ?? 0 ) > 2)
-                             InkWell(
-                               onTap: (){
-                                 Navigator.push(context, LeftToRight(ShowMoreEducation()));
-                               },
-                               child: Container(
-                                 decoration: BoxDecoration(
-                                   borderRadius: BorderRadius.circular(5),
-                                   color: AppColors.theme['backgroundColor'],
-                                 ),
-                                 child: Center(
-                                   child: Padding(
-                                     padding: const EdgeInsets.all(5.0),
-                                     child: Row(
-                                       crossAxisAlignment: CrossAxisAlignment.center,
-                                       mainAxisAlignment: MainAxisAlignment.center,
-                                       children: [
-                                         Text("Show More",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
-                                         SizedBox(width: 5,),
-                                         Icon(Icons.arrow_right_alt_outlined)
-                                       ],
-                                     ),
-                                   ),
-                                 ),
-                               ),
-                             )
-                         ],
-                       ),
-                     ),
-                 ],
-               ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (appUserProvider.user?.showEducation != false)
+                      Divider(
+                        thickness: 1,
+                        color: AppColors.theme['primaryColor'].withOpacity(0.2),
+                      ),
+                    if (appUserProvider.user?.showEducation != false)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Education",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.add),
+                                      onPressed: () {
+                                        Navigator.push(context,
+                                            LeftToRight(AddEducation()));
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      onPressed: () {},
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            if (appUserProvider.user?.educations?.length == 0)
+                              Center(
+                                child: Text(
+                                  "No education added yet.",
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 16),
+                                ),
+                              ),
+                            if (appUserProvider.user?.educations?.length != 0)
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: (appUserProvider
+                                                .user?.educations?.length ??
+                                            0) >
+                                        2
+                                    ? 2
+                                    : appUserProvider.user?.educations?.length,
+                                itemBuilder: (context, index) {
+                                  return EducationCard(
+                                      education: appUserProvider
+                                          .user!.educations![index]);
+                                },
+                              ),
+                            if ((appUserProvider.user?.educations?.length ??
+                                    0) >
+                                2)
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      LeftToRight(ShowMoreEducation()));
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: AppColors.theme['backgroundColor'],
+                                  ),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Show More",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(Icons.arrow_right_alt_outlined)
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
 
                 //Projects
-               Column(
-                 crossAxisAlignment:CrossAxisAlignment.start,
-                 children: [
-                   if (appUserProvider.user?.showProject != false)
-                     Divider(
-                       thickness: 1,
-                       color: AppColors.theme['primaryColor'].withOpacity(0.2),
-                     ),
-
-                   if (appUserProvider.user?.showProject != false)
-                     Padding(
-                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                       child: Column(
-                         crossAxisAlignment: CrossAxisAlignment.start,
-                         children: [
-                           Row(
-                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                             children: [
-                               Text(
-                                 "Projects",
-                                 style: TextStyle(
-                                     fontWeight: FontWeight.bold, fontSize: 18),
-                               ),
-                               Row(
-                                 children: [
-                                   IconButton(
-                                     icon: Icon(Icons.add),
-                                     onPressed: () {},
-                                   ),
-                                   IconButton(
-                                     icon: Icon(Icons.edit),
-                                     onPressed: () {},
-                                   )
-                                 ],
-                               ),
-                             ],
-                           ),
-                           SizedBox(
-                             height: 10,
-                           ),
-                         ],
-                       ),
-                     ),
-                 ],
-               ),
-
-
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (appUserProvider.user?.showProject != false)
+                      Divider(
+                        thickness: 1,
+                        color: AppColors.theme['primaryColor'].withOpacity(0.2),
+                      ),
+                    if (appUserProvider.user?.showProject != false)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Projects",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.add),
+                                      onPressed: () {},
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      onPressed: () {},
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
 
                 //skills
                 Column(
@@ -638,14 +628,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Text(
                                   "Skills",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 18),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
                                 ),
                                 Row(
                                   children: [
                                     IconButton(
                                       icon: Icon(Icons.add),
-                                      onPressed: () {
-                                      },
+                                      onPressed: () {},
                                     ),
                                     IconButton(
                                       icon: Icon(Icons.edit),
@@ -661,10 +651,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ],
                         ),
                       ),
-
                   ],
-               ),
-
+                ),
 
                 // Test scores
                 Column(
@@ -687,7 +675,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Text(
                                   "Test Scores",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 18),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
                                 ),
                                 Row(
                                   children: [
@@ -714,27 +703,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Center(
                                 child: Text(
                                   "No test scores added yet.",
-                                  style:
-                                  TextStyle(color: Colors.grey, fontSize: 16),
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 16),
                                 ),
                               )
                             else
                               ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: (appUserProvider.user!.testScores!.length ?? 0) > 3 ? 3 : appUserProvider.user!.testScores!.length ,
+                                itemCount: (appUserProvider
+                                                .user!.testScores!.length ??
+                                            0) >
+                                        3
+                                    ? 3
+                                    : appUserProvider.user!.testScores!.length,
                                 itemBuilder: (context, index) {
                                   return TestScoreCard(
-                                      testScores:
-                                      appUserProvider.user!.testScores![index]);
+                                      testScores: appUserProvider
+                                          .user!.testScores![index]);
                                 },
                               ),
-
-
-                            if ((appUserProvider.user?.testScores?.length ?? 0 ) > 3)
+                            if ((appUserProvider.user?.testScores?.length ??
+                                    0) >
+                                3)
                               InkWell(
-                                onTap: (){
-                                  Navigator.push(context, LeftToRight(ShowMoreTestscore()));
+                                onTap: () {
+                                  Navigator.push(context,
+                                      LeftToRight(ShowMoreTestscore()));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -745,11 +740,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(5.0),
                                       child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          Text("Show More",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
-                                          SizedBox(width: 5,),
+                                          Text(
+                                            "Show More",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
                                           Icon(Icons.arrow_right_alt_outlined)
                                         ],
                                       ),
@@ -757,7 +761,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                               )
-
                           ],
                         ),
                       ),
@@ -787,7 +790,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Text(
                                   "Languages",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 18),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
                                 ),
                                 Row(
                                   children: [
@@ -811,27 +815,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Center(
                                 child: Text(
                                   "No language added yet.",
-                                  style:
-                                  TextStyle(color: Colors.grey, fontSize: 16),
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 16),
                                 ),
                               )
                             else
                               ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: (appUserProvider.user!.languages!.length ?? 0 ) > 3  ? 3 : appUserProvider.user!.languages!.length,
+                                itemCount: (appUserProvider
+                                                .user!.languages!.length ??
+                                            0) >
+                                        3
+                                    ? 3
+                                    : appUserProvider.user!.languages!.length,
                                 itemBuilder: (context, index) {
                                   return LanguageCard(
                                     speakLanguage:
-                                    appUserProvider.user!.languages![index],
+                                        appUserProvider.user!.languages![index],
                                   );
                                 },
                               ),
-
-                            if ((appUserProvider.user?.languages?.length ?? 0 ) > 3)
+                            if ((appUserProvider.user?.languages?.length ?? 0) >
+                                3)
                               InkWell(
-                                onTap: (){
-                                  Navigator.push(context, LeftToRight(ShowMoreLanguageScreen()));
+                                onTap: () {
+                                  Navigator.push(context,
+                                      LeftToRight(ShowMoreLanguageScreen()));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -842,11 +852,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(5.0),
                                       child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          Text("Show More",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
-                                          SizedBox(width: 5,),
+                                          Text(
+                                            "Show More",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
                                           Icon(Icons.arrow_right_alt_outlined)
                                         ],
                                       ),
