@@ -1,7 +1,6 @@
-import 'package:connect_with/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
 
-class Button1 extends StatelessWidget {
+class CustomButton1 extends StatelessWidget {
   final double height;
   final double width;
   final double? loadWidth;
@@ -10,7 +9,7 @@ class Button1 extends StatelessWidget {
   final Color bgColor;
   final VoidCallback onTap;
   bool? isLoading = false;
-  Button1({
+  CustomButton1({
     super.key,
     required this.height,
     required this.width,

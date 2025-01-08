@@ -1,14 +1,13 @@
-import 'package:connect_with/apis/normal/auth_apis/user_details_update.dart';
+import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
-import 'package:connect_with/screens/home_screens/profile_screen/profile_screen.dart';
-import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
-import 'package:connect_with/utils/widgets/buttons/auth_buttons/button_1.dart';
-import 'package:connect_with/utils/widgets/custom_containers/image_uploader.dart';
-import 'package:connect_with/utils/widgets/text_feilds/text_feild_1.dart';
-import 'package:dotted_border/dotted_border.dart';
+import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
+import 'package:connect_with/utils/widgets/common_widgets/image_uploader.dart';
+import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
+import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';
+import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_18.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -150,6 +149,7 @@ class _EditProfileState extends State<EditProfile> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+
                           SizedBox(height: 20),
 
                           // Basic Information
@@ -163,31 +163,24 @@ class _EditProfileState extends State<EditProfile> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  Center(
-                                    child: Text(
-                                      "Basic Information",
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
+
+                                  Center(child: Text18(text: "Basic Information")),
+
                                   Divider(
                                     color: AppColors.theme['primaryColor'],
                                   ),
+
                                   SizedBox(
                                     height: 10,
                                   ),
+
+
                                   // Headline field
-                                  Text(
-                                    "Headline",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  Text16(text: "Headline",isBold: true,),
                                   TextFeild1(
                                     hintText: "Enter Headline",
                                     isNumber: false,
@@ -205,13 +198,7 @@ class _EditProfileState extends State<EditProfile> {
                                   SizedBox(height: 10),
 
                                   // About field
-                                  Text(
-                                    "About",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  Text16(text: "About",),
                                   TextFeild1(
                                     hintText: "Enter About",
                                     isNumber: false,
@@ -229,13 +216,7 @@ class _EditProfileState extends State<EditProfile> {
                                   SizedBox(height: 10),
 
                                   // pronoun field
-                                  Text(
-                                    "Pronoun",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  Text16(text: "Pronoun"),
                                   TextFeild1(
                                     hintText: "Enter pronoun",
                                     isNumber: false,
@@ -247,15 +228,7 @@ class _EditProfileState extends State<EditProfile> {
                                   SizedBox(height: 10),
 
                                   //  phone number
-
-                                  // pronoun field
-                                  Text(
-                                    "Phone Number",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  Text18(text: "Phone Number"),
                                   TextFeild1(
                                     hintText: "Enter number",
                                     isNumber: true,
@@ -266,6 +239,8 @@ class _EditProfileState extends State<EditProfile> {
                                     onSaved: (value) => _phoneNumber = value,
                                   ),
                                   SizedBox(height: 10),
+
+
                                 ],
                               ),
                             ),
@@ -284,31 +259,21 @@ class _EditProfileState extends State<EditProfile> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  Center(
-                                    child: Text(
-                                      "Custom Button Information",
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
+                                  Center(child: Text18(text: "Custom Button Information")),
                                   Divider(
                                     color: AppColors.theme['primaryColor'],
                                   ),
                                   SizedBox(
                                     height: 10,
                                   ),
+
+
                                   // link
-                                  Text(
-                                    "Link",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  Text16(text: "Link"),
                                   TextFeild1(
                                     hintText: "Enter link",
                                     isNumber: false,
@@ -320,13 +285,8 @@ class _EditProfileState extends State<EditProfile> {
                                   SizedBox(height: 10),
 
                                   // linktext
-                                  Text(
-                                    "Button Name",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+
+                                  Text16(text: "Button Name"),
                                   TextFeild1(
                                     hintText: "Enter Button Name",
                                     isNumber: false,
@@ -337,6 +297,7 @@ class _EditProfileState extends State<EditProfile> {
                                     onSaved: (value) => _buttonText = value,
                                   ),
                                   SizedBox(height: 10),
+
                                 ],
                               ),
                             ),
@@ -358,28 +319,16 @@ class _EditProfileState extends State<EditProfile> {
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  Center(
-                                    child: Text(
-                                      "Address Information",
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
+                                  Center(child: Text18(text: "Address Information")),
                                   Divider(
                                     color: AppColors.theme['primaryColor'],
                                   ),
                                   SizedBox(
                                     height: 10,
                                   ),
+
                                   // city name
-                                  Text(
-                                    "City Name",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  Text16(text:"City Name" ,),
                                   TextFeild1(
                                     hintText: "Enter CityName",
                                     isNumber: false,
@@ -392,13 +341,7 @@ class _EditProfileState extends State<EditProfile> {
                                   SizedBox(height: 10),
 
                                   // state name
-                                  Text(
-                                    "State Name",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  Text16(text:  "State Name"),
                                   TextFeild1(
                                     hintText: "Enter StateName",
                                     isNumber: false,
@@ -411,13 +354,7 @@ class _EditProfileState extends State<EditProfile> {
                                   SizedBox(height: 10),
 
                                   // country name
-                                  Text(
-                                    "Country Name",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  Text16(text: "Country Name"),
                                   TextFeild1(
                                     hintText: "Enter CountryName",
                                     isNumber: false,
@@ -428,6 +365,7 @@ class _EditProfileState extends State<EditProfile> {
                                     onSaved: (value) => _countryName = value,
                                   ),
                                   SizedBox(height: 10),
+
                                 ],
                               ),
                             ),
@@ -446,30 +384,19 @@ class _EditProfileState extends State<EditProfile> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  Center(
-                                    child: Text(
-                                      "Profile and Cover Picture",
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
+                                  Center(child: Text18(text: "Profile and Cover Picture")),
                                   Divider(
                                     color: AppColors.theme['primaryColor'],
                                   ),
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  Text(
-                                    "Cover Image",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+
+                                  Text16(text: "Cover Image"),
                                   SizedBox(
                                     height: 10,
                                   ),
@@ -483,13 +410,9 @@ class _EditProfileState extends State<EditProfile> {
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  Text(
-                                    "Profile Image",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+
+
+                                  Text16(text: "Profile Image"),
                                   SizedBox(
                                     height: 10,
                                   ),
@@ -501,6 +424,7 @@ class _EditProfileState extends State<EditProfile> {
                                         childWidth: 150,
                                         isProfile: true,
                                       )),
+
                                   SizedBox(height: 20),
                                 ],
                               ),
@@ -542,11 +466,11 @@ class _EditProfileState extends State<EditProfile> {
                             ],
                           ),
 
-                          SizedBox(height: 30),
+                          SizedBox(height: 20),
 
                           // Save button
                           Center(
-                            child: Button1(
+                            child: CustomButton1(
                               isLoading: isLoading,
                               height: 50,
                               loadWidth: mq.width * 0.5,
@@ -570,7 +494,7 @@ class _EditProfileState extends State<EditProfile> {
                             ),
                           ),
 
-                          SizedBox(height: 30),
+                          SizedBox(height: 20),
                         ],
                       ),
                     ),

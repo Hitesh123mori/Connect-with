@@ -1,17 +1,17 @@
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/utils/theme/colors.dart';
-import 'package:connect_with/utils/widgets/custom_containers/profile_screen_container/language_card.dart';
-import 'package:flutter/material.dart' ;
+import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/test_score_card.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ShowMoreLanguageScreen extends StatefulWidget {
-  const ShowMoreLanguageScreen({super.key});
+class ShowMoreTestscore extends StatefulWidget {
+  const ShowMoreTestscore({super.key});
 
   @override
-  State<ShowMoreLanguageScreen> createState() => _ShowMoreLanguageScreenState();
+  State<ShowMoreTestscore> createState() => _ShowMoreTestscoreState();
 }
 
-class _ShowMoreLanguageScreenState extends State<ShowMoreLanguageScreen> {
+class _ShowMoreTestscoreState extends State<ShowMoreTestscore> {
   @override
   Widget build(BuildContext context) {
     return Consumer<AppUserProvider>(
@@ -25,7 +25,7 @@ class _ShowMoreLanguageScreenState extends State<ShowMoreLanguageScreen> {
                 toolbarHeight: 50,
                 centerTitle: true,
                 title: Text(
-                  "Languages",
+                  "Test Scores",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: AppColors.theme['secondaryColor']),
                 ),
                 leading: IconButton(
@@ -49,16 +49,16 @@ class _ShowMoreLanguageScreenState extends State<ShowMoreLanguageScreen> {
                     ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: appUserProvider.user?.languages?.length,
+                      itemCount: appUserProvider.user?.testScores?.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              LanguageCard(
-                                  speakLanguage:
-                                  appUserProvider.user!.languages![index]),
+                              TestScoreCard(
+                                  testScores:
+                                  appUserProvider.user!.testScores![index]),
                               Divider(),
                             ],
                           ),

@@ -1,5 +1,5 @@
+import 'package:connect_with/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
-import '../../theme/colors.dart';
 
 class TextFeild1 extends StatelessWidget {
   final String hintText;

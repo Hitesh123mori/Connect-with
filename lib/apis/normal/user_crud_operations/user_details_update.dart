@@ -16,6 +16,9 @@ class UserProfile {
 
   static final _collectionRef = Config.firestore.collection("users");
 
+
+
+  // upload image
   static Future<String?> uploadMedia(File file, String path, String userId) async {
     final fileName = basename(file.path);
     final ext = fileName.split('.').last;
@@ -40,6 +43,8 @@ class UserProfile {
   }
 
 
+
+   // update profile pic and coverpic
   static Future<void> updatePicture(File file, String path, bool isProfile, AppUserProvider provider) async {
 
     final currentUser = provider.user;
@@ -82,6 +87,7 @@ class UserProfile {
   }
 
 
+  // get user by id
   static Future<Map<dynamic, dynamic>?> getUser(String userId) async {
     return await _collectionRef
         .doc(userId)
@@ -94,11 +100,13 @@ class UserProfile {
     });
   }
 
+
+ // get list of all users
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllAppUsers() {
     return _collectionRef.snapshots();
   }
 
-
+  // update profile details
   static Future<bool> updateUserProfile(String? userId,
       Map<String, dynamic> fields) async {
     return await _collectionRef.doc("$userId").update(fields)
@@ -167,7 +175,6 @@ class UserProfile {
 
 
   // adding testscore
-
   static Future<bool> addTestScore(String? userId, TestScores ts) async {
     try {
       DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
@@ -192,7 +199,6 @@ class UserProfile {
       return false;
     }
   }
-
 
   // adding language
   static Future<bool> addLangauge(String? userId, SpeakLanguageUser lan) async {
@@ -238,7 +244,6 @@ class UserProfile {
 //     log("No user is currently logged in.");
 //   }
 // }
-
 
 
 

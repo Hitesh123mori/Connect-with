@@ -1,7 +1,7 @@
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/utils/theme/colors.dart';
-import 'package:connect_with/utils/widgets/custom_containers/profile_screen_container/experience_card.dart';
+import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/experience_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

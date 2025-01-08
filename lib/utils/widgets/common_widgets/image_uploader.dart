@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:connect_with/apis/normal/auth_apis/user_details_update.dart';
+import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';

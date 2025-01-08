@@ -1,15 +1,12 @@
-import 'package:connect_with/apis/normal/auth_apis/auth_apis.dart';
-import 'package:connect_with/apis/init/config.dart';
+import 'package:connect_with/apis/common/auth_apis.dart';
 import 'package:connect_with/screens/auth_screens/register_screen.dart';
-import 'package:connect_with/screens/home_screens/home_main_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
-import 'package:connect_with/utils/widgets/buttons/auth_buttons/button_1.dart';
-import 'package:connect_with/utils/widgets/text_feilds/text_feild_1.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart' ;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,19 +21,21 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Future<void> loginUser(String email, String password) async {
 
+  // internal function for login
+  Future<void> loginUser(String email, String password) async {
     if (email.isEmpty || password.isEmpty) {
       HelperFunctions.showToast("Fill Email and Password") ;
       return;
     }
-
     try {
       await AuthApi.signIn(context, email, password);
       } catch (e) {
       HelperFunctions.showToast("Something went wrong!");
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             controller: _passwordController,
                           ),
                           SizedBox(height: 20),
-                          Button1(
+                          CustomButton1(
                             height: 50,
                             width: 300,
                             textColor: AppColors.theme['secondaryColor'],

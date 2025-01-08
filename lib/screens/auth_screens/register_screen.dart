@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:connect_with/apis/normal/auth_apis/auth_apis.dart';
+import 'package:connect_with/apis/common/auth_apis.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/auth_screens/login_screen.dart';
 import 'package:connect_with/screens/home_screens/home_main_screen.dart';
@@ -7,10 +7,9 @@ import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
-import 'package:connect_with/utils/widgets/buttons/auth_buttons/button_1.dart';
-import 'package:connect_with/utils/widgets/text_feilds/text_feild_1.dart';
+import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
+import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -21,6 +20,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+
   final _formKey = GlobalKey<FormState>();
   // For register loading condition
   bool _isLoading = false;
@@ -156,7 +156,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   validator: passwordValidator,
                                 ),
                                 SizedBox(height: 20),
-                                Button1(
+                                CustomButton1(
                                   height: 50,
                                   width: 300,
                                   textColor: AppColors.theme['secondaryColor'],

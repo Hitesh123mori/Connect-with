@@ -1,17 +1,17 @@
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/utils/theme/colors.dart';
-import 'package:connect_with/utils/widgets/custom_containers/profile_screen_container/test_score_card.dart';
-import 'package:flutter/material.dart';
+import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/education_card.dart';
+import 'package:flutter/material.dart' ;
 import 'package:provider/provider.dart';
 
-class ShowMoreTestscore extends StatefulWidget {
-  const ShowMoreTestscore({super.key});
+class ShowMoreEducation extends StatefulWidget {
+  const ShowMoreEducation({super.key});
 
   @override
-  State<ShowMoreTestscore> createState() => _ShowMoreTestscoreState();
+  State<ShowMoreEducation> createState() => _ShowMoreEducationState();
 }
 
-class _ShowMoreTestscoreState extends State<ShowMoreTestscore> {
+class _ShowMoreEducationState extends State<ShowMoreEducation> {
   @override
   Widget build(BuildContext context) {
     return Consumer<AppUserProvider>(
@@ -25,7 +25,7 @@ class _ShowMoreTestscoreState extends State<ShowMoreTestscore> {
                 toolbarHeight: 50,
                 centerTitle: true,
                 title: Text(
-                  "Test Scores",
+                  "Educations",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: AppColors.theme['secondaryColor']),
                 ),
                 leading: IconButton(
@@ -49,19 +49,16 @@ class _ShowMoreTestscoreState extends State<ShowMoreTestscore> {
                     ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: appUserProvider.user?.testScores?.length,
+                      itemCount: appUserProvider.user?.educations?.length,
                       itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TestScoreCard(
-                                  testScores:
-                                  appUserProvider.user!.testScores![index]),
-                              Divider(),
-                            ],
-                          ),
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            EducationCard(
+                                education:
+                                appUserProvider.user!.educations![index]),
+                            Divider(),
+                          ],
                         );
                       },
                     ),

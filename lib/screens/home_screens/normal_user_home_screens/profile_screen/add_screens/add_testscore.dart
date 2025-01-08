@@ -1,11 +1,14 @@
-import 'package:connect_with/apis/normal/auth_apis/user_details_update.dart';
+import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/test_score.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
-import 'package:connect_with/utils/widgets/buttons/auth_buttons/button_1.dart';
-import 'package:connect_with/utils/widgets/text_feilds/text_feild_1.dart';
+import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
+import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
+import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/heading_text.dart';
+import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/normal_text.dart';
+import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_18.dart';
 import 'package:flutter/material.dart' ;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -118,106 +121,110 @@ class _AddTestscoreState extends State<AddTestscore> {
                    child: Column(
                      crossAxisAlignment: CrossAxisAlignment.start,
                      children: [
-                       Text(
-                         "Add TestScore",
-                         style: TextStyle(
-                             fontSize: 20, fontWeight: FontWeight.bold),
-                       ),
-                       Text("* Indicates required field"),
+
+                       HeadingText(heading: "Add TestScore"),
+                       NormalText(text: "* Indicates required field"),
                        SizedBox(height: 20),
 
                        // exam name
-                       Text(
-                         "Exam Name*",
-                         style: TextStyle(
-                             fontSize: 18, fontWeight: FontWeight.bold),
-                       ),
-                       TextFeild1(
-                           controller: titleController,
-                           hintText: 'Ex. University Exam',
-                           isNumber: false,
-                           prefixicon: Icon(Icons.title),
-                           obsecuretext: false,
-                           validator: (value) {
-                             if (value == null || value.isEmpty) {
-                               return 'Exam Name is required';
-                             }
-                             return null;
-                           }),
 
-                       SizedBox(height: 10),
+                       Column(
+                         crossAxisAlignment: CrossAxisAlignment.start,
+                         children: [
+                           Text18(text: "Exam Name*",),
+                           TextFeild1(
+                               controller: titleController,
+                               hintText: 'Ex. University Exam',
+                               isNumber: false,
+                               prefixicon: Icon(Icons.title),
+                               obsecuretext: false,
+                               validator: (value) {
+                                 if (value == null || value.isEmpty) {
+                                   return 'Exam Name is required';
+                                 }
+                                 return null;
+                               }),
+                           SizedBox(height: 10),
+                         ],
+                       ),
 
                        // grade
-                       Text(
-                         "Score*",
-                         style: TextStyle(
-                             fontSize: 18, fontWeight: FontWeight.bold),
+                       Column(
+                         crossAxisAlignment: CrossAxisAlignment.start,
+                         children: [
+                           Text18(text: "Score*"),
+                           TextFeild1(
+                               controller: scoreController,
+                               hintText: 'Ex. 9/10',
+                               isNumber: false,
+                               prefixicon: Icon(Icons.title),
+                               obsecuretext: false,
+                               validator: (value) {
+                                 if (value == null || value.isEmpty) {
+                                   return 'Score is required';
+                                 }
+                                 return null;
+                               }),
+                           SizedBox(height: 10),
+                         ],
                        ),
-                       TextFeild1(
-                           controller: scoreController,
-                           hintText: 'Ex. 9/10',
-                           isNumber: false,
-                           prefixicon: Icon(Icons.title),
-                           obsecuretext: false,
-                           validator: (value) {
-                             if (value == null || value.isEmpty) {
-                               return 'Score is required';
-                             }
-                             return null;
-                           }),
 
-                       // Start date picker
-                       SizedBox(height: 10),
-                       Text(
-                         "Exam Date",
-                         style: TextStyle(
-                             fontSize: 18, fontWeight: FontWeight.bold),
-                       ),
-                       GestureDetector(
-                         onTap: () => _selectDate(context),
-                         child: Container(
-                           width: double.infinity,
-                           padding: EdgeInsets.symmetric(
-                               horizontal: 10, vertical: 15),
-                           decoration: BoxDecoration(
-                             color: AppColors.theme['backgroundColor'],
-                             borderRadius: BorderRadius.circular(10),
-                             border: Border.all(
-                               color: AppColors.theme['primaryColor']!,
-                               width: 1.0,
-                             ),
-                           ),
-                           child: Text(
-                             ExamDate != null
-                                 ? "${ExamDate!.day}/${ExamDate!.month}/${ExamDate!.year}"
-                                 : "Select Exam Date",
-                             style: TextStyle(
-                                 color: AppColors.theme['primaryColor']),
-                           ),
-                         ),
-                       ),
+
+                       // exam date picker
+
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text18(text: "Exam Date"),
+                          GestureDetector(
+                            onTap: () => _selectDate(context),
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 15),
+                              decoration: BoxDecoration(
+                                color: AppColors.theme['backgroundColor'],
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: AppColors.theme['primaryColor']!,
+                                  width: 1.0,
+                                ),
+                              ),
+                              child: Text(
+                                ExamDate != null
+                                    ? "${ExamDate!.day}/${ExamDate!.month}/${ExamDate!.year}"
+                                    : "Select Exam Date",
+                                style: TextStyle(
+                                    color: AppColors.theme['primaryColor']),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                        ],
+                      ),
 
                        // Description
-                       SizedBox(height: 10),
-                       Text(
-                         "Description",
-                         style: TextStyle(
-                             fontSize: 18, fontWeight: FontWeight.bold),
-                       ),
-                       TextFeild1(
-                         controller: descriptionController,
-                         hintText: 'Ex. My rank ...',
-                         isNumber: false,
-                         prefixicon: Icon(Icons.description),
-                         obsecuretext: false,
+                       Column(
+                         crossAxisAlignment: CrossAxisAlignment.start,
+                         children: [
+                           Text18(text: "Description"),
+                           TextFeild1(
+                             controller: descriptionController,
+                             hintText: 'Ex. My rank ...',
+                             isNumber: false,
+                             prefixicon: Icon(Icons.description),
+                             obsecuretext: false,
+                           ),
+                         ],
                        ),
 
                        SizedBox(
                          height: 20,
                        ),
 
+                       //button
                        Center(
-                         child: Button1(
+                         child: CustomButton1(
                            isLoading: isLoading,
                            height: 50,
                            loadWidth: mq.width * 0.5,
@@ -245,7 +252,7 @@ class _AddTestscoreState extends State<AddTestscore> {
                            title: 'Save Test Score',
                          ),
                        ),
-                       SizedBox(height: 30),
+                       SizedBox(height: 20),
                      ],
                    ),
                  ),

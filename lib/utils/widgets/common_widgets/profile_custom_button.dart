@@ -1,6 +1,6 @@
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:flutter/material.dart';
-import '../../../theme/colors.dart';
+import '../../theme/colors.dart';
 
 class CustomProfileButton extends StatefulWidget {
   final String data;

@@ -1,24 +1,19 @@
 import 'package:connect_with/main.dart';
-import 'package:connect_with/models/user/education.dart';
-import 'package:connect_with/models/user/speak_language_user.dart';
-import 'package:connect_with/models/user/test_score.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
-import 'package:connect_with/screens/home_screens/home_main_screen.dart';
-import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_education.dart';
-import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_experience_screen.dart';
-import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_speak_language.dart';
-import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_testscore.dart';
-import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_experience.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_education.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_experience_screen.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_speak_language.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_testscore.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_profile.dart';
-import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_education.dart';
-import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_experience_screen.dart';
-import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_language_screen.dart';
-import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_testscore.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_screens/edit_experience.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_education.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_experience_screen.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_language_screen.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_testscore.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
-import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
 import 'package:connect_with/utils/theme/colors.dart';
-import 'package:connect_with/utils/widgets/buttons/profile_screen_buttons/profile_custom_button.dart';
+import 'package:connect_with/utils/widgets/common_widgets/profile_custom_button.dart';
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/analytics_tool_container.dart';
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/education_card.dart';
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/experience_card.dart';
@@ -89,6 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+
                 // profile and cover pic
                 Stack(
                   clipBehavior: Clip.none,
