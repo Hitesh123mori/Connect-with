@@ -12,6 +12,7 @@ import 'package:connect_with/screens/home_screens/profile_screen/edit_experience
 import 'package:connect_with/screens/home_screens/profile_screen/edit_profile.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/show_more_education.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/show_more_experience_screen.dart';
+import 'package:connect_with/screens/home_screens/profile_screen/show_more_language_screen.dart';
 import 'package:connect_with/screens/home_screens/profile_screen/show_more_testscore.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
@@ -818,7 +819,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: appUserProvider.user!.languages!.length,
+                                itemCount: (appUserProvider.user!.languages!.length ?? 0 ) > 3  ? 3 : appUserProvider.user!.languages!.length,
                                 itemBuilder: (context, index) {
                                   return LanguageCard(
                                     speakLanguage:
@@ -826,6 +827,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   );
                                 },
                               ),
+
+                            if ((appUserProvider.user?.languages?.length ?? 0 ) > 3)
+                              InkWell(
+                                onTap: (){
+                                  Navigator.push(context, LeftToRight(ShowMoreLanguageScreen()));
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: AppColors.theme['backgroundColor'],
+                                  ),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text("Show More",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                                          SizedBox(width: 5,),
+                                          Icon(Icons.arrow_right_alt_outlined)
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
                           ],
                         ),
                       ),
