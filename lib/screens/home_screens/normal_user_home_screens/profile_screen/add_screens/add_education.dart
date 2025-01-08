@@ -251,7 +251,7 @@ class _AddEducationState extends State<AddEducation> {
                                 activeColor: AppColors.theme['primaryColor'],
                               ),
                               Text16(
-                                  text: "I am currently studying in this role"),
+                                  text: "I am currently studying in this school"),
                             ],
                           ),
                           SizedBox(height: 10),
@@ -401,9 +401,9 @@ class _AddEducationState extends State<AddEducation> {
                             runSpacing: 5,
                             children: skills.map((skill) {
                               return Chip(
-                                label: Text14(
-                                  text: skill,
-                                  isBold: true,
+                                label: Text(
+                                  skill,
+                                  style: TextStyle(color: Colors.white),
                                 ),
                                 backgroundColor:
                                     AppColors.theme['primaryColor'],

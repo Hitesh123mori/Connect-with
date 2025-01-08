@@ -18,7 +18,7 @@ class ExperienceCard extends StatefulWidget {
 class _ExperienceCardState extends State<ExperienceCard> {
   @override
   Widget build(BuildContext context) {
-    mq = MediaQuery.of(context).size ;
+    mq = MediaQuery.of(context).size;
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -107,19 +107,23 @@ class _ExperienceCardState extends State<ExperienceCard> {
                             "${position.startDate ?? "Start Date"} - ${position.endDate ?? "End Date"} - ${_calculateDuration((position.startDate ?? ""), (position.endDate ?? ""))}",
                             style: TextStyle(fontSize: 14, color: Colors.grey),
                           ),
-                          Text(
-                            position.location ?? "Location",
-                            style: TextStyle(fontSize: 14, color: Colors.grey),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            position.description ?? "Description",
-                            style: TextStyle(
-                              fontSize: 14,
+                          if (position.location != "")
+                            Text(
+                              position.location ?? "Location",
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.grey),
                             ),
-                          ),
+                          if (position.location != "")
+                            SizedBox(
+                              height: 10,
+                            ),
+                          if (position.description != "")
+                            Text(
+                              position.description ?? "Description",
+                              style: TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
                           if (position.description != "")
                             SizedBox(
                               height: 10,
@@ -180,7 +184,12 @@ class _ExperienceCardState extends State<ExperienceCard> {
                                 ),
                               ),
                               onTap: () {
-                                Navigator.push(context, LeftToRight(ImageViewScreen(path:position.media ?? "", isFile: false,))) ;
+                                Navigator.push(
+                                    context,
+                                    LeftToRight(ImageViewScreen(
+                                      path: position.media ?? "",
+                                      isFile: false,
+                                    )));
                                 // showDialog(
                                 //   context: context,
                                 //   builder: (BuildContext context) {

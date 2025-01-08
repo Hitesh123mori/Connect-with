@@ -189,7 +189,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
+                      if(appUserProvider.user!.info?.address!="")
+                        Text(
                         (appUserProvider.user!.info?.address ?? "Address"),
                         style: TextStyle(fontSize: 16),
                         softWrap: true,
@@ -199,8 +200,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         SizedBox(
                           height: 20,
                         ),
+
                       if (appUserProvider.user?.button!.display == true)
-                        CustomProfileButton(
+                         CustomProfileButton(
                           data: appUserProvider.user?.button?.linkText ??
                               "Button",
                           link: appUserProvider.user?.button?.link ??

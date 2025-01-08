@@ -436,7 +436,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                              runSpacing: 5,
                              children: skills.map((skill) {
                                return Chip(
-                                 label: Text14(text: skill,isBold: true,),
+                                 label: Text(skill,style: TextStyle(color: Colors.white),),
                                  backgroundColor: AppColors.theme['primaryColor'],
                                  deleteIcon: Icon(
                                    Icons.cancel,

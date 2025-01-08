@@ -63,14 +63,14 @@ class _EducationCardState extends State<EducationCard> {
                           (widget.education.endDate ?? "End"),
                     ),
 
-                    if (widget.education.grade!.isNotEmpty)
+                    if (widget.education.grade!="")
                       Text14(
                         text: "Grade: " + (widget.education.grade ?? "Grade"),
                         isBold: false,
                       ),
 
                     // Allow description to wrap properly
-                    if (widget.education.description!.isNotEmpty)
+                    if (widget.education.description!= "")
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

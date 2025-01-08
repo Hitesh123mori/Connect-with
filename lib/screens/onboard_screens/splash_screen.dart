@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
         if (Config.auth?.currentUser != null && widget.appUser.isLoggedIn()) {
           Navigator.pushReplacement(context, LeftToRight(HomeScreen()));
         } else {
-          HelperFunctions.showToast("Please Login") ;
+          // HelperFunctions.showToast("Please Login") ;
           throw Exception("User not logged in");
         }
       } catch (e) {
