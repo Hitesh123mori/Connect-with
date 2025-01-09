@@ -6,6 +6,7 @@ import 'package:connect_with/screens/home_screens/organization_home_screens/org_
 import 'package:connect_with/screens/home_screens/organization_home_screens/org_tabs/network_org/network_screen_org.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/org_tabs/notification_org/notification_screen_org.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/org_tabs/post_org/post_screen_org.dart';
+import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/company_profile.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
@@ -69,7 +70,7 @@ class _HomeOrganizationMainScreenState
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.push(context, LeftToRight(ProfileScreen()));
+                      Navigator.push(context, LeftToRight(CompanyProfile()));
                     },
                     child: Container(
                         height: 60,
@@ -86,7 +87,7 @@ class _HomeOrganizationMainScreenState
                                               .organization?.logo ??
                                           "")
                                       : AssetImage(
-                                          "assets/other_images/org_logo.png"),
+                                          "assets/other_images/org_logo.png") as ImageProvider,
                             ),
                             SizedBox(
                               width: 10,

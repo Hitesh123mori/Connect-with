@@ -1,22 +1,25 @@
-import 'package:flutter/material.dart' ;
-
+import 'package:flutter/material.dart';
 
 class Text18 extends StatelessWidget {
   final String text;
   final bool? isBold;
-  const Text18({super.key, required this.text, this.isBold});
+  final bool? isWhite;
+
+  const Text18({
+    super.key,
+    required this.text,
+    this.isBold,
+    this.isWhite,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: (isBold ?? true)
-          ? TextStyle(
+      style: TextStyle(
         fontSize: 18,
-        fontWeight: FontWeight.bold,
-      )
-          : TextStyle(
-        fontSize: 18,
+        fontWeight: (isBold ?? true) ? FontWeight.bold : FontWeight.normal,
+        color: (isWhite ?? false) ? Colors.white : Colors.black,
       ),
     );
   }

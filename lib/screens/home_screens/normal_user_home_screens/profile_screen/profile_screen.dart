@@ -41,7 +41,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         isfirst = false;
       }
       // print("lan  : ${appUserProvider.user?.languages}");
-
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
