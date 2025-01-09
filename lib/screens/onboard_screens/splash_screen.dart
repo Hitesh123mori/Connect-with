@@ -25,6 +25,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+  late bool isOrganization ;
   @override
   void initState() {
     super.initState();
@@ -42,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
           throw Exception("No user is logged in");
         }
 
-        bool isOrganization = await AuthApi.userExistsById(Config.auth.currentUser!.uid, true);
+        isOrganization = await AuthApi.userExistsById(Config.auth.currentUser!.uid, true);
 
         print("User exists as organization: $isOrganization");
 
@@ -66,7 +68,8 @@ class _SplashScreenState extends State<SplashScreen> {
         debugPrint("Error during initialization: $e");
         Navigator.pushReplacement(context, LeftToRight(LoginScreen()));
       }
-    });
+    }
+    );
   }
 
 

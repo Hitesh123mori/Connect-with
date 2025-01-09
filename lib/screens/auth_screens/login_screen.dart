@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart' ;
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({super.key,});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();

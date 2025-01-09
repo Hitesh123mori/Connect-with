@@ -5,23 +5,31 @@ import 'package:connect_with/models/user/contact_info.dart';
 import 'package:connect_with/models/common/custom_button.dart';
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/home_main_screen.dart';
+import 'package:connect_with/screens/home_screens/organization_home_screens/home_organization_main_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-
 class AuthApi {
-
-  static Future<void> signIn(BuildContext context, String email,
-      String password) async {
+  static Future<void> signIn(
+      BuildContext context, String email, String password) async {
     try {
       await Config.auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+
       HelperFunctions.showToast("Login Successful!");
-      Navigator.pushReplacement(context, LeftToRight(HomeScreen()));
+
+      final isOrg = await AuthApi.userExistsEmail(email, false);
+
+      if(isOrg){
+        Navigator.pushReplacement(context, LeftToRight(HomeScreen()));
+      }else{
+        Navigator.pushReplacement(context, LeftToRight(HomeOrganizationMainScreen()));
+      }
+
     } on FirebaseAuthException catch (e) {
       HelperFunctions.showToast("Something went wrong");
     } catch (e) {
@@ -32,7 +40,7 @@ class AuthApi {
   static Future<void> signUp(BuildContext context, String email,
       String password, String name, bool isOrganization) async {
     try {
-      final existingUser = await AuthApi.userExistsEmail(email,isOrganization);
+      final existingUser = await AuthApi.userExistsEmail(email, isOrganization);
       if (existingUser) {
         HelperFunctions.showToast('This email is already in use.');
         return;
@@ -45,7 +53,12 @@ class AuthApi {
       await createUserEmail(
           userCredential, email, password, name, isOrganization);
       HelperFunctions.showToast("Successfully registered!");
-      await Navigator.pushReplacement(context, LeftToRight(HomeScreen()));
+
+      isOrganization == false
+          ? await Navigator.pushReplacement(context, LeftToRight(HomeScreen()))
+          : await Navigator.pushReplacement(
+              context, LeftToRight(HomeOrganizationMainScreen()));
+
     } on FirebaseAuthException catch (e) {
       String errorMessage;
 
@@ -68,7 +81,7 @@ class AuthApi {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     if (isOrganization) {
-      final organization  = Organization(
+      final organization = Organization(
         organizationId: userCredential.user!.uid,
         name: name,
         email: email,
@@ -83,7 +96,7 @@ class AuthApi {
         ),
         followers: 0,
         employees: [],
-        jobs:[],
+        jobs: [],
         button: CustomButton(
           display: false,
           linkText: "",
@@ -96,23 +109,22 @@ class AuthApi {
         services: [],
         searchCount: 0,
         profileView: 0,
-      ) ;
+      );
 
       return await Config.firestore
           .collection('organizations')
           .doc(userCredential.user!.uid)
           .set(organization.toJson());
-    }
-    else {
+    } else {
       final appUser = AppUser(
         isOrganization: false,
         userID: userCredential.user!.uid,
         email: email,
         showScore: false,
         showEducation: false,
-        showExperience :false,
-        showProject:false,
-        showSkill:false,
+        showExperience: false,
+        showProject: false,
+        showSkill: false,
         showLanguage: false,
         userName: name,
         pronoun: "",
@@ -160,15 +172,16 @@ class AuthApi {
   static Future<bool> userExistsEmail(String email, bool isOrganization) async {
     final querySnapshot = isOrganization
         ? await Config.firestore
-        .collection('organizations')
-        .where('email', isEqualTo: email)
-        .get()
+            .collection('organizations')
+            .where('email', isEqualTo: email)
+            .get()
         : await Config.firestore
-        .collection('users')
-        .where('email', isEqualTo: email)
-        .get();
+            .collection('users')
+            .where('email', isEqualTo: email)
+            .get();
 
     return querySnapshot.docs.isNotEmpty;
+
   }
 
   static Future<bool> userExistsById(String userId, bool isOrganization) async {
@@ -178,8 +191,4 @@ class AuthApi {
 
     return docSnapshot.exists;
   }
-
-
-
-
 }

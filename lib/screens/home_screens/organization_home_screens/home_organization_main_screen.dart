@@ -19,11 +19,12 @@ class HomeOrganizationMainScreen extends StatefulWidget {
   const HomeOrganizationMainScreen({super.key});
 
   @override
-  State<HomeOrganizationMainScreen> createState() => _HomeOrganizationMainScreenState();
+  State<HomeOrganizationMainScreen> createState() =>
+      _HomeOrganizationMainScreenState();
 }
 
-class _HomeOrganizationMainScreenState extends State<HomeOrganizationMainScreen> {
-
+class _HomeOrganizationMainScreenState
+    extends State<HomeOrganizationMainScreen> {
   int _currentIndex = 0;
 
   final List<Widget> children = [
@@ -41,6 +42,7 @@ class _HomeOrganizationMainScreenState extends State<HomeOrganizationMainScreen>
     'Notifications',
     'Jobs',
   ];
+
   void init(OrganizationProvider orgProvider) async {
     await orgProvider.initOrganization();
   }
@@ -51,111 +53,125 @@ class _HomeOrganizationMainScreenState extends State<HomeOrganizationMainScreen>
   Widget build(BuildContext context) {
     return Consumer<OrganizationProvider>(
         builder: (context, organizationProvider, child) {
-          if (isFirst) {
-            init(organizationProvider);
-            isFirst = false;
-          }
-          return Scaffold(
-            // backgroundColor: AppColors.theme['backgroundColor'],
-            drawer: Drawer(
-              backgroundColor: AppColors.theme['backgroundColor'],
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: SafeArea(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(context, LeftToRight(ProfileScreen()));
-                        },
-                        child: Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
+      if (isFirst) {
+        init(organizationProvider);
+        isFirst = false;
+      }
+      return Scaffold(
+        // backgroundColor: AppColors.theme['backgroundColor'],
+        drawer: Drawer(
+          backgroundColor: AppColors.theme['backgroundColor'],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context, LeftToRight(ProfileScreen()));
+                    },
+                    child: Container(
+                        height: 60,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: AppColors.theme['primaryColor'],
+                              backgroundImage:
+                                  organizationProvider.organization?.logo != ""
+                                      ? NetworkImage(organizationProvider
+                                              .organization?.logo ??
+                                          "")
+                                      : AssetImage(
+                                          "assets/other_images/org_logo.png"),
                             ),
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor: AppColors.theme['primaryColor'],
-                                  backgroundImage:
-                                  organizationProvider.organization?.logo != ""  ? NetworkImage(organizationProvider.organization!.logo ?? "") : AssetImage("assets/other_images/org_logo.png"),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                               Text16(text: organizationProvider.organization?.name ?? "Name",),
-                              ],
-                            )),
-                      ),
-                      Text(
-                        organizationProvider.organization?.domain ?? "domain",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16),
-                      ),
-                      Divider(),
-                      DrawerContainer(
-                        data: organizationProvider.organization?.followers.toString() ?? "0",
-                        label: 'Followers',
-                      ),
-                      DrawerContainer(
-                        data: organizationProvider.organization?.employees?.length.toString() ?? "0",
-                        label: 'Employees',
-                      ),
-                      DrawerContainer(
-                        data: organizationProvider.organization?.searchCount.toString() ?? "0",
-                        label: 'Search Count',
-                      ),
-                      DrawerContainer(
-                        data: organizationProvider.organization?.profileView.toString() ?? "0",
-                        label: 'Profile Views',
-                      ),
-                      Expanded(child: Container()),
-                      InkWell(
-                        onTap: () async {
-                          await organizationProvider.logOut();
-                          HelperFunctions.showToast("Logout successfully");
-                          await Navigator.pushReplacement(
-                              context, RightToLeft(LoginScreen()));
-                        },
-                        child: Container(
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: AppColors.theme['primaryColor'].withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: Row(
-                              children: [
-                                Icon(Icons.logout),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "L O G O U T",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
+                            SizedBox(
+                              width: 10,
                             ),
-                          ),
+                            Text16(
+                              text: organizationProvider.organization?.name ??
+                                  "Name",
+                            ),
+                          ],
+                        )),
+                  ),
+                  Text(
+                    organizationProvider.organization?.domain ?? "domain",
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                  ),
+                  Divider(),
+                  DrawerContainer(
+                    data: organizationProvider.organization?.followers
+                            .toString() ??
+                        "0",
+                    label: 'Followers',
+                  ),
+                  DrawerContainer(
+                    data: organizationProvider.organization?.employees?.length
+                            .toString() ??
+                        "0",
+                    label: 'Employees',
+                  ),
+                  DrawerContainer(
+                    data: organizationProvider.organization?.searchCount
+                            .toString() ??
+                        "0",
+                    label: 'Search Count',
+                  ),
+                  DrawerContainer(
+                    data: organizationProvider.organization?.profileView
+                            .toString() ??
+                        "0",
+                    label: 'Profile Views',
+                  ),
+                  Expanded(child: Container()),
+                  InkWell(
+                    onTap: () async {
+                      await organizationProvider.logOut();
+                      HelperFunctions.showToast("Logout successfully");
+                      await Navigator.pushReplacement(
+                          context, RightToLeft(LoginScreen()));
+                    },
+                    child: Container(
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: AppColors.theme['primaryColor'].withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: Row(
+                          children: [
+                            Icon(Icons.logout),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "L O G O U T",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
                         ),
                       ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                ],
               ),
             ),
-            appBar: AppBar(
-              leading: Container(
-                child: Builder(
-                    builder: (context) => InkWell(
+          ),
+        ),
+        appBar: AppBar(
+          leading: Container(
+            child: Builder(
+                builder: (context) => InkWell(
                       onTap: () {
                         Scaffold.of(context).openDrawer();
                       },
@@ -163,57 +179,62 @@ class _HomeOrganizationMainScreenState extends State<HomeOrganizationMainScreen>
                         padding: const EdgeInsets.only(
                             left: 5.0, top: 10, bottom: 10),
                         child: CircleAvatar(
-                          backgroundColor: AppColors.theme['backgroundColor'].withOpacity(0.3),
-                          backgroundImage:
-                          organizationProvider.organization?.logo!="" ? NetworkImage(organizationProvider.organization?.logo ?? "") : AssetImage("assets/other_images/org_logo.png"),
+                          backgroundColor: AppColors.theme['backgroundColor']
+                              .withOpacity(0.3),
+                          backgroundImage: organizationProvider
+                                      .organization?.logo !=
+                                  ""
+                              ? NetworkImage(
+                                  organizationProvider.organization?.logo ?? "")
+                              : AssetImage("assets/other_images/org_logo.png"),
                           radius: 20,
                         ),
                       ),
                     )),
-              ),
-              backgroundColor: AppColors.theme['primaryColor'],
-              centerTitle: true,
-              title: Text(
-                titles[_currentIndex],
-                style: TextStyle(
-                  color: AppColors.theme['secondaryColor'],
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
+          ),
+          backgroundColor: AppColors.theme['primaryColor'],
+          centerTitle: true,
+          title: Text(
+            titles[_currentIndex],
+            style: TextStyle(
+              color: AppColors.theme['secondaryColor'],
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
             ),
-            body: _buildBody(),
-            bottomNavigationBar: BottomNavigationBar(
-              onTap: onTabTapped,
-              selectedItemColor: AppColors.theme['primaryColor'],
-              unselectedItemColor: Colors.grey,
-              showUnselectedLabels: true,
-              currentIndex: _currentIndex,
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home_outlined),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.people_outline_sharp),
-                  label: 'Network',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.add_box_rounded),
-                  label: 'Post',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications_active_outlined),
-                  label: 'Notifications',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.all_inbox_outlined),
-                  label: 'Jobs',
-                ),
-              ],
+          ),
+        ),
+        body: _buildBody(),
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: onTabTapped,
+          selectedItemColor: AppColors.theme['primaryColor'],
+          unselectedItemColor: Colors.grey,
+          showUnselectedLabels: true,
+          currentIndex: _currentIndex,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
             ),
-          );
-        });
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people_outline_sharp),
+              label: 'Network',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add_box_rounded),
+              label: 'Post',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notifications_active_outlined),
+              label: 'Notifications',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.all_inbox_outlined),
+              label: 'Jobs',
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildBody() {
