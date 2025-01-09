@@ -1,4 +1,5 @@
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/screens/onboard_screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -18,6 +19,7 @@ void main()async{
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context)=>AppUserProvider()),
+        ChangeNotifierProvider(create: (context)=>OrganizationProvider()),
       ],
       child: MyApp()));
 
@@ -33,10 +35,10 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppUserProvider>(builder: (context,appUserProvider,child){
+    return Consumer2<AppUserProvider,OrganizationProvider>(builder: (context,appUserProvider,organizationProvider,child){
       return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: SplashScreen(appUser: appUserProvider,) ,
+        home: SplashScreen(appUser: appUserProvider, orgizationProvider: organizationProvider,) ,
       ) ;
     }) ;
   }

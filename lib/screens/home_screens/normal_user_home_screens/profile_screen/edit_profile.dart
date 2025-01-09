@@ -4,10 +4,10 @@ import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
-import 'package:connect_with/utils/widgets/common_widgets/image_uploader.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_18.dart';
+import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/image_uploader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

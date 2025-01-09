@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'package:connect_with/apis/common/auth_apis.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/auth_screens/login_screen.dart';
-import 'package:connect_with/screens/home_screens/home_main_screen.dart';
-import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
@@ -42,7 +40,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _userNameController.text,
           isOrganization
       );
-      await Navigator.pushReplacement(context, LeftToRight(HomeScreen()));
     } catch (error) {
       print(error);
       HelperFunctions.showToast("Something went wrong!");

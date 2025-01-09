@@ -42,8 +42,6 @@ class UserProfile {
     }
   }
 
-
-
    // update profile pic and coverpic
   static Future<void> updatePicture(File file, String path, bool isProfile, AppUserProvider provider) async {
 
@@ -88,17 +86,22 @@ class UserProfile {
 
 
   // get user by id
-  static Future<Map<dynamic, dynamic>?> getUser(String userId) async {
-    return await _collectionRef
-        .doc(userId)
-        .get()
-        .then((value) => value.data())
-        .onError((error, stackTrace) =>
-    {
-      "error": error,
-      "stackTrace": stackTrace
-    });
+  static Future<dynamic> getUser(String userId) async {
+    try {
+      final docSnapshot = await _collectionRef.doc(userId).get();
+      if (docSnapshot.exists) {
+        return docSnapshot.data();
+      } else {
+        return false;
+      }
+    } catch (error, stackTrace) {
+      return {
+        "error": error.toString(),
+        "stackTrace": stackTrace.toString(),
+      };
+    }
   }
+
 
 
  // get list of all users

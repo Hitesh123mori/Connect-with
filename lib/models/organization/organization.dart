@@ -1,6 +1,5 @@
 import 'package:connect_with/models/common/address_info.dart';
 import 'package:connect_with/models/common/custom_button.dart';
-import 'package:connect_with/models/user/user.dart';
 
 class Organization {
   String? organizationId;
@@ -11,7 +10,9 @@ class Organization {
   String? logo;
   Address? address;
   int? followers;
-  List<AppUser>? employees;
+  int? searchCount;
+  int? profileView;
+  List<String>? employees;
   CustomButton? button;
   String? about;
   String? website;
@@ -19,15 +20,18 @@ class Organization {
   String? type;
   List<String>? services;
   String? createAt;
-
+  List<String>? jobs;
 
   Organization({
     this.organizationId,
     this.name,
+    this.jobs,
     this.email,
     this.domain,
     this.createAt,
     this.coverPath,
+    this.profileView,
+    this.searchCount,
     this.logo,
     this.address,
     this.followers,
@@ -44,8 +48,10 @@ class Organization {
     final map = <String, dynamic>{};
     map['organizationId'] = organizationId;
     map['name'] = name;
-    map['email'] = email ;
-    map['createAt'] = createAt ;
+    map['profileView'] = profileView ;
+    map['searchCount'] = searchCount ;
+    map['email'] = email;
+    map['createAt'] = createAt;
     map['domain'] = domain;
     map['coverPath'] = coverPath;
     map['logo'] = logo;
@@ -54,7 +60,7 @@ class Organization {
     }
     map['followers'] = followers;
     if (employees != null) {
-      map['employees'] = employees!.map((e) => e.toJson()).toList();
+      map['employees'] = employees;
     }
     if (button != null) {
       map['button'] = button!.toJson();
@@ -63,36 +69,39 @@ class Organization {
     map['website'] = website;
     map['companySize'] = companySize;
     map['type'] = type;
-    map['services'] = services;
+    if (services != null) {
+      map['services'] = services;
+    }
+    if (jobs != null) {
+      map['jobs'] = jobs;
+    }
     return map;
   }
 
+  // Create an Organization object from JSON
   factory Organization.fromJson(dynamic json) {
     return Organization(
       organizationId: json['organizationId'],
       name: json['name'],
-      email:json['email'],
+      searchCount : json['searchCount'],
+      profileView: json['profileView'],
+      email: json['email'],
       domain: json['domain'],
-      createAt:json['createAt'],
+      createAt: json['createAt'],
       coverPath: json['coverPath'],
       logo: json['logo'],
       address: json['address'] != null ? Address.fromJson(json['address']) : null,
       followers: json['followers'],
       employees: json['employees'] != null
-          ? (json['employees'] as List)
-          .map((e) => AppUser.fromJson(e))
-          .toList()
+          ? List<String>.from(json['employees'])
           : null,
-      button: json['button'] != null
-          ? CustomButton.fromJson(json['button'])
-          : null,
+      button: json['button'] != null ? CustomButton.fromJson(json['button']) : null,
       about: json['about'],
       website: json['website'],
       companySize: json['companySize'],
       type: json['type'],
-      services: json['services'] != null
-          ? List<String>.from(json['services'])
-          : null,
+      services: json['services'] != null ? List<String>.from(json['services']) : null,
+      jobs: json['jobs'] != null ? List<String>.from(json['jobs']) : null,
     );
   }
 }

@@ -1,14 +1,14 @@
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
 
-class PostScreen extends StatefulWidget {
-  const PostScreen({super.key});
+class PostScreenOrganization extends StatefulWidget {
+  const PostScreenOrganization({super.key});
 
   @override
-  State<PostScreen> createState() => _PostScreenState();
+  State<PostScreenOrganization> createState() => _PostScreenOrganizationState();
 }
 
-class _PostScreenState extends State<PostScreen> {
+class _PostScreenOrganizationState extends State<PostScreenOrganization> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

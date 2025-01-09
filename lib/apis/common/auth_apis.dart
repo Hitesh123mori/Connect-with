@@ -4,7 +4,7 @@ import 'package:connect_with/models/organization/organization.dart';
 import 'package:connect_with/models/user/contact_info.dart';
 import 'package:connect_with/models/common/custom_button.dart';
 import 'package:connect_with/models/user/user.dart';
-import 'package:connect_with/screens/home_screens/home_main_screen.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/home_main_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 
 
 class AuthApi {
+
   static Future<void> signIn(BuildContext context, String email,
       String password) async {
     try {
@@ -44,6 +45,7 @@ class AuthApi {
       await createUserEmail(
           userCredential, email, password, name, isOrganization);
       HelperFunctions.showToast("Successfully registered!");
+      await Navigator.pushReplacement(context, LeftToRight(HomeScreen()));
     } on FirebaseAuthException catch (e) {
       String errorMessage;
 
@@ -67,6 +69,7 @@ class AuthApi {
 
     if (isOrganization) {
       final organization  = Organization(
+        organizationId: userCredential.user!.uid,
         name: name,
         email: email,
         domain: "",
@@ -80,6 +83,7 @@ class AuthApi {
         ),
         followers: 0,
         employees: [],
+        jobs:[],
         button: CustomButton(
           display: false,
           linkText: "",
@@ -90,15 +94,16 @@ class AuthApi {
         companySize: "",
         type: "",
         services: [],
-
-
+        searchCount: 0,
+        profileView: 0,
       ) ;
 
       return await Config.firestore
           .collection('organizations')
           .doc(userCredential.user!.uid)
           .set(organization.toJson());
-    } else {
+    }
+    else {
       final appUser = AppUser(
         isOrganization: false,
         userID: userCredential.user!.uid,
@@ -144,7 +149,7 @@ class AuthApi {
         ),
         createAt: time,
       );
-      print("#come");
+      // print("#come");
       return await Config.firestore
           .collection('users')
           .doc(userCredential.user!.uid)
@@ -152,10 +157,29 @@ class AuthApi {
     }
   }
 
-  static Future<bool> userExistsEmail(
-      String userId, bool isOrganization) async {
-    return isOrganization ?(await Config.firestore.collection('organizations').doc(userId).get())
-        .exists  :(await Config.firestore.collection('users').doc(userId).get())
-        .exists;
+  static Future<bool> userExistsEmail(String email, bool isOrganization) async {
+    final querySnapshot = isOrganization
+        ? await Config.firestore
+        .collection('organizations')
+        .where('email', isEqualTo: email)
+        .get()
+        : await Config.firestore
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+
+    return querySnapshot.docs.isNotEmpty;
   }
+
+  static Future<bool> userExistsById(String userId, bool isOrganization) async {
+    final docSnapshot = isOrganization
+        ? await Config.firestore.collection('organizations').doc(userId).get()
+        : await Config.firestore.collection('users').doc(userId).get();
+
+    return docSnapshot.exists;
+  }
+
+
+
+
 }
