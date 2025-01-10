@@ -84,6 +84,7 @@ class AuthApi {
       final organization = Organization(
         organizationId: userCredential.user!.uid,
         name: name,
+        latestNews : "",
         email: email,
         domain: "",
         createAt: time,

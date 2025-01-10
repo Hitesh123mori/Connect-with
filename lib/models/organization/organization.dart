@@ -6,6 +6,7 @@ class Organization {
   String? name;
   String? email;
   String? domain;
+  String? latestNews;
   String? coverPath;
   String? logo;
   Address? address;
@@ -30,6 +31,7 @@ class Organization {
     this.domain,
     this.createAt,
     this.coverPath,
+    this.latestNews,
     this.profileView,
     this.searchCount,
     this.logo,
@@ -48,6 +50,7 @@ class Organization {
     final map = <String, dynamic>{};
     map['organizationId'] = organizationId;
     map['name'] = name;
+    map['latestNews'] = latestNews;
     map['profileView'] = profileView ;
     map['searchCount'] = searchCount ;
     map['email'] = email;
@@ -83,6 +86,7 @@ class Organization {
     return Organization(
       organizationId: json['organizationId'],
       name: json['name'],
+      latestNews : json['latestNews'],
       searchCount : json['searchCount'],
       profileView: json['profileView'],
       email: json['email'],

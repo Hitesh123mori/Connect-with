@@ -7,7 +7,8 @@ class CompanyJob {
   String? applyLink;
   String? location;
   String? locationType;
-  String? postDate;
+  DateTime? postDate;
+  bool? jobOpen;
   String? employmentType;
   int? applications;
   List<String>? applicants;
@@ -24,6 +25,7 @@ class CompanyJob {
     this.locationType,
     this.postDate,
     this.employmentType,
+    this.jobOpen,
     this.applications,
     this.applicants,
     this.about,
@@ -36,10 +38,11 @@ class CompanyJob {
       'companyId': companyId,
       'companyName': companyName,
       'jobTitle': jobTitle,
+      'jobOpen' : jobOpen,
       'applyLink': applyLink,
       'location': location,
       'locationType': locationType,
-      'postDate': postDate,
+      'postDate': postDate?.toIso8601String(),
       'employmentType': employmentType,
       'applications': applications,
       'applicants': applicants,
@@ -51,19 +54,22 @@ class CompanyJob {
 
   factory CompanyJob.fromJson(dynamic json) {
     return CompanyJob(
+      jobOpen : json['jobOpen'],
       companyId: json['companyId'],
       companyName: json['companyName'],
       jobTitle: json['jobTitle'],
       applyLink: json['applyLink'],
       location: json['location'],
       locationType: json['locationType'],
-      postDate: json['postDate'],
+      postDate: json['postDate'] != null
+          ? DateTime.parse(json['postDate'])
+          : null,
       employmentType: json['employmentType'],
       applications: json['applications'],
       applicants: (json['applicants'] as List<dynamic>?)?.map((e) => e as String).toList(),
       about: json['about'],
       requirements: (json['requirements'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      salary: json['salary'],
+      salary: json['salary'] != null ? json['salary'].toDouble() : null,
     );
   }
 }

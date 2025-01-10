@@ -36,7 +36,7 @@ class TextFeild1 extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Center(
         child: TextFormField(
-          enabled: enabled, // Use the enabled property here
+          enabled: enabled,
           cursorColor: AppColors.theme['primaryColor'],
           onSaved: onSaved,
           onChanged: onChange,
