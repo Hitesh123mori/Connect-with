@@ -92,7 +92,7 @@ class _AddSpeakLanguageState extends State<AddSpeakLanguage> {
                       NormalText(text: "* Indicates required field"),
                       SizedBox(height: 20),
 
-                      // Title
+                      // name
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

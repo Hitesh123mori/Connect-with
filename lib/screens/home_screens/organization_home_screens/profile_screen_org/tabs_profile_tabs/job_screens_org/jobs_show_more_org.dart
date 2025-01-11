@@ -1,3 +1,5 @@
+import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_profile_tabs/job_screens_org/create_job_screen.dart';
+import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/widgets/common_widgets/filter_container.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
 import 'package:flutter/material.dart';
@@ -18,224 +20,7 @@ class JobShowMoreScreenCompany extends StatefulWidget {
 
 class _JobShowMoreScreenCompanyState extends State<JobShowMoreScreenCompany> {
 
-  final List<CompanyJob> jobs = [
-    CompanyJob(
-      jobOpen: true,
-      postDate: DateTime(2014, 1, 5),
-      experienceLevel: "Internship",
-      requirements: [
-        "Flutter",
-        "Data structure",
-        "Operating System",
-        "Database Management System"
-      ],
-      companyName: "Apyarsh Development",
-      jobTitle: "Software Engineer",
-      location: "Ahmedabad, Gujarat, India",
-      locationType: "On-site",
-      employmentType: "Full Time",
-      about: "Recently posted",
-      salary: 120000,
-    ),
-    CompanyJob(
-      jobOpen: false,
-      postDate: DateTime(2025, 1, 3),
-      experienceLevel: "Entry level",
-      requirements: [
-        "Flutter",
-        "Data structure",
-        "Operating System",
-        "Database Management System"
-      ],
-      companyName: "Google",
-      jobTitle: "Software Engineer",
-      location: "Ahmedabad, Gujarat, India",
-      locationType: "Remote",
-      employmentType: "Full Time",
-      about: "Recently posted",
-      salary: 150000,
-    ),
-    CompanyJob(
-      jobOpen: true,
-      postDate: DateTime(2014, 1, 5),
-      experienceLevel: "Internship",
-      requirements: [
-        "Flutter",
-        "Data structure",
-        "Operating System",
-        "Database Management System"
-      ],
-      companyName: "Apyarsh Development",
-      jobTitle: "Software Engineer",
-      location: "Ahmedabad, Gujarat, India",
-      locationType: "On-site",
-      employmentType: "Full Time",
-      about: "Recently posted",
-      salary: 120000,
-    ),
-    CompanyJob(
-      jobOpen: false,
-      postDate: DateTime(2025, 1, 3),
-      experienceLevel: "Entry level",
-      requirements: [
-        "Flutter",
-        "Data structure",
-        "Operating System",
-        "Database Management System"
-      ],
-      companyName: "Google",
-      jobTitle: "Software Engineer",
-      location: "Ahmedabad, Gujarat, India",
-      locationType: "Remote",
-      employmentType: "Full Time",
-      about: "Recently posted",
-      salary: 150000,
-    ),
-    CompanyJob(
-      jobOpen: true,
-      postDate: DateTime(2014, 1, 5),
-      experienceLevel: "Associate",
-      requirements: [
-        "Flutter",
-        "Data structure",
-        "Operating System",
-        "Database Management System"
-      ],
-      companyName: "Apyarsh Development",
-      jobTitle: "Software Engineer",
-      location: "Ahmedabad, Gujarat, India",
-      locationType: "On-site",
-      employmentType: "Full Time",
-      about: "Recently posted",
-      salary: 120000,
-    ),
-    CompanyJob(
-      jobOpen: false,
-      postDate: DateTime(2025, 1, 3),
-      experienceLevel: "Entry level",
-      requirements: [
-        "Flutter",
-        "Data structure",
-        "Operating System",
-        "Database Management System"
-      ],
-      companyName: "Google",
-      jobTitle: "Software Engineer",
-      location: "Ahmedabad, Gujarat, India",
-      locationType: "Remote",
-      employmentType: "Full Time",
-      about: "Recently posted",
-      salary: 150000,
-    ),
-    CompanyJob(
-      jobOpen: true,
-      postDate: DateTime(2014, 1, 5),
-      experienceLevel: "Internship",
-      requirements: [
-        "Flutter",
-        "Data structure",
-        "Operating System",
-        "Database Management System"
-      ],
-      companyName: "Apyarsh Development",
-      jobTitle: "Software Engineer",
-      location: "Ahmedabad, Gujarat, India",
-      locationType: "On-site",
-      employmentType: "Full Time",
-      about: "Recently posted",
-      salary: 120000,
-    ),
-    CompanyJob(
-      jobOpen: false,
-      postDate: DateTime(2025, 1, 3),
-      experienceLevel: "Entry level",
-      requirements: [
-        "Flutter",
-        "Data structure",
-        "Operating System",
-        "Database Management System"
-      ],
-      companyName: "Google",
-      jobTitle: "Software Engineer",
-      location: "Ahmedabad, Gujarat, India",
-      locationType: "Remote",
-      employmentType: "Part Time",
-      about: "Recently posted",
-      salary: 150000,
-    ),
-    CompanyJob(
-      jobOpen: true,
-      postDate: DateTime(2014, 1, 5),
-      experienceLevel: "Internship",
-      requirements: [
-        "Flutter",
-        "Data structure",
-        "Operating System",
-        "Database Management System"
-      ],
-      companyName: "Apyarsh Development",
-      jobTitle: "Software Engineer",
-      location: "Ahmedabad, Gujarat, India",
-      locationType: "On-site",
-      employmentType: "Full Time",
-      about: "Recently posted",
-      salary: 120000,
-    ),
-    CompanyJob(
-      jobOpen: false,
-      postDate: DateTime(2025, 1, 3),
-      experienceLevel: "Entry level",
-      requirements: [
-        "Flutter",
-        "Data structure",
-        "Operating System",
-        "Database Management System"
-      ],
-      companyName: "Google",
-      jobTitle: "Software Engineer",
-      location: "Ahmedabad, Gujarat, India",
-      locationType: "Remote",
-      employmentType: "Full Time",
-      about: "Recently posted",
-      salary: 150000,
-    ),
-    CompanyJob(
-      jobOpen: true,
-      postDate: DateTime(2014, 1, 5),
-      experienceLevel: "Internship",
-      requirements: [
-        "Flutter",
-        "Data structure",
-        "Operating System",
-        "Database Management System"
-      ],
-      companyName: "Apyarsh Development",
-      jobTitle: "Software Engineer",
-      location: "Ahmedabad, Gujarat, India",
-      locationType: "On-site",
-      employmentType: "Internship",
-      about: "Recently posted",
-      salary: 120000,
-    ),
-    CompanyJob(
-      jobOpen: false,
-      postDate: DateTime(2025, 1, 3),
-      experienceLevel: "Entry level",
-      requirements: [
-        "Flutter",
-        "Data structure",
-        "Operating System",
-        "Database Management System"
-      ],
-      companyName: "Google",
-      jobTitle: "Software Engineer",
-      location: "Ahmedabad, Gujarat, India",
-      locationType: "Remote",
-      employmentType: "Full Time",
-      about: "Recently posted",
-      salary: 150000,
-    ),
-  ];
+  List<CompanyJob> jobs = [] ;
 
   String _selectedLocationType = "";
   String _selectedEmployementType = "";
@@ -535,10 +320,10 @@ class _JobShowMoreScreenCompanyState extends State<JobShowMoreScreenCompany> {
                       width: 5,
                     ),
                     FilterContainer(
-                      name: 'Others',
+                      name: 'Other',
                       onTap: () {
                         setState(() {
-                          _selectedExperienceType = "Others";
+                          _selectedExperienceType = "Other";
                         });
                         Navigator.pop(context);
                         _applyFilter();
@@ -583,7 +368,7 @@ class _JobShowMoreScreenCompanyState extends State<JobShowMoreScreenCompany> {
           actions: [
             TextButton(
               onPressed: () {
-                // Navigator.push(context, LeftToRight(EditProfile()));
+                Navigator.push(context, LeftToRight(CreateJobScreen()));
               },
               child: Text(
                 "CREATE",
@@ -808,7 +593,7 @@ class _JobShowMoreScreenCompanyState extends State<JobShowMoreScreenCompany> {
                                 height: 10,
                               ),
                               Text(
-                                "N O , J O B S",
+                                "NO JOBS FOUND!",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,

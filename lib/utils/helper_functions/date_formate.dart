@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class MyDateUtil {
-  // for getting formatted time from milliSecondsSinceEpochs String
   static String getFormattedTime(
       {required BuildContext context, required String time}) {
     final date = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
@@ -27,7 +26,6 @@ class MyDateUtil {
         : '$formattedTime - ${sent.day} ${_getMonth(sent)} ${sent.year}';
   }
 
-  //get last message time (used in chat user card)
   static String getLastMessageTime(
       {required BuildContext context,
         required String time,
@@ -45,8 +43,6 @@ class MyDateUtil {
         ? '${sent.day} ${_getMonth(sent)} ${sent.year}'
         : '${sent.day} ${_getMonth(sent)}';
   }
-
-  //get formatted last active time of user in chat screen
   static String getLastActiveTime(
       {required BuildContext context, required String lastActive}) {
     final int i = int.tryParse(lastActive) ?? -1;
@@ -73,7 +69,6 @@ class MyDateUtil {
     return 'Last seen on ${time.day} $month on $formattedTime';
   }
 
-  // get month name from month no. or index
   static String _getMonth(DateTime date) {
     switch (date.month) {
       case 1:
