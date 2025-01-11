@@ -51,7 +51,7 @@ class _JobCardCompanyState extends State<JobCardCompany> {
         child: Column(
           children: [
             Container(
-              height: 120,
+              height: 130,
               // color: Colors.red,
               width: mq.width * 1,
               // color: Colors.red,

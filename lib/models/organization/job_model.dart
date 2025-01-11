@@ -6,6 +6,7 @@ class CompanyJob {
   String? jobTitle;
   String? applyLink;
   String? location;
+  String? experienceLevel;
   String? locationType;
   DateTime? postDate;
   bool? jobOpen;
@@ -18,6 +19,7 @@ class CompanyJob {
 
   CompanyJob({
     this.companyId,
+    this.experienceLevel,
     this.companyName,
     this.jobTitle,
     this.applyLink,
@@ -41,6 +43,7 @@ class CompanyJob {
       'jobOpen' : jobOpen,
       'applyLink': applyLink,
       'location': location,
+      'experienceLevel':experienceLevel,
       'locationType': locationType,
       'postDate': postDate?.toIso8601String(),
       'employmentType': employmentType,
@@ -58,6 +61,7 @@ class CompanyJob {
       companyId: json['companyId'],
       companyName: json['companyName'],
       jobTitle: json['jobTitle'],
+      experienceLevel:json['experienceLevel'],
       applyLink: json['applyLink'],
       location: json['location'],
       locationType: json['locationType'],
