@@ -14,7 +14,6 @@ class Organization {
   int? searchCount;
   int? profileView;
   List<String>? employees;
-  CustomButton? button;
   String? about;
   String? website;
   String? companySize;
@@ -38,7 +37,6 @@ class Organization {
     this.address,
     this.followers,
     this.employees,
-    this.button,
     this.about,
     this.website,
     this.companySize,
@@ -64,9 +62,6 @@ class Organization {
     map['followers'] = followers;
     if (employees != null) {
       map['employees'] = employees;
-    }
-    if (button != null) {
-      map['button'] = button!.toJson();
     }
     map['about'] = about;
     map['website'] = website;
@@ -99,7 +94,6 @@ class Organization {
       employees: json['employees'] != null
           ? List<String>.from(json['employees'])
           : null,
-      button: json['button'] != null ? CustomButton.fromJson(json['button']) : null,
       about: json['about'],
       website: json['website'],
       companySize: json['companySize'],

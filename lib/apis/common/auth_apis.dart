@@ -98,11 +98,6 @@ class AuthApi {
         followers: 0,
         employees: [],
         jobs: [],
-        button: CustomButton(
-          display: false,
-          linkText: "",
-          link: "",
-        ),
         about: "",
         website: "",
         companySize: "",

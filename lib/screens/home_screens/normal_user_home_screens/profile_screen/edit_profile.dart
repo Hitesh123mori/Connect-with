@@ -19,6 +19,7 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String? _headline;
