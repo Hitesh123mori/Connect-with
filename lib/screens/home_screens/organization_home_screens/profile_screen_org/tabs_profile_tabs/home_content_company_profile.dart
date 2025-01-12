@@ -18,6 +18,17 @@ class HomeContentCompanyProfile extends StatefulWidget {
 }
 
 class _HomeContentCompanyProfileState extends State<HomeContentCompanyProfile> {
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    final orgProvider = Provider.of<OrganizationProvider>(context, listen: false);
+    orgProvider.initOrganization();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Consumer<OrganizationProvider>(

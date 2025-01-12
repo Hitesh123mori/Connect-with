@@ -18,6 +18,15 @@ class AboutContentCompanyProfile extends StatefulWidget {
 
 class _AboutContentCompanyProfileState
     extends State<AboutContentCompanyProfile> {
+
+  @override
+  void initState() {
+    super.initState();
+    final orgProvider = Provider.of<OrganizationProvider>(context, listen: false);
+    orgProvider.initOrganization();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Consumer<OrganizationProvider>(
@@ -141,7 +150,10 @@ class _AboutContentCompanyProfileState
                         text: "Services",
                       ),
                       SizedBox(height: 10,),
-                      Wrap(
+                      if(orgProvider.organization?.services?.length==0)
+                        Text14(text : "No Services added",isBold: false,),
+                      if(orgProvider.organization?.services?.length!=0)
+                        Wrap(
                         children: orgProvider.organization?.services?.asMap().entries.map((entry) {
                           final index = entry.key;
                           final service = entry.value;
@@ -186,8 +198,6 @@ class _AboutContentCompanyProfileState
                       ),
                     ],
                   ),
-
-
 
 
                 ],

@@ -92,9 +92,11 @@ class _HomeOrganizationMainScreenState
                             SizedBox(
                               width: 10,
                             ),
-                            Text16(
-                              text: organizationProvider.organization?.name ??
-                                  "Name",
+                            Flexible(
+                              child: Text16(
+                                text: organizationProvider.organization?.name ??
+                                    "Name",
+                              ),
                             ),
                           ],
                         )),

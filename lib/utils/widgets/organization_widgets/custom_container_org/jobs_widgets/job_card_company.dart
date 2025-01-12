@@ -61,7 +61,7 @@ class _JobCardCompanyState extends State<JobCardCompany> {
                     SizedBox(width: 5),
                     CircleAvatar(
                       backgroundColor: Colors.white,
-                      radius: 50,
+                      radius: 45,
                       backgroundImage: (orgProvider.organization?.logo?.isNotEmpty ?? false)
                           ? NetworkImage(orgProvider.organization!.logo!)
                           : const AssetImage("assets/other_images/org_logo.png") as ImageProvider,

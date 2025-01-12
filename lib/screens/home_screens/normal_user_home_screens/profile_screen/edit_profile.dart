@@ -22,6 +22,7 @@ class _EditProfileState extends State<EditProfile> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  String? _name;
   String? _headline;
   String? _about;
   String? _cityName;
@@ -66,6 +67,7 @@ class _EditProfileState extends State<EditProfile> {
         appUserProvider.user?.userID,
         {
           'headLine': _headline,
+          'userName' : _name,
           'about': _about,
           'showExperience': showExperience,
           'showEducation': showEducation,
@@ -178,6 +180,25 @@ class _EditProfileState extends State<EditProfile> {
                                   SizedBox(
                                     height: 10,
                                   ),
+
+
+                                  // name field
+                                  Text16(text: "Name",isBold: true,),
+                                  TextFeild1(
+                                    hintText: "Enter Name",
+                                    isNumber: false,
+                                    prefixicon: Icon(Icons.text_format_outlined),
+                                    obsecuretext: false,
+                                    initialText: appUserProvider.user?.userName,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "Name cannot be empty";
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) => _name = value,
+                                  ),
+                                  SizedBox(height: 10),
 
 
                                   // Headline field

@@ -4,6 +4,7 @@ import 'package:connect_with/screens/home_screens/organization_home_screens/prof
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_profile_tabs/job_screens_org/job_content_screen_org.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_profile_tabs/post_content_company_profile.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
+import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -218,13 +219,21 @@ class _CompanyProfileState extends State<CompanyProfile> {
                                 CustomProfileButtonOrg(
                                   bgColor: AppColors.theme['primaryColor'],
                                   text: 'Website',
-                                  onTap: () {},
+                                  onTap: () {
+                                    HelperFunctions.launchURL(orgProvider.organization?.website ?? "");
+                                  },
                                   isBorder: false,
                                 ),
                                 CustomProfileButtonOrg(
                                   bgColor: AppColors.theme['primaryColor'],
                                   text: 'Employees',
-                                  onTap: () {},
+                                  onTap: () {
+                                    if(orgProvider.organization?.employees?.length==0){
+                                      HelperFunctions.showToast("No Employee till now!");
+                                    }else{
+                                      // navigate to employee screen
+                                    }
+                                  },
                                   isBorder: true,
                                 ),
                                 InkWell(

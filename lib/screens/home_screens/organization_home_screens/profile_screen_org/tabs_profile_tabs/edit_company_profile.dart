@@ -1,10 +1,14 @@
+import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/providers/organization_provider.dart';
+import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
+import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
 import 'package:connect_with/utils/widgets/common_widgets/other_widgets/image_uploader_container.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_18.dart';
+import 'package:connect_with/utils/widgets/organization_widgets/custom_container_org/company_profile/image_uploader_org.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,13 +27,52 @@ class _EditCompanyProfileState extends State<EditCompanyProfile> {
   String? type;
   String? csize;
   String? website;
+  bool isLoading = false;
   String? _countryName;
   String? _stateName;
   String? _cityName;
+  String? _newsLink;
+  List<String> services = [];
+  TextEditingController servicesController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    final orgProvider = Provider.of<OrganizationProvider>(context, listen: false);
+
+    services = orgProvider.organization?.services ?? [];
+  }
+
+  Future<void> _saveProfile(OrganizationProvider provider) async {
+    if (_formKey.currentState?.validate() ?? false) {
+      _formKey.currentState?.save();
+
+      bool success = await OrganizationProfile.updateOrganizationProfile(
+        provider.organization?.organizationId,
+        {
+          'name': companyName,
+          'about': about,
+          'domain': domain,
+          'type': type,
+          'companySize': csize,
+          'website': website,
+          'address': {
+            'cityName': _cityName,
+            'countryName': _countryName,
+            'stateName': _stateName,
+          },
+          'latestNews': _newsLink,
+          'services': services,
+        },
+      );
+      await Future.delayed(Duration(seconds: 2));
+
+      if (success) {
+        HelperFunctions.showToast("Profile updated successfully!");
+      } else {
+        HelperFunctions.showToast("Profile not updated!");
+      }
+    }
   }
 
   @override
@@ -167,6 +210,12 @@ class _EditCompanyProfileState extends State<EditCompanyProfile> {
                                 obsecuretext: false,
                                 initialText: orgProvider.organization?.domain,
                                 onSaved: (value) => domain = value,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Domain cannot be empty";
+                                  }
+                                  return null;
+                                },
                               ),
                               SizedBox(height: 10),
 
@@ -233,6 +282,12 @@ class _EditCompanyProfileState extends State<EditCompanyProfile> {
                                 initialText:
                                     orgProvider.organization?.companySize,
                                 onSaved: (value) => csize = value,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Company Size cannot be empty";
+                                  }
+                                  return null;
+                                },
                               ),
                               SizedBox(height: 10),
 
@@ -245,6 +300,12 @@ class _EditCompanyProfileState extends State<EditCompanyProfile> {
                                 obsecuretext: false,
                                 initialText: orgProvider.organization?.website,
                                 onSaved: (value) => website = value,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Website cannot be empty";
+                                  }
+                                  return null;
+                                },
                               ),
                               SizedBox(height: 20),
                             ],
@@ -289,6 +350,12 @@ class _EditCompanyProfileState extends State<EditCompanyProfile> {
                                 initialText:
                                     orgProvider.organization?.address?.cityName,
                                 onSaved: (value) => _cityName = value,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "City Name cannot be empty";
+                                  }
+                                  return null;
+                                },
                               ),
                               SizedBox(height: 10),
 
@@ -302,6 +369,12 @@ class _EditCompanyProfileState extends State<EditCompanyProfile> {
                                 initialText: orgProvider
                                     .organization?.address?.stateName,
                                 onSaved: (value) => _stateName = value,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "State Name cannot be empty";
+                                  }
+                                  return null;
+                                },
                               ),
                               SizedBox(height: 10),
 
@@ -315,6 +388,12 @@ class _EditCompanyProfileState extends State<EditCompanyProfile> {
                                 initialText: orgProvider
                                     .organization?.address?.countryName,
                                 onSaved: (value) => _countryName = value,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Country Name cannot be empty";
+                                  }
+                                  return null;
+                                },
                               ),
                               SizedBox(height: 10),
                             ],
@@ -347,15 +426,17 @@ class _EditCompanyProfileState extends State<EditCompanyProfile> {
                               SizedBox(
                                 height: 10,
                               ),
-                              Text16(text: "Logo Image"),
+                              Text16(text: "Cover Image"),
                               SizedBox(
                                 height: 10,
                               ),
-                              ImageUploaderContainer(
-                                  parheight: 100,
-                                  parwidth: mq.width * 1,
-                                  childheight: 80,
-                                  childwidth: mq.width * 0.6),
+                              ImageUploaderOrg(
+                                parHeight: 100,
+                                parWidth: mq.width * 1,
+                                childHeight: 80,
+                                childWidth: mq.width * 0.6,
+                                isLogo: false,
+                              ),
                               SizedBox(
                                 height: 10,
                               ),
@@ -364,14 +445,172 @@ class _EditCompanyProfileState extends State<EditCompanyProfile> {
                                 height: 10,
                               ),
                               Center(
-                                  child: ImageUploaderContainer(
-                                      parheight: 100,
-                                      parwidth: mq.width * 0.5,
-                                      childheight: 80,
-                                      childwidth: mq.width * 0.3)),
+                                  child: ImageUploaderOrg(
+                                parHeight: 200,
+                                parWidth: 200,
+                                childHeight: 100,
+                                childWidth: 150,
+                                isLogo: true,
+                              )),
                               SizedBox(height: 20),
                             ],
                           ),
+                        ),
+                      ),
+
+                      SizedBox(height: 10),
+
+                      // news later and services field
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.theme['secondaryColor'],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Center(
+                                  child: Text18(text: "Services Information")),
+                              Divider(
+                                color: AppColors.theme['primaryColor'],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+
+                              // city name
+                              Text16(
+                                text: "News Link",
+                              ),
+                              TextFeild1(
+                                hintText: "Enter News link",
+                                isNumber: false,
+                                prefixicon: Icon(Icons.text_format_outlined),
+                                obsecuretext: false,
+                                initialText:
+                                    orgProvider.organization?.latestNews,
+                                onSaved: (value) => _newsLink = value,
+                              ),
+                              SizedBox(height: 10),
+
+                              // Skills
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text18(text: "Services"),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                          child: TextFeild1(
+                                              controller: servicesController,
+                                              hintText: "Enter service",
+                                              isNumber: false,
+                                              prefixicon: Icon(Icons.code),
+                                              obsecuretext: false)),
+                                      SizedBox(width: 10),
+                                      SizedBox(
+                                        height: 49,
+                                        child: OutlinedButton(
+                                          onPressed: () {
+                                            if (servicesController.text
+                                                .trim()
+                                                .isNotEmpty) {
+                                              setState(() {
+                                                services.add(servicesController
+                                                    .text
+                                                    .trim());
+                                                servicesController.clear();
+                                              });
+                                            }
+                                          },
+                                          child: Icon(
+                                            Icons.add,
+                                            size: 25,
+                                            color:
+                                                AppColors.theme['primaryColor'],
+                                          ),
+                                          style: ButtonStyle(
+                                              side: MaterialStateProperty.all(
+                                                  BorderSide(
+                                                      width: 1,
+                                                      color: AppColors.theme[
+                                                          'primaryColor']!)),
+                                              shape: MaterialStateProperty.all(
+                                                  RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10))),
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.transparent)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Wrap(
+                                    spacing: 5,
+                                    runSpacing: 5,
+                                    children: services.map((skill) {
+                                      return Chip(
+                                        label: Text(
+                                          skill,
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        backgroundColor:
+                                            AppColors.theme['primaryColor'],
+                                        deleteIcon: Icon(
+                                          Icons.cancel,
+                                          size: 20,
+                                          color: Colors.white,
+                                        ),
+                                        onDeleted: () {
+                                          setState(() {
+                                            services.remove(skill);
+                                          });
+                                        },
+                                      );
+                                    }).toList(),
+                                  ),
+                                  SizedBox(height: 10),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 20),
+
+                      // Save button
+                      Center(
+                        child: CustomButton1(
+                          isLoading: isLoading,
+                          height: 50,
+                          loadWidth: mq.width * 0.5,
+                          width: mq.width * 1,
+                          textColor: AppColors.theme['secondaryColor'],
+                          bgColor: AppColors.theme['primaryColor'],
+                          onTap: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            await _saveProfile(orgProvider);
+                            setState(() {
+                              isLoading = false;
+                            });
+
+                            await orgProvider.initOrganization();
+
+                            Navigator.pop(context);
+                          },
+                          title: "Save Profile",
                         ),
                       ),
 
