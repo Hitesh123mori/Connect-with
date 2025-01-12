@@ -7,6 +7,6 @@ class NormalText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text) ;
+    return Text(text,softWrap: true,) ;
   }
 }

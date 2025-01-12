@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 
 class OrganizationProvider extends ChangeNotifier {
   Organization? organization;
+  List<CompanyJob> cjobs = [];
 
   void notify() {
     notifyListeners();
@@ -20,12 +21,29 @@ class OrganizationProvider extends ChangeNotifier {
     // log("#authId: $uid");
     if (uid != null) {
       organization = Organization.fromJson(await OrganizationProfile.getOrganization(uid));
+      await _populateCompanyJobs();
       // await NotificationApi.getFirebaseMessagingToken(uid);
     }
     notifyListeners();
     log("#initOrganization complete");
   }
+  Future<void> _populateCompanyJobs() async {
 
+    cjobs = [];
+
+    final jobIds = organization?.jobs ?? [];
+
+    for (var jobId in jobIds) {
+      try {
+        final job = await OrganizationProfile.getJobById(jobId);
+        if (job != null) {
+          cjobs.add(CompanyJob.fromJson(job));
+        }
+      } catch (e) {
+        // debugPrint('Error fetching job with ID $jobId: $e');
+      }
+    }
+  }
   Future logOut() async {
     await Config.auth.signOut();
     organization = null;

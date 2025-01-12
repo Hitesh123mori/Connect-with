@@ -1,5 +1,7 @@
+import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_profile_tabs/job_screens_org/create_job_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
+import 'package:connect_with/utils/shimmer_effects/organization/job_card_shimmer_effect.dart';
 import 'package:connect_with/utils/widgets/common_widgets/filter_container.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/hea
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_18.dart';
 import 'package:connect_with/utils/widgets/organization_widgets/custom_container_org/jobs_widgets/job_card_company.dart';
+import 'package:provider/provider.dart';
 
 class JobShowMoreScreenCompany extends StatefulWidget {
   const JobShowMoreScreenCompany({Key? key}) : super(key: key);
@@ -29,11 +32,36 @@ class _JobShowMoreScreenCompanyState extends State<JobShowMoreScreenCompany> {
   String _selectedExperienceType = "";
   List<CompanyJob> _filteredJobs = [];
 
+  bool isFirst = true;
+
+  // this is fake loading
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
-    _filteredJobs = List.from(jobs);
+    Future.delayed(Duration(seconds: 1), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
   }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (isFirst) {
+      final orgProvider = Provider.of<OrganizationProvider>(context, listen: true);
+      orgProvider.initOrganization();
+      isFirst = false;
+      jobs = orgProvider.cjobs;
+      _filteredJobs = jobs;
+      setState(() {
+
+      });
+    }
+  }
+
 
   void _applyFilter() {
     setState(() {
@@ -344,272 +372,285 @@ class _JobShowMoreScreenCompanyState extends State<JobShowMoreScreenCompany> {
   @override
   Widget build(BuildContext context) {
     Size mq = MediaQuery.of(context).size;
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text18(
-            text: "JOBS",
-            isWhite: true,
-          ),
-          centerTitle: true,
-          backgroundColor: AppColors.theme['primaryColor'],
-          toolbarHeight: 50,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.keyboard_arrow_left_rounded,
-              size: 35,
-              color: Colors.white,
+    return Consumer<OrganizationProvider>(builder: (context,orgProvider,child){
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          appBar: AppBar(
+            title: Text18(
+              text: "JOBS",
+              isWhite: true,
             ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.push(context, LeftToRight(CreateJobScreen()));
+            centerTitle: true,
+            backgroundColor: AppColors.theme['primaryColor'],
+            toolbarHeight: 50,
+            leading: IconButton(
+              onPressed: (){
+                Navigator.pop(context);
               },
-              child: Text(
-                "CREATE",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              icon: Icon(
+                Icons.keyboard_arrow_left_rounded,
+                size: 35,
+                color: Colors.white,
               ),
             ),
-          ],
-        ),
-        backgroundColor: AppColors.theme['secondaryColor'],
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.push(context, LeftToRight(CreateJobScreen(isShowScreen: true,)));
+                },
+                child: Text(
+                  "CREATE",
+                  style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: AppColors.theme['secondaryColor'],
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
 
-            // filter Chips
-            Center(
-              child: Container(
-                height: 40,
-                width: mq.width * 1,
-                child: Center(
-                  child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(width: 10),
-                        ChoiceChip(
-                          checkmarkColor: AppColors.theme['secondaryColor'],
-                          padding: EdgeInsets.zero,
-                          backgroundColor: AppColors.theme['secondaryColor'],
-                          selectedColor: AppColors.theme['primaryColor'],
-                          label: Text(
-                            "Most Recents",
-                            style: TextStyle(
-                              color: _selectedPostDate.isNotEmpty
-                                  ? AppColors.theme['secondaryColor']
-                                  : Colors.black,
-                            ),
-                          ),
-                          selected: _selectedPostDate.isNotEmpty,
-                          onSelected: (bool selected) {
-                            if (selected) {
-                              setState(() {
-                                _selectedPostDate = "Post Date";
-                              });
-                            } else {
-                              setState(() {
-                                _selectedPostDate = "";
-                              });
-                            }
-                            _applyFilter();
-                          },
-                        ),
-                        SizedBox(width: 5),
-                        ChoiceChip(
-                          checkmarkColor: AppColors.theme['secondaryColor'],
-                          padding: EdgeInsets.zero,
-                          backgroundColor: AppColors.theme['secondaryColor'],
-                          selectedColor: AppColors.theme['primaryColor'],
-                          label: Text(
-                            "Open Jobs",
-                            style: TextStyle(
-                              color: _selectedJobOpen.isNotEmpty
-                                  ? AppColors.theme['secondaryColor']
-                                  : Colors.black,
-                            ),
-                          ),
-                          selected: _selectedJobOpen.isNotEmpty,
-                          onSelected: (bool selected) {
-                            if (selected) {
-                              setState(() {
-                                _selectedJobOpen = "Job Open";
-                              });
-                            } else {
-                              setState(() {
-                                _selectedJobOpen = "";
-                              });
-                            }
-                            _applyFilter();
-                          },
-                        ),
-                        SizedBox(width: 5),
-                        SizedBox(width: 5),
-                        ChoiceChip(
-                          padding: EdgeInsets.zero,
-                          checkmarkColor: AppColors.theme['secondaryColor'],
-                          backgroundColor: AppColors.theme['secondaryColor'],
-                          selectedColor: AppColors.theme['primaryColor'],
-                          label: Row(
-                            children: [
-                              Text(
-                                "Location Type",
-                                style: TextStyle(
-                                  color: _selectedLocationType.isNotEmpty
-                                      ? AppColors.theme['secondaryColor']
-                                      : Colors.black,
-                                ),
+              // filter Chips
+              Center(
+                child: Container(
+                  height: 40,
+                  width: mq.width * 1,
+                  child: Center(
+                    child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(width: 10),
+                          ChoiceChip(
+                            checkmarkColor: AppColors.theme['secondaryColor'],
+                            padding: EdgeInsets.zero,
+                            backgroundColor: AppColors.theme['secondaryColor'],
+                            selectedColor: AppColors.theme['primaryColor'],
+                            label: Text(
+                              "Most Recents",
+                              style: TextStyle(
+                                color: _selectedPostDate.isNotEmpty
+                                    ? AppColors.theme['secondaryColor']
+                                    : Colors.black,
                               ),
-                              SizedBox(width: 5),
-                              if (_selectedLocationType.isEmpty)
-                                Icon(Icons.keyboard_arrow_down_outlined)
-                            ],
-                          ),
-                          selected: _selectedLocationType.isNotEmpty,
-                          onSelected: (bool selected) {
-                            if (selected) {
-                              _showLocationTypeFilter();
-                            } else {
-                              setState(() {
-                                _selectedLocationType = "";
-                              });
+                            ),
+                            selected: _selectedPostDate.isNotEmpty,
+                            onSelected: (bool selected) {
+                              if (selected) {
+                                setState(() {
+                                  _selectedPostDate = "Post Date";
+                                });
+                              } else {
+                                setState(() {
+                                  _selectedPostDate = "";
+                                });
+                              }
                               _applyFilter();
-                            }
-                          },
-                        ),
-                        SizedBox(width: 5),
+                            },
+                          ),
+                          SizedBox(width: 5),
+                          ChoiceChip(
+                            checkmarkColor: AppColors.theme['secondaryColor'],
+                            padding: EdgeInsets.zero,
+                            backgroundColor: AppColors.theme['secondaryColor'],
+                            selectedColor: AppColors.theme['primaryColor'],
+                            label: Text(
+                              "Open Jobs",
+                              style: TextStyle(
+                                color: _selectedJobOpen.isNotEmpty
+                                    ? AppColors.theme['secondaryColor']
+                                    : Colors.black,
+                              ),
+                            ),
+                            selected: _selectedJobOpen.isNotEmpty,
+                            onSelected: (bool selected) {
+                              if (selected) {
+                                setState(() {
+                                  _selectedJobOpen = "Job Open";
+                                });
+                              } else {
+                                setState(() {
+                                  _selectedJobOpen = "";
+                                });
+                              }
+                              _applyFilter();
+                            },
+                          ),
+                          SizedBox(width: 5),
+                          SizedBox(width: 5),
+                          ChoiceChip(
+                            padding: EdgeInsets.zero,
+                            checkmarkColor: AppColors.theme['secondaryColor'],
+                            backgroundColor: AppColors.theme['secondaryColor'],
+                            selectedColor: AppColors.theme['primaryColor'],
+                            label: Row(
+                              children: [
+                                Text(
+                                  "Location Type",
+                                  style: TextStyle(
+                                    color: _selectedLocationType.isNotEmpty
+                                        ? AppColors.theme['secondaryColor']
+                                        : Colors.black,
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                if (_selectedLocationType.isEmpty)
+                                  Icon(Icons.keyboard_arrow_down_outlined)
+                              ],
+                            ),
+                            selected: _selectedLocationType.isNotEmpty,
+                            onSelected: (bool selected) {
+                              if (selected) {
+                                _showLocationTypeFilter();
+                              } else {
+                                setState(() {
+                                  _selectedLocationType = "";
+                                });
+                                _applyFilter();
+                              }
+                            },
+                          ),
+                          SizedBox(width: 5),
 
-                        //here
-                        ChoiceChip(
-                          padding: EdgeInsets.zero,
-                          checkmarkColor: AppColors.theme['secondaryColor'],
-                          backgroundColor: AppColors.theme['secondaryColor'],
-                          selectedColor: AppColors.theme['primaryColor'],
-                          label: Row(
-                            children: [
-                              Text(
-                                "Experience Level",
-                                style: TextStyle(
-                                  color: _selectedExperienceType.isNotEmpty
-                                      ? AppColors.theme['secondaryColor']
-                                      : Colors.black,
+                          //here
+                          ChoiceChip(
+                            padding: EdgeInsets.zero,
+                            checkmarkColor: AppColors.theme['secondaryColor'],
+                            backgroundColor: AppColors.theme['secondaryColor'],
+                            selectedColor: AppColors.theme['primaryColor'],
+                            label: Row(
+                              children: [
+                                Text(
+                                  "Experience Level",
+                                  style: TextStyle(
+                                    color: _selectedExperienceType.isNotEmpty
+                                        ? AppColors.theme['secondaryColor']
+                                        : Colors.black,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(width: 5),
-                              if (_selectedExperienceType.isEmpty)
-                                Icon(Icons.keyboard_arrow_down_outlined)
-                            ],
+                                SizedBox(width: 5),
+                                if (_selectedExperienceType.isEmpty)
+                                  Icon(Icons.keyboard_arrow_down_outlined)
+                              ],
+                            ),
+                            selected: _selectedExperienceType.isNotEmpty,
+                            onSelected: (bool selected) {
+                              if (selected) {
+                                _showExperienceLevelFilter();
+                              } else {
+                                setState(() {
+                                  _selectedExperienceType = "";
+                                });
+                                _applyFilter();
+                              }
+                            },
                           ),
-                          selected: _selectedExperienceType.isNotEmpty,
-                          onSelected: (bool selected) {
-                            if (selected) {
-                              _showExperienceLevelFilter();
-                            } else {
-                              setState(() {
-                                _selectedExperienceType = "";
-                              });
-                              _applyFilter();
-                            }
-                          },
-                        ),
-                        SizedBox(width: 5),
-                        ChoiceChip(
-                          padding: EdgeInsets.zero,
-                          checkmarkColor: AppColors.theme['secondaryColor'],
-                          backgroundColor: AppColors.theme['secondaryColor'],
-                          selectedColor: AppColors.theme['primaryColor'],
-                          label: Row(
-                            children: [
-                              Text(
-                                "Employment Type",
-                                style: TextStyle(
-                                  color: _selectedEmployementType.isNotEmpty
-                                      ? AppColors.theme['secondaryColor']
-                                      : Colors.black,
+                          SizedBox(width: 5),
+                          ChoiceChip(
+                            padding: EdgeInsets.zero,
+                            checkmarkColor: AppColors.theme['secondaryColor'],
+                            backgroundColor: AppColors.theme['secondaryColor'],
+                            selectedColor: AppColors.theme['primaryColor'],
+                            label: Row(
+                              children: [
+                                Text(
+                                  "Employment Type",
+                                  style: TextStyle(
+                                    color: _selectedEmployementType.isNotEmpty
+                                        ? AppColors.theme['secondaryColor']
+                                        : Colors.black,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(width: 5),
-                              if (_selectedEmployementType.isEmpty)
-                                Icon(Icons.keyboard_arrow_down_outlined)
-                            ],
+                                SizedBox(width: 5),
+                                if (_selectedEmployementType.isEmpty)
+                                  Icon(Icons.keyboard_arrow_down_outlined)
+                              ],
+                            ),
+                            selected: _selectedEmployementType.isNotEmpty,
+                            onSelected: (bool selected) {
+                              if (selected) {
+                                _showEmployementTypeFilter();
+                              } else {
+                                setState(() {
+                                  _selectedEmployementType = "";
+                                });
+                                _applyFilter();
+                              }
+                            },
                           ),
-                          selected: _selectedEmployementType.isNotEmpty,
-                          onSelected: (bool selected) {
-                            if (selected) {
-                              _showEmployementTypeFilter();
-                            } else {
-                              setState(() {
-                                _selectedEmployementType = "";
-                              });
-                              _applyFilter();
-                            }
-                          },
-                        ),
-                        SizedBox(width: 10),
-                      ],
+                          SizedBox(width: 10),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
 
-            SizedBox(
-              height: 10,
-            ),
+              SizedBox(
+                height: 10,
+              ),
 
-            // Job cards list (scrollable)
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    if (_filteredJobs.isNotEmpty)
-                      ListView.builder(
-                        itemCount: _filteredJobs.length,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return JobCardCompany(cjob: _filteredJobs[index]);
-                        },
-                      )
-                    else
-                      Container(
-                          height: mq.height * 0.8,
-                          width: mq.width * 1,
-                          child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset("assets/other_images/no_job.png"),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "NO JOBS FOUND!",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: Colors.grey),
-                              )
-                            ],
-                          ))),
-                  ],
+              // Job cards list (scrollable)
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+
+                      if(isLoading)
+                        ListView.builder(
+                          itemCount: orgProvider.cjobs.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return JobCardShimmerEffect();
+                          },
+                        ),
+
+                      if (!isLoading && _filteredJobs.isNotEmpty)
+                        ListView.builder(
+                          itemCount: _filteredJobs.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return JobCardCompany(cjob: _filteredJobs[index]);
+                          },
+                        )
+                      else
+                        Container(
+                            height: mq.height * 0.8,
+                            width: mq.width * 1,
+                            child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset("assets/other_images/no_job.png"),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      "NO JOBS FOUND!",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          color: Colors.grey),
+                                    )
+                                  ],
+                                ))),
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            SizedBox(height: 30),
-          ],
+              SizedBox(height: 30),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }) ;
   }
 }

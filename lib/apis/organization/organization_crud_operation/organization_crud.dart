@@ -8,6 +8,7 @@ import 'package:connect_with/providers/organization_provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 
 class OrganizationProfile {
   static final _collectionRefOrg = Config.firestore.collection("organizations");
@@ -121,7 +122,7 @@ class OrganizationProfile {
   }
 
   // adding job
-  static Future<bool> addJob(String? orgID,CompanyJob cjob) async {
+  static Future<bool> addJob(String? orgID,CompanyJob cjob,OrganizationProvider provider) async {
     try {
 
       // add job in job collection

@@ -19,7 +19,7 @@ class _JobCardShimmerEffectState extends State<JobCardShimmerEffect> {
       child: Column(
         children: [
           Container(
-            height: 130,
+            height: 150,
             width: mq.width,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -33,7 +33,7 @@ class _JobCardShimmerEffectState extends State<JobCardShimmerEffect> {
                       AppColors.theme['backgroundColor']!.withOpacity(0.1),
                   child: CircleAvatar(
                     backgroundColor: AppColors.theme['secondaryColor'],
-                    radius: 30,
+                    radius: 40,
                   ),
                 ),
                 SizedBox(width: 10),
@@ -50,23 +50,7 @@ class _JobCardShimmerEffectState extends State<JobCardShimmerEffect> {
                               .withOpacity(0.1),
                           child: Container(
                             height: 20,
-                            width: mq.width * 0.3,
-                            decoration: BoxDecoration(
-                              color: AppColors.theme['primaryColor'],
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: AppColors.theme['primaryColor'].withOpacity(0.1),
-                          highlightColor: AppColors.theme['backgroundColor']
-                              .withOpacity(0.1),
-                          child: Container(
-                            height: 20,
-                            width: mq.width * 0.15,
+                            width: mq.width * 0.5,
                             decoration: BoxDecoration(
                               color: AppColors.theme['primaryColor'],
                               borderRadius: BorderRadius.circular(5),
@@ -96,7 +80,21 @@ class _JobCardShimmerEffectState extends State<JobCardShimmerEffect> {
                           .withOpacity(0.1),
                       child: Container(
                         height: 20,
-                        width: mq.width * 0.40,
+                        width: mq.width * 0.7,
+                        decoration: BoxDecoration(
+                          color: AppColors.theme['primaryColor'],
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Shimmer.fromColors(
+                      baseColor: AppColors.theme['primaryColor'].withOpacity(0.1),
+                      highlightColor: AppColors.theme['backgroundColor']
+                          .withOpacity(0.1),
+                      child: Container(
+                        height: 20,
+                        width: mq.width * 0.15,
                         decoration: BoxDecoration(
                           color: AppColors.theme['primaryColor'],
                           borderRadius: BorderRadius.circular(5),

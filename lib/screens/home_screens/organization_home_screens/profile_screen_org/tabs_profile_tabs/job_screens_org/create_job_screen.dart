@@ -2,6 +2,8 @@ import 'package:connect_with/apis/organization/organization_crud_operation/organ
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/organization/job_model.dart';
 import 'package:connect_with/providers/organization_provider.dart';
+import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_profile_tabs/job_screens_org/jobs_show_more_org.dart';
+import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
@@ -15,7 +17,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class CreateJobScreen extends StatefulWidget {
-  const CreateJobScreen({super.key});
+  final bool isShowScreen ;
+  const CreateJobScreen({super.key, required this.isShowScreen});
 
   @override
   State<CreateJobScreen> createState() => _CreateJobScreenState();
@@ -66,7 +69,9 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
         requirements: requirements,
       );
 
-      bool isAdded = await OrganizationProfile.addJob(provider.organization?.organizationId,cjob);
+      bool isAdded = await OrganizationProfile.addJob(provider.organization?.organizationId,cjob,provider);
+
+      await provider.initOrganization() ;
 
       if (isAdded) {
         HelperFunctions.showToast("Job added successfully");
@@ -667,12 +672,21 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
 
                               await orgProvider.initOrganization();
 
-                              Navigator.pop(context);
+
+                              if(widget.isShowScreen){
+                                Navigator.pushReplacement(context, RightToLeft(JobShowMoreScreenCompany())) ;
+                              }else{
+                                Navigator.pop(context);
+                              }
+
+
                             }
                           },
                           title: 'Create Job',
                         ),
                       ),
+
+
 
                       SizedBox(height: 20),
                     ],

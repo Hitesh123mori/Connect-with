@@ -9,6 +9,7 @@ class Text14 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      softWrap: true,
       style: (isBold ?? true)
           ? TextStyle(
               fontSize: 14,
