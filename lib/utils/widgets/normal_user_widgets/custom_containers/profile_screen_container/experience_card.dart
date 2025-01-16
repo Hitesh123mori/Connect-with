@@ -1,11 +1,15 @@
 import 'dart:io';
 
+import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
+import 'package:connect_with/models/organization/organization.dart';
 import 'package:connect_with/models/user/experience.dart';
+import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ExperienceCard extends StatefulWidget {
   final Experience experience;
@@ -16,6 +20,19 @@ class ExperienceCard extends StatefulWidget {
 }
 
 class _ExperienceCardState extends State<ExperienceCard> {
+  Organization org = Organization();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> FetchOrganization()async {
+
+    String orgId = widget.experience.companyId ?? "" ;
+    org = await Organization.fromJson(OrganizationProfile.getOrganization(orgId));
+  }
+
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
@@ -46,7 +63,7 @@ class _ExperienceCardState extends State<ExperienceCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.experience.companyName ?? "Company Name",
+                      org.name ?? "Name",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),

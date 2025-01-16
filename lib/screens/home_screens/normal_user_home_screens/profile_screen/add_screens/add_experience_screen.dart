@@ -43,7 +43,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
   TextEditingController skillController = TextEditingController();
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  TextEditingController companyNameController = TextEditingController();
+  TextEditingController companyIdController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   String? _mediaImage = "";
   late BuildContext dialogContext;
@@ -70,7 +70,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
 
       Experience experience = Experience(
         employementType: selectedEmploymentType,
-        companyName: companyNameController.text.trim(),
+        companyId: companyIdController.text.trim(),
         positions: [newPosition],
       );
 
@@ -120,7 +120,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
   Widget build(BuildContext context) {
     setState(() {
       final pro = Provider.of<AppUserProvider>(context, listen: true);
-      companyNameController.text = pro.bucket ?? "";
+      companyIdController.text = pro.bucket ?? "";
       pro.bucket = "";
     });
     mq = MediaQuery.of(context).size;
@@ -193,7 +193,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                               child: TextFeild1(
                                   enabled:  false ,
                                   // initialText: ,
-                                  controller: companyNameController,
+                                  controller: companyIdController,
                                   hintText: 'Ex. Microsoft',
                                   isNumber: false,
                                   prefixicon: Icon(Icons.title),

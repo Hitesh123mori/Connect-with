@@ -18,32 +18,37 @@ class _OrganizationCardState extends State<OrganizationCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: widget.onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.theme['primaryColor'].withOpacity(0.1),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 5),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.2),
-                backgroundImage: widget.org.logo!="" ? NetworkImage(widget.org.logo ?? "") :AssetImage("assets/other_images/org_logo.png"),
-              ) ,
-              SizedBox(width: 10,),
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text14(text: widget.org.name ?? "Name"),
-                    Text14(text: widget.org.domain ?? "Domain",isBold: false,),
-                  ],
-                ),
-              )
-            ],
+      child: Material(
+        elevation: 1,
+        borderRadius: BorderRadius.circular(10),
+        color:AppColors.theme['secondaryColor'] ,
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.theme['secondaryColor'],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 5),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.2),
+                  backgroundImage: widget.org.logo!="" ? NetworkImage(widget.org.logo ?? "") :AssetImage("assets/other_images/org_logo.png"),
+                ) ,
+                SizedBox(width: 10,),
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text14(text: widget.org.name ?? "Name"),
+                      Text14(text: widget.org.domain ?? "Domain",isBold: false,),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
