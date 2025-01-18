@@ -91,14 +91,33 @@ class OrganizationProfile {
   }
 
   // get organization by id
-  static Future<Map<dynamic, dynamic>?> getOrganization(
-      String organizationId) async {
-    return await _collectionRefOrg
-        .doc(organizationId)
-        .get()
-        .then((value) => value.data())
-        .onError(
-            (error, stackTrace) => {"error": error, "stackTrace": stackTrace});
+  static Future<dynamic> getOrganizationById(String organizationId) async {
+    try {
+      final docSnapshot = await _collectionRefOrg.doc(organizationId).get();
+      if (docSnapshot.exists) {
+
+        return docSnapshot.data();
+      } else {
+        return false;
+      }
+    } catch (error, stackTrace) {
+      return {
+        "error": error.toString(),
+        "stackTrace": stackTrace.toString(),
+      };
+    }
+  }
+
+
+  // check id exist
+  static Future<bool> checkOrganizationExists(String organizationId) async {
+    try {
+      final doc = await _collectionRefOrg.doc(organizationId).get();
+      return doc.exists;
+    } catch (error) {
+      print("Error checking organization existence: $error");
+      return false;
+    }
   }
 
   // get all organization

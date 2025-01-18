@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class AppUserProvider extends ChangeNotifier {
   AppUser? user;
   String? bucket;
-  bool? boolBucket;
+  String? bucket2;
 
   void notify() {
     notifyListeners();

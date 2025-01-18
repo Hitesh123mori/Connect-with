@@ -23,7 +23,7 @@ class _AllOrganizationScreenSelectCompanyState
   List<Organization> _filteredList = [];
   bool _isShimmering = true;
   bool isSearch = false;
-  bool isManual = true;
+  String oid = "";
 
   @override
   void initState() {
@@ -74,7 +74,13 @@ class _AllOrganizationScreenSelectCompanyState
               actions: [
                 TextButton(
                     onPressed: () {
-                      appUserProvider.bucket = "";
+                      if(oid!=""){
+                        appUserProvider.bucket = oid ;
+                        appUserProvider.bucket2 =  textController.text ;
+                      }else{
+                        appUserProvider.bucket = textController.text  ;
+                        appUserProvider.bucket2 =  textController.text ;
+                      }
                       appUserProvider.notify();
                       Navigator.pop(context);
                     },
@@ -117,7 +123,7 @@ class _AllOrganizationScreenSelectCompanyState
                       controller: textController,
                       hintText: "Search company...",
                       isNumber: false,
-                      prefixicon: const Icon(Icons.search_rounded),
+                      prefixicon: Icon(Icons.search_rounded),
                       obsecuretext: false,
                       onChange: (query) {
                         setState(() {
@@ -167,19 +173,14 @@ class _AllOrganizationScreenSelectCompanyState
                                         ? _filteredList[index]
                                         : _fullList[index],
                                     onTap: () {
-                                      setState(() {
-                                        isManual = false;
-                                      });
                                       textController.text = isSearch
                                           ? (_filteredList[index].name ?? "")
                                           : (_fullList[index].name ?? "");
-                                      appUserProvider.bucket = isManual ? textController.text : (isSearch
+
+                                      oid  = isSearch
                                           ? (_filteredList[index].organizationId ?? "")
-                                          : (_fullList[index].organizationId ?? ""));
-                                      appUserProvider.boolBucket = isManual;
-                                      print(appUserProvider.boolBucket) ;
-                                      print(appUserProvider.bucket) ;
-                                      appUserProvider.notify();
+                                          : (_fullList[index].organizationId ?? "");
+
                                     },
                                   ),
                                 );

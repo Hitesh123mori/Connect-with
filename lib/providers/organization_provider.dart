@@ -20,7 +20,7 @@ class OrganizationProvider extends ChangeNotifier {
     String? uid = Config.auth.currentUser?.uid;
     // log("#authId: $uid");
     if (uid != null) {
-      organization = Organization.fromJson(await OrganizationProfile.getOrganization(uid));
+      organization = Organization.fromJson(await OrganizationProfile.getOrganizationById(uid));
       await _populateCompanyJobs();
       // await NotificationApi.getFirebaseMessagingToken(uid);
     }

@@ -48,6 +48,11 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
   String? _mediaImage = "";
   late BuildContext dialogContext;
   File? file;
+  String? oid ;
+
+  void initState(){
+    super.initState();
+  }
 
   Future<void> _saveExperience(String downloadUrl,AppUserProvider provider) async {
     if (_formKey.currentState!.validate()) {
@@ -70,7 +75,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
 
       Experience experience = Experience(
         employementType: selectedEmploymentType,
-        companyId: companyIdController.text.trim(),
+        companyId:oid,
         positions: [newPosition],
       );
 
@@ -120,8 +125,9 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
   Widget build(BuildContext context) {
     setState(() {
       final pro = Provider.of<AppUserProvider>(context, listen: true);
-      companyIdController.text = pro.bucket ?? "";
-      pro.bucket = "";
+      companyIdController.text = pro.bucket2 ?? "";
+      oid  = pro.bucket  ?? "";
+      // print("#bucket ${pro.bucket}") ;
     });
     mq = MediaQuery.of(context).size;
     return Consumer<AppUserProvider>(
