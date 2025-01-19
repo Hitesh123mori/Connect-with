@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
+import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/education.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/all_organization_screen_select_company.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
@@ -45,8 +47,8 @@ class _AddEducationState extends State<AddEducation> {
   List<String> skills = [];
   String? _mediaImage = "";
   late BuildContext dialogContext;
-
   File? file;
+  String? oid ;
 
   // selecting date
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
@@ -77,13 +79,12 @@ class _AddEducationState extends State<AddEducation> {
     }
   }
 
-  Future<void> _saveEducation(String downloadUrl) async {
+  Future<void> _saveEducation(String downloadUrl,AppUserProvider provider) async {
     if (_formKey.currentState!.validate()) {
       Education education = Education(
         fieldOfStudy:
             fieldController.text.isEmpty ? "" : fieldController.text.trim(),
-        school:
-            schoolController.text.isEmpty ? "" : schoolController.text.trim(),
+        schoolId:oid,
         grade: gradeController.text.isEmpty ? "" : gradeController.text.trim(),
         location: locationController.text.isEmpty
             ? ""
@@ -103,6 +104,11 @@ class _AddEducationState extends State<AddEducation> {
       bool isAdded = await UserProfile.addEducation(
           context.read<AppUserProvider>().user?.userID, education);
 
+      provider.bucket = "";
+
+      await OrganizationProfile.addEmployee(oid ?? "",context.read<AppUserProvider>().user?.userID ?? "") ;
+
+
       if (isAdded) {
         HelperFunctions.showToast("Education added successfully");
       } else {
@@ -114,6 +120,12 @@ class _AddEducationState extends State<AddEducation> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      final pro = Provider.of<AppUserProvider>(context, listen: true);
+      schoolController.text = pro.bucket2 ?? "";
+      oid  = pro.bucket  ?? "";
+      // print("#bucket ${pro.bucket}") ;
+    });
     mq = MediaQuery.of(context).size;
     return Consumer<AppUserProvider>(
         builder: (context, appUserProvider, child) {
@@ -163,18 +175,24 @@ class _AddEducationState extends State<AddEducation> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text18(text: "School Name*"),
-                          TextFeild1(
-                              controller: schoolController,
-                              hintText: 'Ex. Standford University',
-                              isNumber: false,
-                              prefixicon: Icon(Icons.title),
-                              obsecuretext: false,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'School Name is required';
-                                }
-                                return null;
-                              }),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, LeftToRight(AllOrganizationScreenSelectCompany()));
+                            },
+                            child: TextFeild1(
+                                enabled:  false ,
+                                controller: schoolController,
+                                hintText: 'Ex. Standford University',
+                                isNumber: false,
+                                prefixicon: Icon(Icons.title),
+                                obsecuretext: false,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'School Name is required';
+                                  }
+                                  return null;
+                                }),
+                          ),
                           SizedBox(height: 10),
                         ],
                       ),
@@ -537,7 +555,7 @@ class _AddEducationState extends State<AddEducation> {
                                     appUserProvider.user?.userID ?? "");
                               }
 
-                              await _saveEducation(downloadUrl ?? "");
+                              await _saveEducation(downloadUrl ?? "",appUserProvider);
 
                               setState(() {
                                 isLoading = false;

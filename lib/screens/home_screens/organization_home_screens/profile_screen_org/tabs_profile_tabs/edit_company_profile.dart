@@ -238,10 +238,10 @@ class _EditCompanyProfileState extends State<EditCompanyProfile> {
                                   isExpanded: true,
                                   underline: SizedBox(),
                                   hint: Text(
-                                    'Select Experience Type',
+                                    'Select Company Type',
                                     style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        // fontWeight: FontWeight.bold,
                                         color: AppColors.theme['primaryColor']),
                                   ),
                                   icon: Icon(Icons.arrow_drop_down,

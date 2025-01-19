@@ -210,4 +210,38 @@ class OrganizationProfile {
     }
   }
 
+  // add add employee
+
+  static Future<bool> addEmployee(String oid, String eid) async {
+    try {
+      DocumentSnapshot orgDoc = await _collectionRefOrg.doc(oid).get();
+
+      if (orgDoc.exists) {
+        List<dynamic> existingEmployees = orgDoc['employees'] ?? [];
+
+        // Check if `eid` already exists
+        if (!existingEmployees.contains(eid)) {
+          existingEmployees.add(eid);
+
+          await _collectionRefOrg.doc(oid).update({
+            'employees': existingEmployees,
+          });
+
+          log("#Employee added successfully");
+          return true;
+        } else {
+          log("#Employee already exists");
+          return false;
+        }
+      } else {
+        log("#Org not found");
+        return false;
+      }
+    } catch (error, stackTrace) {
+      log("#addEmployee error: $error, $stackTrace");
+      return false;
+    }
+  }
+
+
 }

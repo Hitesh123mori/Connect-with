@@ -1,6 +1,6 @@
 class Education {
 
-  String? school;
+  String? schoolId;
   String? fieldOfStudy;
   String? startDate;
   String? endDate;
@@ -11,7 +11,7 @@ class Education {
   String? media;
 
   Education({
-    this.school,
+    this.schoolId,
     this.fieldOfStudy,
     this.startDate,
     this.endDate,
@@ -24,7 +24,7 @@ class Education {
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['school'] = school;
+    map['schoolId'] = schoolId;
     map['location'] = location;
     map['fieldOfStudy'] = fieldOfStudy;
     map['startDate'] = startDate;
@@ -39,7 +39,7 @@ class Education {
 
   factory Education.fromJson(dynamic json) {
     return Education(
-      school: json['school'],
+      schoolId: json['schoolId'],
       fieldOfStudy: json['fieldOfStudy'],
       startDate: json['startDate'],
       endDate: json['endDate'],
