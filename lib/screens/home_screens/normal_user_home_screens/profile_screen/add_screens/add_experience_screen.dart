@@ -12,7 +12,6 @@ import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
-import 'package:connect_with/utils/widgets/common_widgets/organization_card.dart';
 import 'package:connect_with/utils/widgets/common_widgets/other_widgets/image_uploader_container.dart';
 import 'package:connect_with/utils/widgets/common_widgets/other_widgets/loader.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';

@@ -4,8 +4,8 @@ import 'package:connect_with/providers/buckets_provider.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/utils/shimmer_effects/organization/organization_card_shimmer_effect.dart';
 import 'package:connect_with/utils/theme/colors.dart';
-import 'package:connect_with/utils/widgets/common_widgets/organization_card.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
+import 'package:connect_with/utils/widgets/organization_widgets/organization_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +19,7 @@ class AllOrganizationScreenSelectCompany extends StatefulWidget {
 
 class _AllOrganizationScreenSelectCompanyState
     extends State<AllOrganizationScreenSelectCompany> {
+
   TextEditingController textController = TextEditingController();
   List<Organization> _fullList = [];
   List<Organization> _filteredList = [];

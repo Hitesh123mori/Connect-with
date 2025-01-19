@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/project.dart';
+import 'package:connect_with/providers/buckets_provider.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/screens/home_screens/common_screens/all_user_screen_select_users.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
@@ -36,6 +38,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   DateTime? endDate;
   List<String> skills = [];
   List<String> contributors = [];
+  List<String> nameContributors  = [];
   TextEditingController skillController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -111,9 +114,13 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
-
-    return Consumer<AppUserProvider>(
-        builder: (context, appUserProvider, child) {
+    setState(() {
+       final pro = Provider.of<BucketsProvider>(context, listen: true);
+       nameContributors = pro.listBucket2 ?? [];
+       contributors  = pro.listBucket1  ?? [];
+    });
+    return Consumer2<AppUserProvider,BucketsProvider>(
+        builder: (context, appUserProvider,bucketProvider ,child) {
       return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: MaterialApp(
@@ -189,6 +196,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextFormField(
+                                controller: descriptionController,
                                 cursorColor: AppColors.theme['primaryColor'],
                                 obscureText: false,
                                 maxLines: null,
@@ -325,7 +333,9 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                           Text18(text: "Contributors"),
                           SizedBox(height: 10),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context, LeftToRight(AllUserScreenSelectUsers()));
+                            },
                             child: Container(
                               width: 200,
                               decoration: BoxDecoration(
@@ -354,14 +364,14 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                           Wrap(
                             spacing: 5,
                             runSpacing: 5,
-                            children: skills.map((skill) {
-                              return Chip(
+                            children: List.generate(
+                              nameContributors.length,
+                                  (index) => Chip(
                                 label: Text(
-                                  skill,
+                                  nameContributors[index],
                                   style: TextStyle(color: Colors.white),
                                 ),
-                                backgroundColor:
-                                    AppColors.theme['primaryColor'],
+                                backgroundColor: AppColors.theme['primaryColor'],
                                 deleteIcon: Icon(
                                   Icons.cancel,
                                   size: 20,
@@ -369,11 +379,12 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                                 ),
                                 onDeleted: () {
                                   setState(() {
-                                    skills.remove(skill);
+                                    nameContributors.removeAt(index);
+                                    contributors.removeAt(index);
                                   });
                                 },
-                              );
-                            }).toList(),
+                              ),
+                            ),
                           ),
                           SizedBox(height: 10),
                         ],
@@ -582,11 +593,17 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
 
                               await _saveProject(
                                   downloadUrl ?? "", appUserProvider);
+
                               setState(() {
                                 isLoading = false;
                               });
 
                               await appUserProvider.initUser();
+
+                              bucketProvider.listBucket1 = [] ;
+                              bucketProvider.listBucket2 = [] ;
+
+                               bucketProvider.notify();
 
                               Navigator.pop(context);
                             }

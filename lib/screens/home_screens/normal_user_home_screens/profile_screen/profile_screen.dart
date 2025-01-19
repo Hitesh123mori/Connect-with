@@ -1,4 +1,5 @@
 import 'package:connect_with/main.dart';
+import 'package:connect_with/models/user/project.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_education.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_experience_screen.dart';
@@ -10,6 +11,7 @@ import 'package:connect_with/screens/home_screens/normal_user_home_screens/profi
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_education.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_experience_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_language_screen.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_project.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_testscore.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
@@ -19,6 +21,7 @@ import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/education_card.dart';
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/experience_card.dart';
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/language_card.dart';
+import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/project_card.dart';
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/test_score_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -621,7 +624,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ? 2
                                     : appUserProvider.user?.projects?.length,
                                 itemBuilder: (context, index) {
-                                  return Container();
+                                  return ProjectCard(project: appUserProvider.user?.projects?[index] ?? Project());
                                 },
                               ),
                             if ((appUserProvider.user?.projects?.length ?? 0) >
@@ -629,7 +632,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               InkWell(
                                 onTap: () {
                                   Navigator.push(context,
-                                      LeftToRight(ShowMoreEducation()));
+                                      LeftToRight(ShowMoreProject()));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
