@@ -4,7 +4,7 @@ import 'package:connect_with/models/organization/organization.dart';
 import 'package:connect_with/models/user/education.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
-import 'package:connect_with/utils/shimmer_effects/organization/education_card_shimmer_effect.dart';
+import 'package:connect_with/utils/shimmer_effects/normal_user/education_card_shimmer_effect.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';

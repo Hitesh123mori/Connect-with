@@ -4,8 +4,9 @@ import 'package:connect_with/apis/organization/organization_crud_operation/organ
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/organization/organization.dart';
 import 'package:connect_with/models/user/experience.dart';
+import 'package:connect_with/providers/buckets_provider.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
-import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/all_organization_screen_select_company.dart';
+import 'package:connect_with/screens/home_screens/common_screens/all_organization_screen_select_company.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
@@ -54,7 +55,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
     super.initState();
   }
 
-  Future<void> _saveExperience(String downloadUrl,AppUserProvider provider) async {
+  Future<void> _saveExperience(String downloadUrl) async {
     if (_formKey.currentState!.validate()) {
       Positions newPosition = Positions(
         title: titleController.text.trim(),
@@ -84,7 +85,8 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
 
       await OrganizationProfile.addEmployee(oid ?? "",context.read<AppUserProvider>().user?.userID ?? "") ;
 
-      provider.bucket = "";
+      final bucketProvider = Provider.of<BucketsProvider>(context, listen: true);
+      bucketProvider.bucket = "";
 
       if (isAdded) {
         HelperFunctions.showToast("Experience added successfully");
@@ -126,7 +128,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
   @override
   Widget build(BuildContext context) {
     setState(() {
-      final pro = Provider.of<AppUserProvider>(context, listen: true);
+      final pro = Provider.of<BucketsProvider>(context, listen: true);
       companyIdController.text = pro.bucket2 ?? "";
       oid  = pro.bucket  ?? "";
       // print("#bucket ${pro.bucket}") ;
@@ -605,7 +607,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                                       appUserProvider.user?.userID ?? "");
                                 }
 
-                                await _saveExperience(downloadUrl ?? "",appUserProvider);
+                                await _saveExperience(downloadUrl ?? "");
                                 setState(() {
                                   isLoading = false;
                                 });

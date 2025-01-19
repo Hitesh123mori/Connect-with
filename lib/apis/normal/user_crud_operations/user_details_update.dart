@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connect_with/apis/init/config.dart';
 import 'package:connect_with/models/user/education.dart';
 import 'package:connect_with/models/user/experience.dart';
+import 'package:connect_with/models/user/project.dart';
 import 'package:connect_with/models/user/speak_language_user.dart';
 import 'package:connect_with/models/user/test_score.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
@@ -228,6 +229,34 @@ class UserProfile {
       return false;
     }
   }
+
+
+   // adding project
+  static Future<bool> addProject(String? userId, Project project) async {
+    try {
+      DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
+
+      if (userDoc.exists) {
+        List<dynamic> existingProjects = userDoc['projects'] ?? [];
+
+        existingProjects.add(project.toJson());
+
+        await _collectionRef.doc(userId).update({
+          'projects': existingProjects,
+        });
+
+        log("#Project added successfully");
+        return true;
+      } else {
+        log("#User not found");
+        return false;
+      }
+    } catch (error, stackTrace) {
+      log("#addProject error: $error, $stackTrace");
+      return false;
+    }
+  }
+
 
 
 

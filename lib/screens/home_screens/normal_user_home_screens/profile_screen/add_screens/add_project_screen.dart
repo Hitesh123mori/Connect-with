@@ -1,11 +1,9 @@
 import 'dart:io';
+
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
-import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
-import 'package:connect_with/models/user/education.dart';
-import 'package:connect_with/providers/buckets_provider.dart';
+import 'package:connect_with/models/user/project.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
-import 'package:connect_with/screens/home_screens/common_screens/all_organization_screen_select_company.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
@@ -16,42 +14,72 @@ import 'package:connect_with/utils/widgets/common_widgets/other_widgets/loader.d
 import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/heading_text.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/normal_text.dart';
-import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
-import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_18.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';
-import 'package:dotted_border/dotted_border.dart';
+import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_18.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 
-class AddEducation extends StatefulWidget {
-  const AddEducation({super.key});
+class AddProjectScreen extends StatefulWidget {
+  const AddProjectScreen({super.key});
 
   @override
-  State<AddEducation> createState() => _AddEducationState();
+  State<AddProjectScreen> createState() => _AddProjectScreenState();
 }
 
-class _AddEducationState extends State<AddEducation> {
+class _AddProjectScreenState extends State<AddProjectScreen> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController schoolController = new TextEditingController();
-  TextEditingController fieldController = new TextEditingController();
-  TextEditingController gradeController = new TextEditingController();
-  TextEditingController descriptionController = new TextEditingController();
-  TextEditingController locationController = new TextEditingController();
-  TextEditingController skillController = TextEditingController();
   bool isLoading = false;
-  bool isCurrentlyStuding = false;
+  bool isCurrentlyWorking = false;
   DateTime? startDate;
   DateTime? endDate;
   List<String> skills = [];
+  List<String> contributors = [];
+  TextEditingController skillController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController urlController = TextEditingController();
   String? _mediaImage = "";
   late BuildContext dialogContext;
   File? file;
-  String? oid ;
 
-  // selecting date
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> _saveProject(
+      String downloadUrl, AppUserProvider provider) async {
+    if (_formKey.currentState!.validate()) {
+      Project project = Project(
+        name: nameController.text.isEmpty ? "" : nameController.text.trim(),
+        description: descriptionController.text.isEmpty
+            ? ""
+            : descriptionController.text.trim(),
+        url: urlController.text.isEmpty ? "" : urlController.text.trim(),
+        skills: skills,
+        contributors: contributors,
+        startDate:
+            startDate == null ? "" : DateFormat('MMM yyyy').format(startDate!),
+        endDate: isCurrentlyWorking
+            ? "Present"
+            : (endDate == null ? "" : DateFormat('MMM yyyy').format(endDate!)),
+        coverImage: downloadUrl,
+      );
+
+      bool isAdded = await UserProfile.addProject(
+          context.read<AppUserProvider>().user?.userID, project);
+
+      if (isAdded) {
+        HelperFunctions.showToast("Project added successfully");
+      } else {
+        HelperFunctions.showToast("Failed to update Project.");
+        Navigator.pop(context);
+      }
+    }
+  }
+
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -80,55 +108,10 @@ class _AddEducationState extends State<AddEducation> {
     }
   }
 
-  Future<void> _saveEducation(String downloadUrl) async {
-    if (_formKey.currentState!.validate()) {
-      Education education = Education(
-        fieldOfStudy:
-            fieldController.text.isEmpty ? "" : fieldController.text.trim(),
-        schoolId:oid,
-        grade: gradeController.text.isEmpty ? "" : gradeController.text.trim(),
-        location: locationController.text.isEmpty
-            ? ""
-            : locationController.text.trim(),
-        startDate:
-            startDate == null ? "" : DateFormat('MMM yyyy').format(startDate!),
-        endDate: isCurrentlyStuding
-            ? "Present"
-            : (endDate == null ? "" : DateFormat('MMM yyyy').format(endDate!)),
-        description: descriptionController.text.isEmpty
-            ? ""
-            : descriptionController.text.trim(),
-        skills: skills.isEmpty ? [] : skills,
-        media: downloadUrl,
-      );
-
-      bool isAdded = await UserProfile.addEducation(
-          context.read<AppUserProvider>().user?.userID, education);
-
-      final bucketsProvider = Provider.of<BucketsProvider>(context, listen: true);
-      bucketsProvider.bucket = "";
-
-      await OrganizationProfile.addEmployee(oid ?? "",context.read<AppUserProvider>().user?.userID ?? "") ;
-
-
-      if (isAdded) {
-        HelperFunctions.showToast("Education added successfully");
-      } else {
-        HelperFunctions.showToast("Failed to update education.");
-        Navigator.pop(context);
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      final pro = Provider.of<BucketsProvider>(context, listen: true);
-      schoolController.text = pro.bucket2 ?? "";
-      oid  = pro.bucket  ?? "";
-      // print("#bucket ${pro.bucket}") ;
-    });
     mq = MediaQuery.of(context).size;
+
     return Consumer<AppUserProvider>(
         builder: (context, appUserProvider, child) {
       return GestureDetector(
@@ -153,7 +136,9 @@ class _AddEducationState extends State<AddEducation> {
                 ),
               ),
             ),
-            // body
+
+            //body
+
             body: Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
@@ -164,55 +149,24 @@ class _AddEducationState extends State<AddEducation> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      HeadingText(
-                        heading: 'Add Education',
-                      ),
-                      NormalText(
-                        text: '* Indicates required field',
-                      ),
+                      HeadingText(heading: "Add Project"),
+                      NormalText(text: "* Indicates required field"),
                       SizedBox(height: 20),
 
-                      // school
+                      // Title
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text18(text: "School Name*"),
-                          InkWell(
-                            onTap: (){
-                              Navigator.push(context, LeftToRight(AllOrganizationScreenSelectCompany()));
-                            },
-                            child: TextFeild1(
-                                enabled:  false ,
-                                controller: schoolController,
-                                hintText: 'Ex. Standford University',
-                                isNumber: false,
-                                prefixicon: Icon(Icons.title),
-                                obsecuretext: false,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'School Name is required';
-                                  }
-                                  return null;
-                                }),
-                          ),
-                          SizedBox(height: 10),
-                        ],
-                      ),
-
-                      // degree
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text18(text: 'Degree*'),
+                          Text18(text: "Title*"),
                           TextFeild1(
-                              controller: fieldController,
-                              hintText: 'Ex. B-Tech',
+                              controller: nameController,
+                              hintText: 'Ex. Image generator',
                               isNumber: false,
                               prefixicon: Icon(Icons.title),
                               obsecuretext: false,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Feild of Study is required';
+                                  return 'Title is required';
                                 }
                                 return null;
                               }),
@@ -220,65 +174,81 @@ class _AddEducationState extends State<AddEducation> {
                         ],
                       ),
 
-                      //grade
+                      // description
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text18(text: "Grade"),
-                          TextFeild1(
-                            controller: gradeController,
-                            hintText: 'Ex. 9/10',
-                            isNumber: false,
-                            prefixicon: Icon(Icons.title),
-                            obsecuretext: false,
-                          ),
-                          SizedBox(height: 10),
-                        ],
-                      ),
-
-                      // location
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text18(text: "Location"),
-                          TextFeild1(
-                            controller: locationController,
-                            hintText: 'Ex.Ahmedabad,Gujarat,India',
-                            isNumber: false,
-                            prefixicon: Icon(Icons.title),
-                            obsecuretext: false,
-                          ),
-                          SizedBox(height: 10),
-                        ],
-                      ),
-
-                      // Checkbox for current role
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: isCurrentlyStuding,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    isCurrentlyStuding = value ?? false;
-                                    if (isCurrentlyStuding) {
-                                      endDate = null;
-                                    }
-                                  });
-                                },
-                                activeColor: AppColors.theme['primaryColor'],
+                          Text18(text: "Description"),
+                          Container(
+                            height: 200,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: AppColors.theme['backgroundColor'],
+                                border: Border.all(
+                                    color: AppColors.theme['primaryColor'])),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                cursorColor: AppColors.theme['primaryColor'],
+                                obscureText: false,
+                                maxLines: null,
+                                decoration: InputDecoration(
+                                    hintText:
+                                        'Write project description here...',
+                                    border: InputBorder.none),
                               ),
-                              Text16(
-                                  text: "I am currently studying in this school"),
-                            ],
+                            ),
                           ),
                           SizedBox(height: 10),
                         ],
                       ),
 
-                      // start date
+                      // Url
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text18(text: "Project Url*"),
+                          TextFeild1(
+                              controller: urlController,
+                              hintText:
+                                  'Ex.https://github.com/user/Image_generator',
+                              isNumber: false,
+                              prefixicon: Icon(Icons.title),
+                              obsecuretext: false,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Url is required';
+                                }
+                                return null;
+                              }),
+                          SizedBox(height: 10),
+                        ],
+                      ),
+
+                      // Checkbox for current working
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: isCurrentlyWorking,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                isCurrentlyWorking = value ?? false;
+                                if (isCurrentlyWorking) {
+                                  endDate = null;
+                                }
+                              });
+                            },
+                            activeColor: AppColors.theme['primaryColor'],
+                          ),
+                          Text(
+                            "I am currently working in this project",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+
+                      // Start date picker
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -318,7 +288,7 @@ class _AddEducationState extends State<AddEducation> {
                           Text18(text: "End Date*"),
                           SizedBox(height: 10),
                           GestureDetector(
-                            onTap: isCurrentlyStuding
+                            onTap: isCurrentlyWorking
                                 ? null
                                 : () => _selectDate(context, false),
                             child: Container(
@@ -334,7 +304,7 @@ class _AddEducationState extends State<AddEducation> {
                                 ),
                               ),
                               child: Text(
-                                isCurrentlyStuding
+                                isCurrentlyWorking
                                     ? "Present"
                                     : endDate != null
                                         ? "${endDate!.day}/${endDate!.month}/${endDate!.year}"
@@ -348,17 +318,62 @@ class _AddEducationState extends State<AddEducation> {
                         ],
                       ),
 
-                      // Description
+                      // contributers
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text18(text: "Description"),
-                          TextFeild1(
-                            controller: descriptionController,
-                            hintText: 'Ex. I am currently studying..',
-                            isNumber: false,
-                            prefixicon: Icon(Icons.description),
-                            obsecuretext: false,
+                          Text18(text: "Contributors"),
+                          SizedBox(height: 10),
+                          InkWell(
+                            onTap: () {},
+                            child: Container(
+                              width: 200,
+                              decoration: BoxDecoration(
+                                  color: AppColors.theme['primaryColor'].withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                      color: AppColors.theme['primaryColor'])
+                              ),
+                              child: Center(
+                                  child: Padding(
+                                padding: EdgeInsets.all(5.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(Icons.add),
+                                    Text16(
+                                      text: "Add Contributor",
+                                    ),
+                                  ],
+                                ),
+                              )),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Wrap(
+                            spacing: 5,
+                            runSpacing: 5,
+                            children: skills.map((skill) {
+                              return Chip(
+                                label: Text(
+                                  skill,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor:
+                                    AppColors.theme['primaryColor'],
+                                deleteIcon: Icon(
+                                  Icons.cancel,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
+                                onDeleted: () {
+                                  setState(() {
+                                    skills.remove(skill);
+                                  });
+                                },
+                              );
+                            }).toList(),
                           ),
                           SizedBox(height: 10),
                         ],
@@ -493,7 +508,13 @@ class _AddEducationState extends State<AddEducation> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text18(text: "Media image uploaded"),
+                                        Text(
+                                          "Media image uploaded",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                         Container(
                                             height: 40,
                                             width: 80,
@@ -505,10 +526,14 @@ class _AddEducationState extends State<AddEducation> {
                                             ),
                                             child: InkWell(
                                               onTap: () {
-                                                Navigator.push(context, LeftToRight(   ImageViewScreen(
-                                                  path: _mediaImage ?? "",
-                                                  isFile: true,
-                                                )));
+                                                Navigator.push(
+                                                    context,
+                                                    LeftToRight(
+                                                      ImageViewScreen(
+                                                        path: _mediaImage ?? "",
+                                                        isFile: true,
+                                                      ),
+                                                    ));
                                               },
                                               child: Center(
                                                 child: Text(
@@ -531,8 +556,6 @@ class _AddEducationState extends State<AddEducation> {
                           ),
                         ],
                       ),
-
-
 
                       //  button
                       Center(
@@ -557,8 +580,8 @@ class _AddEducationState extends State<AddEducation> {
                                     appUserProvider.user?.userID ?? "");
                               }
 
-                              await _saveEducation(downloadUrl ?? "");
-
+                              await _saveProject(
+                                  downloadUrl ?? "", appUserProvider);
                               setState(() {
                                 isLoading = false;
                               });
@@ -568,7 +591,7 @@ class _AddEducationState extends State<AddEducation> {
                               Navigator.pop(context);
                             }
                           },
-                          title: 'Save Education',
+                          title: 'Save Project',
                         ),
                       ),
 
@@ -578,7 +601,6 @@ class _AddEducationState extends State<AddEducation> {
                 ),
               ),
             ),
-
           ),
         ),
       );

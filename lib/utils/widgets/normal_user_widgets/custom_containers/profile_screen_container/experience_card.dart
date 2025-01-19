@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/organization/organization.dart';
@@ -7,7 +6,7 @@ import 'package:connect_with/models/user/experience.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
-import 'package:connect_with/utils/shimmer_effects/organization/experience_card_shimmer_effect.dart';
+import 'package:connect_with/utils/shimmer_effects/normal_user/experience_card_shimmer_effect.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

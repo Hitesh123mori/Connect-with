@@ -1,7 +1,8 @@
 import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/models/organization/organization.dart';
+import 'package:connect_with/providers/buckets_provider.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
-import 'package:connect_with/utils/shimmer_effects/normal_user/organization_card_shimmer_effect.dart';
+import 'package:connect_with/utils/shimmer_effects/organization/organization_card_shimmer_effect.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/organization_card.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
@@ -50,8 +51,8 @@ class _AllOrganizationScreenSelectCompanyState
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppUserProvider>(
-        builder: (context, appUserProvider, child) {
+    return Consumer2<AppUserProvider,BucketsProvider>(
+        builder: (context, appUserProvider,bucketProvider ,child) {
       return GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -75,13 +76,13 @@ class _AllOrganizationScreenSelectCompanyState
                 TextButton(
                     onPressed: () {
                       if(oid!=""){
-                        appUserProvider.bucket = oid ;
-                        appUserProvider.bucket2 =  textController.text ;
+                        bucketProvider.bucket = oid ;
+                        bucketProvider.bucket2 =  textController.text ;
                       }else{
-                        appUserProvider.bucket = textController.text  ;
-                        appUserProvider.bucket2 =  textController.text ;
+                        bucketProvider.bucket = textController.text  ;
+                        bucketProvider.bucket2 =  textController.text ;
                       }
-                      appUserProvider.notify();
+                      bucketProvider.notify();
                       Navigator.pop(context);
                     },
                     child: Text(

@@ -1,17 +1,14 @@
-import 'package:connect_with/models/user/skills.dart';
-import 'package:connect_with/models/user/user.dart';
-
 class Project {
 
   String? proID;
   String? name;
   String? description;
   String? url;
-  List<Skill>? skills;
+  List<String>? skills;
   String? coverImage;
   String? startDate;
   String? endDate;
-  List<AppUser>? contributors;
+  List<String>? contributors;
 
   Project({
     this.proID,
@@ -26,19 +23,17 @@ class Project {
   });
 
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['proID'] = proID;
-    map['name'] = name;
-    map['description'] = description;
-    map['url'] = url;
-    map['coverImage'] = coverImage;
-    map['startDate'] = startDate;
-    map['endDate'] = endDate;
-    map['contributors'] = contributors?.map((e) => e.toJson()).toList();
-    map['skills'] = skills?.map((e) => e.toJson()).toList();
-
-
-    return map;
+    return {
+      'proID': proID,
+      'name': name,
+      'description': description,
+      'url': url,
+      'coverImage': coverImage,
+      'startDate': startDate,
+      'endDate': endDate,
+      'contributors': contributors,
+      'skills': skills,
+    };
   }
 
   factory Project.fromJson(dynamic json) {
@@ -50,15 +45,11 @@ class Project {
       coverImage: json['coverImage'],
       startDate: json['startDate'],
       endDate: json['endDate'],
-      contributors: json['contributors']!= null
-          ? (json['contributors'] as List)
-          .map((e) => AppUser.fromJson(e))
-          .toList()
+      contributors: json['contributors'] != null
+          ? List<String>.from(json['contributors'])
           : null,
-      skills: json['skills']!= null
-          ? (json['skills'] as List)
-          .map((e) => Skill.fromJson(e))
-          .toList()
+      skills: json['skills'] != null
+          ? List<String>.from(json['skills'])
           : null,
     );
   }

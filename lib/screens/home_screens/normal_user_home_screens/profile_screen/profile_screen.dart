@@ -2,6 +2,7 @@ import 'package:connect_with/main.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_education.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_experience_screen.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_project_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_speak_language.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_testscore.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_profile.dart';
@@ -83,18 +84,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 // profile and cover pic
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
                     InkWell(
-                      onTap: (){
+                      onTap: () {
                         Navigator.push(
                             context,
                             LeftToRight(
                               ImageViewScreen(
-                                path: appUserProvider.user?.coverPath ?? "", isFile: false,
+                                path: appUserProvider.user?.coverPath ?? "",
+                                isFile: false,
                               ),
                             ));
                       },
@@ -122,16 +123,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               context,
                               LeftToRight(
                                 ImageViewScreen(
-                                  path: appUserProvider.user?.profilePath ?? "", isFile: false,
+                                  path: appUserProvider.user?.profilePath ?? "",
+                                  isFile: false,
                                 ),
                               ));
                         },
                         child: Center(
                           child: SizedBox(
-                            height:
-                                100,
-                            width:
-                                100,
+                            height: 100,
+                            width: 100,
                             child: Center(
                               child: CircleAvatar(
                                 radius: 50,
@@ -140,9 +140,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ""
                                     ? NetworkImage(
                                         appUserProvider.user?.profilePath ?? "")
-                                    : AssetImage("assets/other_images/photo.png")
+                                    : AssetImage(
+                                            "assets/other_images/photo.png")
                                         as ImageProvider,
-                                backgroundColor: AppColors.theme['backgroundColor']
+                                backgroundColor: AppColors
+                                    .theme['backgroundColor']
                                     .withOpacity(0.5),
                               ),
                             ),
@@ -188,20 +190,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(
                         height: 10,
                       ),
-                      if(appUserProvider.user!.info?.address!="")
+                      if (appUserProvider.user!.info?.address != "")
                         Text(
-                        (appUserProvider.user!.info?.address ?? "Address"),
-                        style: TextStyle(fontSize: 16),
-                        softWrap: true,
-                        overflow: TextOverflow.visible,
-                      ),
+                          (appUserProvider.user!.info?.address ?? "Address"),
+                          style: TextStyle(fontSize: 16),
+                          softWrap: true,
+                          overflow: TextOverflow.visible,
+                        ),
                       if (appUserProvider.user?.button!.display == true)
                         SizedBox(
                           height: 20,
                         ),
-
                       if (appUserProvider.user?.button!.display == true)
-                         CustomProfileButton(
+                        CustomProfileButton(
                           data: appUserProvider.user?.button?.linkText ??
                               "Button",
                           link: appUserProvider.user?.button?.link ??
@@ -566,7 +567,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     if (appUserProvider.user?.showProject != false)
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -583,7 +586,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   children: [
                                     IconButton(
                                       icon: Icon(Icons.add),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(context,
+                                            LeftToRight(AddProjectScreen()));
+                                      },
                                     ),
                                     IconButton(
                                       icon: Icon(Icons.edit),
@@ -596,6 +602,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             SizedBox(
                               height: 10,
                             ),
+                            if (appUserProvider.user?.projects?.length == 0)
+                              Center(
+                                child: Text(
+                                  "No project added yet.",
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 16),
+                                ),
+                              ),
+                            if (appUserProvider.user?.projects?.length != 0)
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: (appUserProvider
+                                                .user?.projects?.length ??
+                                            0) >
+                                        2
+                                    ? 2
+                                    : appUserProvider.user?.projects?.length,
+                                itemBuilder: (context, index) {
+                                  return Container();
+                                },
+                              ),
+                            if ((appUserProvider.user?.projects?.length ?? 0) >
+                                2)
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      LeftToRight(ShowMoreEducation()));
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: AppColors.theme['backgroundColor'],
+                                  ),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Show More",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(Icons.arrow_right_alt_outlined)
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
                           ],
                         ),
                       ),

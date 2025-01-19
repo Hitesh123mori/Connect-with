@@ -1,6 +1,7 @@
 import 'package:connect_with/models/user/project.dart';
 
 class Skill {
+
   String? name;
   List<String>? endorsedPeoples;
   List<String>? projects;
