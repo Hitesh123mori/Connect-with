@@ -178,24 +178,37 @@ class _EditCompanyProfileState extends State<EditCompanyProfile> {
                                             AppColors.theme['primaryColor'])),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: TextFormField(
-                                    cursorColor:
-                                        AppColors.theme['primaryColor'],
-                                    obscureText: false,
-                                    initialValue:
-                                        orgProvider.organization?.about,
-                                    maxLines: null,
-                                    decoration: InputDecoration(
-                                        hintText:
-                                            'Write job description here...',
-                                        border: InputBorder.none),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'description is required';
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (value) => about = value,
+                                  child: Theme(
+                                    data : ThemeData(
+                                        textSelectionTheme:
+                                        TextSelectionThemeData(
+                                            selectionHandleColor:
+                                            AppColors.theme[
+                                            'primaryColor'],
+                                            cursorColor: AppColors
+                                                .theme['primaryColor'],
+                                            selectionColor: AppColors
+                                                .theme['primaryColor']
+                                                .withOpacity(0.3))),
+                                    child: TextFormField(
+                                      cursorColor:
+                                          AppColors.theme['primaryColor'],
+                                      obscureText: false,
+                                      initialValue:
+                                          orgProvider.organization?.about,
+                                      maxLines: null,
+                                      decoration: InputDecoration(
+                                          hintText:
+                                              'Write job description here...',
+                                          border: InputBorder.none),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'description is required';
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (value) => about = value,
+                                    ),
                                   ),
                                 ),
                               ),

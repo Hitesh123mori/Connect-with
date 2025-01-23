@@ -159,7 +159,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text14(
+                            orgProvider.organization?.domain == "" ? Text14(text: "Not specified domain",isBold: false,) : Text14(
                               text: orgProvider.organization?.domain ?? "Domain",
                               isBold: false,
                             ),
@@ -193,18 +193,13 @@ class _CompanyProfileState extends State<CompanyProfile> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text14(
-                                    text: ((orgProvider.organization?.address
-                                        ?.cityName ??
-                                        "City") +
-                                        ", " +
-                                        (orgProvider.organization?.address
-                                            ?.stateName ??
-                                            "State") +
-                                        ", " +
-                                        (orgProvider.organization?.address
-                                            ?.countryName ??
-                                            "Country")) +
-                                        ".",
+                                    text: orgProvider.organization?.address == null
+                                        ? "No Address"
+                                        : [
+                                      orgProvider.organization?.address?.cityName,
+                                      orgProvider.organization?.address?.stateName,
+                                      orgProvider.organization?.address?.countryName,
+                                    ].where((part) => part != null && part.isNotEmpty).join(", "),
                                     isBold: false,
                                   ),
                                 ],

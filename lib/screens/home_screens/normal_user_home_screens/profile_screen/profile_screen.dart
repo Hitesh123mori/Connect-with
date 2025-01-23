@@ -190,15 +190,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         softWrap: true,
                         overflow: TextOverflow.visible,
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      if (appUserProvider.user!.info?.address != "")
-                        Text(
-                          (appUserProvider.user!.info?.address ?? "Address"),
-                          style: TextStyle(fontSize: 16),
-                          softWrap: true,
-                          overflow: TextOverflow.visible,
+
+                      if (appUserProvider.user!.info?.address != ",,.")
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              (appUserProvider.user!.info?.address ?? "Address"),
+                              style: TextStyle(fontSize: 16),
+                              softWrap: true,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ],
                         ),
                       if (appUserProvider.user?.button!.display == true)
                         SizedBox(
@@ -212,6 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               "google.com",
                         ),
                       SizedBox(height: 20),
+
                       Row(
                         children: [
                           Text(
