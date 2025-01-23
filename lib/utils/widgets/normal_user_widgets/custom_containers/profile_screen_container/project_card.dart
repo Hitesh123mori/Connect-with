@@ -6,12 +6,17 @@ import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
 import 'package:connect_with/utils/shimmer_effects/normal_user/project_card_shimmer_effect.dart';
 import 'package:connect_with/utils/theme/colors.dart';
+import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/heading_text.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';
+import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/user_card.dart';
+import 'package:flutter/material.dart';
+
 import 'package:flutter/material.dart';
 
 class ProjectCard extends StatefulWidget {
   final Project project;
+
   const ProjectCard({super.key, required this.project});
 
   @override
@@ -28,7 +33,7 @@ class _ProjectCardState extends State<ProjectCard> {
   }
 
   Future<List<AppUser>> _fetchColUsers() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
 
     List<AppUser> colUsers = [];
     try {
@@ -44,6 +49,58 @@ class _ProjectCardState extends State<ProjectCard> {
     }
     return colUsers;
   }
+
+  void _showAllUsersDialog(BuildContext context, List<AppUser> users) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Container(
+          height: MediaQuery.of(context).size.height*0.5,
+          decoration: BoxDecoration(
+            color: AppColors.theme['secondaryColor'],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          width: double.maxFinite,
+          child: Column(
+            children: [
+              SizedBox(height: 10,),
+              Container(
+                child: Column(
+                  children: [
+                    Center(child: HeadingText(heading: "Collaborators")),
+                    Divider(),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  padding:  EdgeInsets.all(10),
+                  itemCount: users.length,
+                  itemBuilder: (context, index) {
+                    final user = users[index];
+                    return  ListTile(
+                      leading: CircleAvatar(
+                          backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.2),
+                          backgroundImage: NetworkImage(user.profilePath ?? "")
+                      ),
+                      title: Text16(text: user.userName ?? ""),
+                      subtitle: Text14(text: user.headLine ?? "",isBold: false,),
+                      onTap:(){
+                        // open profile screen of that user
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          )
+        ),
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -164,15 +221,20 @@ class _ProjectCardState extends State<ProjectCard> {
                             );
                           }).toList(),
                           if (colUsers.length > 3)
-                            CircleAvatar(
-                              backgroundColor: AppColors.theme['primaryColor']!.withOpacity(0.2),
-                              child: Center(
-                                child: Text(
-                                  "...",
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            InkWell(
+                              onTap: (){
+                                _showAllUsersDialog(context,colUsers);
+                              },
+                              child: CircleAvatar(
+                                backgroundColor: AppColors.theme['primaryColor']!.withOpacity(0.2),
+                                child: Center(
+                                  child: Text(
+                                    "...",
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  ),
                                 ),
+                                radius: 20,
                               ),
-                              radius: 20,
                             ),
                         ],
                       ),
@@ -223,3 +285,4 @@ class _ProjectCardState extends State<ProjectCard> {
     );
   }
 }
+

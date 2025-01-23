@@ -31,7 +31,7 @@ class _UserCardState extends State<UserCard> {
         backgroundImage: NetworkImage(widget.user.profilePath ?? "")
       ),
       title: Text16(text: widget.user.userName ?? ""),
-      subtitle: Text14(text: widget.user.headLine ?? ""),
+      subtitle: Text14(text: widget.user.headLine ?? "",isBold: false,),
       trailing: Checkbox(
         value: widget.isChecked,
         onChanged: widget.onChecked,
