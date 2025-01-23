@@ -35,6 +35,14 @@ class TextFeild1 extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Center(
+          child: Theme(
+        data: ThemeData(
+            textSelectionTheme: TextSelectionThemeData(
+                selectionHandleColor:
+                    AppColors.theme['primaryColor'],
+                cursorColor: AppColors.theme['primaryColor'],
+                selectionColor:
+                    AppColors.theme['primaryColor'].withOpacity(0.3))),
         child: TextFormField(
           enabled: enabled,
           cursorColor: AppColors.theme['primaryColor'],
@@ -42,7 +50,8 @@ class TextFeild1 extends StatelessWidget {
           onChanged: onChange,
           obscureText: obsecuretext,
           initialValue: initialText,
-          keyboardType: isNumber ? TextInputType.number : TextInputType.emailAddress,
+          keyboardType:
+              isNumber ? TextInputType.number : TextInputType.emailAddress,
           controller: controller,
           decoration: InputDecoration(
             filled: true,
@@ -65,7 +74,8 @@ class TextFeild1 extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             hintText: hintText,
-            hintStyle: TextStyle(color: AppColors.theme['tertiaryColor']!.withOpacity(0.5)),
+            hintStyle: TextStyle(
+                color: AppColors.theme['tertiaryColor']!.withOpacity(0.5)),
             prefixIcon: prefixicon,
             prefixIconColor: AppColors.theme['primaryColor'],
             suffixIcon: suffix,
@@ -73,7 +83,7 @@ class TextFeild1 extends StatelessWidget {
           ),
           validator: validator,
         ),
-      ),
+      )),
     );
   }
 }

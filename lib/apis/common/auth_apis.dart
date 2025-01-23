@@ -98,7 +98,7 @@ class AuthApi {
         followers: 0,
         employees: [],
         jobs: [],
-        about: "",
+        about: "We are using ConnectWith for making connections.",
         website: "",
         companySize: "",
         type: "",

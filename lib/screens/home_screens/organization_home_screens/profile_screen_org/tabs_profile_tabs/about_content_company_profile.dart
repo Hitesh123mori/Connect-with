@@ -61,9 +61,9 @@ class _AboutContentCompanyProfileState
                      crossAxisAlignment: CrossAxisAlignment.start,
                      children: [
                        Text16(text: "Website",),
-                       LinkButton(
-                         name: orgProvider.organization?.website ?? "",
-                         url: orgProvider.organization?.website ?? "Click here!",
+                       orgProvider.organization?.website == "" ? Text14(text :"No website",isBold: false,) : LinkButton(
+                         name: orgProvider.organization?.website ?? "Click here!",
+                         url: orgProvider.organization?.website ?? "",
                        ),
                      ],
                    ),
@@ -76,7 +76,7 @@ class _AboutContentCompanyProfileState
                       // mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text16(text: "Industry",),
-                      Text14(text: orgProvider.organization?.domain ?? "Industry",isBold: false,),
+                      orgProvider.organization?.domain == "" ? Text14(text :"No website",isBold: false,) : Text14(text: orgProvider.organization?.domain ?? "Industry",isBold: false,),
                     ],
                   ),
 
@@ -88,7 +88,7 @@ class _AboutContentCompanyProfileState
                     // mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text16(text: "Company Size",),
-                      Text14(text: (orgProvider.organization?.companySize ?? "Industry") + " employees",isBold: false,),
+                      orgProvider.organization?.companySize=="" ?  Text14(text :"0 employees",isBold: false,) : Text14(text: (orgProvider.organization?.companySize ?? "Industry") + " employees",isBold: false,),
                       Text14(text: (orgProvider.organization?.employees?.length.toString() ?? "0" ) + " associated members",isBold: false,),
                     ],
                   ),
@@ -104,18 +104,16 @@ class _AboutContentCompanyProfileState
                     children: [
                       Text16(text: "Headquarters",),
                       Text14(
-                        text: ((orgProvider.organization?.address
-                            ?.cityName ??
-                            "City") +
+                        text: (orgProvider.organization?.address?.cityName?.isNotEmpty == true ||
+                            orgProvider.organization?.address?.stateName?.isNotEmpty == true ||
+                            orgProvider.organization?.address?.countryName?.isNotEmpty == true)
+                            ? ((orgProvider.organization?.address?.cityName ?? "City") +
                             ", " +
-                            (orgProvider.organization?.address
-                                ?.stateName ??
-                                "State") +
+                            (orgProvider.organization?.address?.stateName ?? "State") +
                             ", " +
-                            (orgProvider.organization?.address
-                                ?.countryName ??
-                                "Country")) +
-                            ".",
+                            (orgProvider.organization?.address?.countryName ?? "Country")) +
+                            "."
+                            : "No Address",
                         isBold: false,
                       ),
                     ],
@@ -131,7 +129,7 @@ class _AboutContentCompanyProfileState
                     // mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text16(text: "Type",),
-                      Text14(
+                      orgProvider.organization?.type=="" ?  Text14(text :"No Type",isBold: false,) :  Text14(
                         text: orgProvider.organization?.type ?? "type",
                         isBold: false,
                       ),
@@ -149,53 +147,57 @@ class _AboutContentCompanyProfileState
                       Text16(
                         text: "Services",
                       ),
-                      SizedBox(height: 10,),
                       if(orgProvider.organization?.services?.length==0)
                         Text14(text : "No Services added",isBold: false,),
                       if(orgProvider.organization?.services?.length!=0)
-                        Wrap(
-                        children: orgProvider.organization?.services?.asMap().entries.map((entry) {
-                          final index = entry.key;
-                          final service = entry.value;
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 5.0,bottom: 5),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Center(
-                                  child: Container(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Text(
-                                        service,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.white,
+                        Column(
+                          children: [
+                            SizedBox(height: 10,),
+                            Wrap(
+                            children: orgProvider.organization?.services?.asMap().entries.map((entry) {
+                              final index = entry.key;
+                              final service = entry.value;
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 5.0,bottom: 5),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Center(
+                                      child: Container(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Text(
+                                            service,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(5),
+                                          color: AppColors.theme['primaryColor'].withOpacity(0.5),
                                         ),
                                       ),
                                     ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: AppColors.theme['primaryColor'].withOpacity(0.5),
-                                    ),
-                                  ),
-                                ),
-                                if (index != orgProvider.organization!.services!.length - 1)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                    child: Text(
-                                      "•", // Dot separator
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
+                                    if (index != orgProvider.organization!.services!.length - 1)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                        child: Text(
+                                          "•", // Dot separator
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          );
-                        }).toList() ?? [],
-                      ),
+                                  ],
+                                ),
+                              );
+                            }).toList() ?? [],
+                                                  ),
+                          ],
+                        ),
                     ],
                   ),
 
