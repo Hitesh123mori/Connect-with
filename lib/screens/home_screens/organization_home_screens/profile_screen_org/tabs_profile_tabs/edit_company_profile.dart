@@ -199,11 +199,11 @@ class _EditCompanyProfileState extends State<EditCompanyProfile> {
                                       maxLines: null,
                                       decoration: InputDecoration(
                                           hintText:
-                                              'Write job description here...',
+                                              'Write about here...',
                                           border: InputBorder.none),
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return 'description is required';
+                                          return 'about is required';
                                         }
                                         return null;
                                       },
@@ -307,7 +307,7 @@ class _EditCompanyProfileState extends State<EditCompanyProfile> {
                               // website field
                               Text16(text: "Company Website"),
                               TextFeild1(
-                                hintText: "Enter Website Size",
+                                hintText: "Enter Website",
                                 isNumber: false,
                                 prefixicon: Icon(Icons.text_format_outlined),
                                 obsecuretext: false,
