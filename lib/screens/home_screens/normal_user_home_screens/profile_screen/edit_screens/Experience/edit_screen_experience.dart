@@ -356,13 +356,13 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                           itemCount: widget.exp.positions?.length ?? 0,
                           physics: BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
-                            return Column(
+                            return  Column(
                               children: [
                                 InkWell(
                                   onTap: () {
                                     setState(() {
                                       expandedStates[index] =
-                                          !expandedStates[index];
+                                      !expandedStates[index];
                                     });
                                   },
                                   child: AnimatedContainer(
@@ -377,12 +377,13 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                       child: SingleChildScrollView(
                                         child: Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Text16(text: widget.exp.positions?[index].title ?? "Position"),
+
+                                                Flexible(child: Text16(text: titleControllers[index].text ?? "Position")),
                                                 Icon(expandedStates[index]
                                                     ? Icons.arrow_drop_up_outlined
                                                     : Icons.arrow_drop_down_outlined),
@@ -406,9 +407,12 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                             isNumber: false,
                                                             prefixicon: Icon(Icons.title),
                                                             obsecuretext: false,
+                                                            onChange: (value) {
+                                                              setState(() {});
+                                                            },
                                                             validator: (value) {
                                                               if (value ==
-                                                                      null ||
+                                                                  null ||
                                                                   value
                                                                       .isEmpty) {
                                                                 return 'Title is required';
@@ -439,10 +443,12 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                           },
                                                           activeColor: AppColors.theme['primaryColor'],
                                                         ),
-                                                        Text(
-                                                          "I am currently working in this role",
-                                                          style: TextStyle(
-                                                              fontSize: 16),
+                                                        Flexible(
+                                                          child: Text(
+                                                            "I am currently working in this role",
+                                                            style: TextStyle(
+                                                                fontSize: 16),
+                                                          ),
                                                         ),
                                                       ],
                                                     ),
@@ -463,12 +469,12 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                             decoration: BoxDecoration(
                                                               color: AppColors.theme['backgroundColor'],
                                                               borderRadius:
-                                                                  BorderRadius.circular(10),
+                                                              BorderRadius.circular(10),
                                                               border:
-                                                                  Border.all(
+                                                              Border.all(
                                                                 color: AppColors
-                                                                        .theme[
-                                                                    'primaryColor'],
+                                                                    .theme[
+                                                                'primaryColor'],
                                                                 width: 1.0,
                                                               ),
                                                             ),
@@ -497,12 +503,12 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                               : () => _selectDate(context, false,index),
                                                           child: Container(
                                                             width:
-                                                                double.infinity,
+                                                            double.infinity,
                                                             padding: EdgeInsets.symmetric(
-                                                                    horizontal: 10,
-                                                                    vertical: 15),
+                                                                horizontal: 10,
+                                                                vertical: 15),
                                                             decoration:
-                                                                BoxDecoration(
+                                                            BoxDecoration(
                                                               color: AppColors.theme['backgroundColor'],
                                                               borderRadius: BorderRadius.circular(10),
                                                               border: Border.all(
@@ -566,8 +572,8 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                     // Skills
                                                     Column(
                                                       crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                                      CrossAxisAlignment
+                                                          .start,
                                                       children: [
                                                         Text18(text: "Skills"),
                                                         SizedBox(height: 10),
@@ -576,60 +582,60 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                             Expanded(
                                                                 child: TextFeild1(
                                                                     controller:
-                                                                        skillControllers[
-                                                                            index],
+                                                                    skillControllers[
+                                                                    index],
                                                                     hintText:
-                                                                        "Enter skill",
+                                                                    "Enter skill",
                                                                     isNumber:
-                                                                        false,
+                                                                    false,
                                                                     prefixicon:
-                                                                        Icon(Icons
-                                                                            .code),
+                                                                    Icon(Icons
+                                                                        .code),
                                                                     obsecuretext:
-                                                                        false)),
+                                                                    false)),
                                                             SizedBox(width: 10),
                                                             SizedBox(
                                                               height: 49,
                                                               child:
-                                                                  OutlinedButton(
+                                                              OutlinedButton(
                                                                 onPressed: () {
                                                                   if (skillControllers[
-                                                                          index]
+                                                                  index]
                                                                       .text
                                                                       .trim()
                                                                       .isNotEmpty) {
                                                                     setState(
-                                                                        () {
-                                                                      skills[index].add(skillControllers[
-                                                                              index]
-                                                                          .text
-                                                                          .trim());
-                                                                      skillControllers[
-                                                                              index]
-                                                                          .clear();
-                                                                    });
+                                                                            () {
+                                                                          skills[index].add(skillControllers[
+                                                                          index]
+                                                                              .text
+                                                                              .trim());
+                                                                          skillControllers[
+                                                                          index]
+                                                                              .clear();
+                                                                        });
                                                                   }
                                                                 },
                                                                 child: Icon(
                                                                   Icons.add,
                                                                   size: 25,
                                                                   color: AppColors
-                                                                          .theme[
-                                                                      'primaryColor'],
+                                                                      .theme[
+                                                                  'primaryColor'],
                                                                 ),
                                                                 style: ButtonStyle(
                                                                     side: MaterialStateProperty.all(BorderSide(
                                                                         width:
-                                                                            1,
+                                                                        1,
                                                                         color: AppColors.theme[
-                                                                            'primaryColor']!)),
+                                                                        'primaryColor']!)),
                                                                     shape: MaterialStateProperty.all(RoundedRectangleBorder(
                                                                         borderRadius:
-                                                                            BorderRadius.circular(
-                                                                                10))),
+                                                                        BorderRadius.circular(
+                                                                            10))),
                                                                     backgroundColor:
-                                                                        MaterialStateProperty.all(
-                                                                            Colors.transparent)),
+                                                                    MaterialStateProperty.all(
+                                                                        Colors.transparent)),
                                                               ),
                                                             ),
                                                           ],
@@ -639,31 +645,31 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                           spacing: 5,
                                                           runSpacing: 5,
                                                           children:
-                                                              skills[index]
-                                                                  .map(
-                                                                      (skill) =>
-                                                                          Chip(
-                                                                            label:
-                                                                                Text(
-                                                                              skill,
-                                                                              style: TextStyle(color: Colors.white),
-                                                                            ),
-                                                                            backgroundColor:
-                                                                                AppColors.theme['primaryColor'],
-                                                                            deleteIcon:
-                                                                                Icon(
-                                                                              Icons.cancel,
-                                                                              size: 20,
-                                                                              color: Colors.white,
-                                                                            ),
-                                                                            onDeleted:
-                                                                                () {
-                                                                              setState(() {
-                                                                                skills[index].remove(skill);
-                                                                              });
-                                                                            },
-                                                                          ))
-                                                                  .toList(),
+                                                          skills[index]
+                                                              .map(
+                                                                  (skill) =>
+                                                                  Chip(
+                                                                    label:
+                                                                    Text(
+                                                                      skill,
+                                                                      style: TextStyle(color: Colors.white),
+                                                                    ),
+                                                                    backgroundColor:
+                                                                    AppColors.theme['primaryColor'],
+                                                                    deleteIcon:
+                                                                    Icon(
+                                                                      Icons.cancel,
+                                                                      size: 20,
+                                                                      color: Colors.white,
+                                                                    ),
+                                                                    onDeleted:
+                                                                        () {
+                                                                      setState(() {
+                                                                        skills[index].remove(skill);
+                                                                      });
+                                                                    },
+                                                                  ))
+                                                              .toList(),
                                                         ),
                                                         SizedBox(height: 10),
                                                       ],
@@ -672,20 +678,23 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                 ),
                                               )
                                             ],
+
                                           ],
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                                //  button
 
+                                //  button
                                 SizedBox(height: 5),
                               ],
                             );
                           },
                         ),
+
                         SizedBox(height: 20),
+
                         Center(
                           child: CustomButton1(
                             isLoading: isLoading,
@@ -737,7 +746,7 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                 setState(() {
                                   isLoading = false;
                                 });
-                                Navigator.pop(context);
+                                // Navigator.pop(context);
                               }
                               else {
                                 HelperFunctions.showToast("Company Name,Title and Dates cannot be empty");
