@@ -1,5 +1,6 @@
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/project.dart';
+import 'package:connect_with/models/user/skills.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_education.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_experience_screen.dart';
@@ -13,6 +14,7 @@ import 'package:connect_with/screens/home_screens/normal_user_home_screens/profi
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_experience_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_language_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_project.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_skills.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_testscore.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
@@ -745,14 +747,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ? 2
                                         : appUserProvider.user?.skills?.length,
                                 itemBuilder: (context, index) {
-                                  return SkillCard();
+                                  return SkillCard(skill: appUserProvider.user?.skills?[index] ?? Skill());
                                 },
                               ),
                             if ((appUserProvider.user?.skills?.length ?? 0) > 2)
                               InkWell(
                                 onTap: () {
                                   Navigator.push(
-                                      context, LeftToRight(ShowMoreProject()));
+                                      context, LeftToRight(ShowMoreSkills()));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
