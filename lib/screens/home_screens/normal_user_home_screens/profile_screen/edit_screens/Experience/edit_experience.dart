@@ -1,4 +1,6 @@
+import 'package:connect_with/models/user/experience.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_screens/Experience/edit_screen_experience.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/experience_card.dart';
@@ -49,7 +51,6 @@ class _EditExperienceState extends State<EditExperience> {
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
-                        Text("Tap anyone and edit"),
                         SizedBox(
                           height: 20,
                         ),
@@ -60,12 +61,17 @@ class _EditExperienceState extends State<EditExperience> {
                           itemBuilder: (context, index) {
                             return InkWell(
                               onTap: (){
-                                print("jsjdf");
+                                Navigator.push(context, LeftToRight(EditScreenExperience(exp:appUserProvider.user?.experiences?[index] ?? Experience())));
                               },
-                              child: Container(
-                                child: ExperienceCard(
-                                    experience: appUserProvider
-                                        .user!.experiences![index]),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    child: ExperienceCard(
+                                        experience: appUserProvider
+                                            .user!.experiences![index]),
+                                  ),
+                                  Divider(),
+                                ],
                               ),
                             );
                           },

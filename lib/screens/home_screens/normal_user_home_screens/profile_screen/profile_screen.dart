@@ -9,7 +9,7 @@ import 'package:connect_with/screens/home_screens/normal_user_home_screens/profi
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_speak_language.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_testscore.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_profile.dart';
-import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_screens/edit_experience.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_screens/Experience/edit_experience.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_education.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_experience_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_language_screen.dart';
