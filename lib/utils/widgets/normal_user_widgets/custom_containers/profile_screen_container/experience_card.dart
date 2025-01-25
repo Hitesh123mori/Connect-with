@@ -89,10 +89,30 @@ class _ExperienceCardState extends State<ExperienceCard> {
                           style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
-                        Text(
-                          "${_calculateTotalDuration()}",
-                          style: TextStyle(fontSize: 14, color: Colors.grey),
-                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "${_calculateTotalDuration()}",
+                              style: TextStyle(fontSize: 14, color: Colors.grey),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 4.0),
+                              child: Text(
+                                "•", // Dot separator
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              widget.experience.employementType ?? "",
+                              style: TextStyle(fontSize: 14, color: Colors.grey),
+                            ),
+
+                          ],
+                        )
                       ],
                     ),
                   ),

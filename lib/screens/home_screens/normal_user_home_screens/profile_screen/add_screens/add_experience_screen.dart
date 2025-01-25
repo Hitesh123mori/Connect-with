@@ -84,7 +84,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
 
       await OrganizationProfile.addEmployee(oid ?? "",context.read<AppUserProvider>().user?.userID ?? "") ;
 
-      final bucketProvider = Provider.of<BucketsProvider>(context, listen: true);
+      final bucketProvider = Provider.of<BucketsProvider>(context, listen: false);
       bucketProvider.bucket = "";
 
       if (isAdded) {

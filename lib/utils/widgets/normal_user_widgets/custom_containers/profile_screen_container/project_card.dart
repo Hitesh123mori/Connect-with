@@ -81,9 +81,12 @@ class _ProjectCardState extends State<ProjectCard> {
                   itemBuilder: (context, index) {
                     final user = users[index];
                     return  ListTile(
-                      leading: CircleAvatar(
+                      leading: user.profilePath!="" ? CircleAvatar(
                           backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.2),
                           backgroundImage: NetworkImage(user.profilePath ?? "")
+                      ) : CircleAvatar(
+                          backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.2),
+                        child: Icon(Icons.person,color: Colors.grey,),
                       ),
                       title: Text16(text: user.userName ?? ""),
                       subtitle: Text14(text: user.headLine ?? "",isBold: false,),

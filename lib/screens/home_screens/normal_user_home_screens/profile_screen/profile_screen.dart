@@ -4,6 +4,7 @@ import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_education.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_experience_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_project_screen.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_skill_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_speak_language.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_testscore.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_profile.dart';
@@ -22,6 +23,7 @@ import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/experience_card.dart';
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/language_card.dart';
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/project_card.dart';
+import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/skill_card.dart';
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/test_score_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -190,7 +192,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         softWrap: true,
                         overflow: TextOverflow.visible,
                       ),
-
                       if (appUserProvider.user!.info?.address != ",,.")
                         Column(
                           children: [
@@ -198,7 +199,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 10,
                             ),
                             Text(
-                              (appUserProvider.user!.info?.address ?? "Address"),
+                              (appUserProvider.user!.info?.address ??
+                                  "Address"),
                               style: TextStyle(fontSize: 16),
                               softWrap: true,
                               overflow: TextOverflow.visible,
@@ -217,7 +219,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               "google.com",
                         ),
                       SizedBox(height: 20),
-
                       Row(
                         children: [
                           Text(
@@ -630,15 +631,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ? 2
                                     : appUserProvider.user?.projects?.length,
                                 itemBuilder: (context, index) {
-                                  return ProjectCard(project: appUserProvider.user?.projects?[index] ?? Project());
+                                  return ProjectCard(
+                                      project: appUserProvider
+                                              .user?.projects?[index] ??
+                                          Project());
                                 },
                               ),
                             if ((appUserProvider.user?.projects?.length ?? 0) >
                                 2)
                               InkWell(
                                 onTap: () {
-                                  Navigator.push(context,
-                                      LeftToRight(ShowMoreProject()));
+                                  Navigator.push(
+                                      context, LeftToRight(ShowMoreProject()));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -706,7 +710,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   children: [
                                     IconButton(
                                       icon: Icon(Icons.add),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(context,
+                                            LeftToRight(AddSkillScreen()));
+                                      },
                                     ),
                                     IconButton(
                                       icon: Icon(Icons.edit),
@@ -719,6 +726,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             SizedBox(
                               height: 10,
                             ),
+                            if (appUserProvider.user?.skills?.length == 0)
+                              Center(
+                                child: Text(
+                                  "No skills added yet.",
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 16),
+                                ),
+                              ),
+                            if (appUserProvider.user?.skills?.length != 0)
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount:
+                                    (appUserProvider.user?.skills?.length ??
+                                                0) >
+                                            2
+                                        ? 2
+                                        : appUserProvider.user?.skills?.length,
+                                itemBuilder: (context, index) {
+                                  return SkillCard();
+                                },
+                              ),
+                            if ((appUserProvider.user?.skills?.length ?? 0) > 2)
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context, LeftToRight(ShowMoreProject()));
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: AppColors.theme['backgroundColor'],
+                                  ),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Show More",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(Icons.arrow_right_alt_outlined)
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
                           ],
                         ),
                       ),

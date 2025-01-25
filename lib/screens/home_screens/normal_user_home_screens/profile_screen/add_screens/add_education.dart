@@ -105,7 +105,7 @@ class _AddEducationState extends State<AddEducation> {
       bool isAdded = await UserProfile.addEducation(
           context.read<AppUserProvider>().user?.userID, education);
 
-      final bucketsProvider = Provider.of<BucketsProvider>(context, listen: true);
+      final bucketsProvider = Provider.of<BucketsProvider>(context, listen: false);
       bucketsProvider.bucket = "";
 
       await OrganizationProfile.addEmployee(oid ?? "",context.read<AppUserProvider>().user?.userID ?? "") ;
