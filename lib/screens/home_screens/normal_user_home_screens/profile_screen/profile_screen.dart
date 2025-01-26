@@ -1,6 +1,7 @@
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/project.dart';
 import 'package:connect_with/models/user/skills.dart';
+import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_education.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_experience_screen.dart';
@@ -441,7 +442,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               InkWell(
                                 onTap: () {
                                   Navigator.push(context,
-                                      LeftToRight(ShowMoreExperienceScreen()));
+                                      LeftToRight(ShowMoreExperienceScreen(user: appUserProvider.user ?? AppUser(),)));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -555,7 +556,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               InkWell(
                                 onTap: () {
                                   Navigator.push(context,
-                                      LeftToRight(ShowMoreEducation()));
+                                      LeftToRight(ShowMoreEducation(user: appUserProvider.user ?? AppUser(),)));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -669,7 +670,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               InkWell(
                                 onTap: () {
                                   Navigator.push(
-                                      context, LeftToRight(ShowMoreProject()));
+                                      context, LeftToRight(ShowMoreProject(user: appUserProvider.user ?? AppUser(),)));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -779,7 +780,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               InkWell(
                                 onTap: () {
                                   Navigator.push(
-                                      context, LeftToRight(ShowMoreSkills()));
+                                      context, LeftToRight(ShowMoreSkills(user: appUserProvider.user??AppUser(),)));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -892,7 +893,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               InkWell(
                                 onTap: () {
                                   Navigator.push(context,
-                                      LeftToRight(ShowMoreTestscore()));
+                                      LeftToRight(ShowMoreTestscore(user: appUserProvider.user??AppUser(),)));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -1004,7 +1005,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               InkWell(
                                 onTap: () {
                                   Navigator.push(context,
-                                      LeftToRight(ShowMoreLanguageScreen()));
+                                      LeftToRight(ShowMoreLanguageScreen(user: appUserProvider.user ?? AppUser(),)));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(

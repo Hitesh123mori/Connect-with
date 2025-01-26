@@ -1,6 +1,7 @@
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/models/user/project.dart';
 import 'package:connect_with/models/user/user.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/other_user_profile_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
@@ -91,7 +92,7 @@ class _ProjectCardState extends State<ProjectCard> {
                       title: Text16(text: user.userName ?? ""),
                       subtitle: Text14(text: user.headLine ?? "",isBold: false,),
                       onTap:(){
-                        // open profile screen of that user
+                        Navigator.push(context, LeftToRight(OtherUserProfileScreen(user: user,)));
                       },
                     );
                   },
