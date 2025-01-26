@@ -1,5 +1,7 @@
 import 'package:connect_with/models/organization/organization.dart';
 import 'package:connect_with/models/user/user.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/other_user_profile_screen.dart';
+import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';

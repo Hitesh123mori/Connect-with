@@ -2,6 +2,8 @@ import 'package:connect_with/apis/normal/user_crud_operations/user_details_updat
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/buckets_provider.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/other_user_profile_screen.dart';
+import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/shimmer_effects/normal_user/user_card_shimmer_effect.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
@@ -177,6 +179,9 @@ class _AllUserScreenSelectUsersState extends State<AllUserScreenSelectUsers> {
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 5.0),
                                       child: ListTile(
+                                        onTap: (){
+                                          Navigator.push(context, LeftToRight(OtherUserProfileScreen(user: user,)));
+                                        },
                                         leading: CircleAvatar(
                                           backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.2),
                                           backgroundImage: user.profilePath != null &&
