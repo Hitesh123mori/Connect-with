@@ -142,11 +142,14 @@ class _ExperienceCardState extends State<ExperienceCard> {
                                 ),
                               ),
                               if (!isLast)
-                                Container(
-                                  width: 2,
-                                  height: 50,
-                                  color: AppColors.theme['primaryColor']
-                                      ?.withOpacity(0.5),
+                                Padding(
+                                  padding:  EdgeInsets.symmetric(vertical: 5.0),
+                                  child: Container(
+                                    width: 2,
+                                    height: 50,
+                                    color: AppColors.theme['primaryColor']
+                                        ?.withOpacity(0.5),
+                                  ),
                                 ),
                             ],
                           ),
@@ -225,75 +228,82 @@ class _ExperienceCardState extends State<ExperienceCard> {
                                 height: 10,
                               ),
                               if (position.media != "")
-                                InkWell(
-                                  child: Container(
-                                    height: 100,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: AppColors.theme['primaryColor']
-                                          .withOpacity(0.2),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.network(
-                                        position.media!,
-                                        fit: BoxFit.cover,
+                                Column(
+                                  children: [
+                                    InkWell(
+                                      child: Container(
+                                        height: 100,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          color: AppColors.theme['primaryColor']
+                                              .withOpacity(0.2),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(10),
+                                          child: Image.network(
+                                            position.media!,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
                                       ),
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            LeftToRight(ImageViewScreen(
+                                              path: position.media ?? "",
+                                              isFile: false,
+                                            )));
+                                        // showDialog(
+                                        //   context: context,
+                                        //   builder: (BuildContext context) {
+                                        //     return AlertDialog(
+                                        //       backgroundColor:
+                                        //           AppColors.theme['backgroundColor'],
+                                        //       shape: RoundedRectangleBorder(
+                                        //         borderRadius: BorderRadius.circular(20),
+                                        //       ),
+                                        //       title: Row(
+                                        //         mainAxisAlignment:
+                                        //             MainAxisAlignment.spaceBetween,
+                                        //         children: [
+                                        //           Text(
+                                        //             "Media Image",
+                                        //             style: TextStyle(
+                                        //               fontWeight: FontWeight.bold,
+                                        //               fontSize: 18,
+                                        //               color: AppColors
+                                        //                   .theme['primaryTextColor'],
+                                        //             ),
+                                        //           ),
+                                        //           IconButton(
+                                        //               onPressed: () {
+                                        //                 Navigator.pop(context);
+                                        //               },
+                                        //               icon: Icon(Icons.close))
+                                        //         ],
+                                        //       ),
+                                        //       content: SizedBox(
+                                        //         // height: mq.height * 1,
+                                        //         width: mq.width * 1,
+                                        //         child: Container(
+                                        //           child: position.media != ""
+                                        //               ? Image.network(
+                                        //                   position.media!,
+                                        //                   // fit: BoxFit.,
+                                        //                 )
+                                        //               : Container(),
+                                        //         ),
+                                        //       ),
+                                        //     );
+                                        //   },
+                                        // );
+                                      },
                                     ),
-                                  ),
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        LeftToRight(ImageViewScreen(
-                                          path: position.media ?? "",
-                                          isFile: false,
-                                        )));
-                                    // showDialog(
-                                    //   context: context,
-                                    //   builder: (BuildContext context) {
-                                    //     return AlertDialog(
-                                    //       backgroundColor:
-                                    //           AppColors.theme['backgroundColor'],
-                                    //       shape: RoundedRectangleBorder(
-                                    //         borderRadius: BorderRadius.circular(20),
-                                    //       ),
-                                    //       title: Row(
-                                    //         mainAxisAlignment:
-                                    //             MainAxisAlignment.spaceBetween,
-                                    //         children: [
-                                    //           Text(
-                                    //             "Media Image",
-                                    //             style: TextStyle(
-                                    //               fontWeight: FontWeight.bold,
-                                    //               fontSize: 18,
-                                    //               color: AppColors
-                                    //                   .theme['primaryTextColor'],
-                                    //             ),
-                                    //           ),
-                                    //           IconButton(
-                                    //               onPressed: () {
-                                    //                 Navigator.pop(context);
-                                    //               },
-                                    //               icon: Icon(Icons.close))
-                                    //         ],
-                                    //       ),
-                                    //       content: SizedBox(
-                                    //         // height: mq.height * 1,
-                                    //         width: mq.width * 1,
-                                    //         child: Container(
-                                    //           child: position.media != ""
-                                    //               ? Image.network(
-                                    //                   position.media!,
-                                    //                   // fit: BoxFit.,
-                                    //                 )
-                                    //               : Container(),
-                                    //         ),
-                                    //       ),
-                                    //     );
-                                    //   },
-                                    // );
-                                  },
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                  ],
                                 )
                             ],
                           ),
@@ -313,25 +323,36 @@ class _ExperienceCardState extends State<ExperienceCard> {
     final positions = widget.experience.positions;
     if (positions == null || positions.isEmpty) return "Duration not available";
 
-    int totalDays = 0;
+    DateTime? earliestStart;
+    DateTime? latestEnd;
 
     for (var position in positions) {
       DateTime? start = _parseDate(position.startDate ?? "");
       DateTime? end = _parseEndDate(position.endDate ?? "");
 
-      if (start != null && end != null) {
-        final duration = end.difference(start);
-        totalDays += duration.inDays;
+      if (start != null) {
+        if (earliestStart == null || start.isBefore(earliestStart)) {
+          earliestStart = start;
+        }
+      }
+
+      if (end != null) {
+        if (latestEnd == null || end.isAfter(latestEnd)) {
+          latestEnd = end;
+        }
       }
     }
 
-    if (totalDays == 0) return "Duration not available";
+    if (earliestStart == null || latestEnd == null) return "Duration not available";
+
+    final totalDays = latestEnd.difference(earliestStart).inDays;
 
     final years = totalDays ~/ 365;
     final months = (totalDays % 365) ~/ 30;
 
-    return "${years > 0 ? "$years yr " : ""}${months >= 0 ? "$months mos" : ""}";
+    return "${years > 0 ? "$years yr " : ""}${months > 0 ? "$months mos" : ""}".trim();
   }
+
 
   String _calculateDuration(String startDate, String endDate) {
     DateTime? start = _parseDate(startDate);

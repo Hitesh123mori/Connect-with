@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/organization/organization.dart';
@@ -17,8 +18,11 @@ import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/nor
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_18.dart';
+import 'package:connect_with/utils/widgets/organization_widgets/custom_container_org/company_profile/custom_profile_button_org.dart';
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class EditScreenExperience extends StatefulWidget {
@@ -81,8 +85,13 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
   @override
   void initState() {
     super.initState();
+    init();
+  }
 
+  Future<void> init() async {
     int len = widget.exp.positions?.length ?? 0;
+
+    selectedEmploymentType = widget.exp.employementType ;
 
     expandedStates = List<bool>.generate(len, (index) => false);
     skillControllers = List.generate(len, (index) => TextEditingController());
@@ -93,6 +102,7 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
         text: widget.exp.positions?[index].title ?? '',
       ),
     );
+
     descriptionControllers = List.generate(
       len,
       (index) => TextEditingController(
@@ -110,7 +120,7 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
 
     endDate = List.generate(
       widget.exp.positions?.length ?? 0,
-          (index) {
+      (index) {
         final positionEndDate = widget.exp.positions?[index].endDate;
         if (positionEndDate != null) {
           if (positionEndDate == "Present") {
@@ -136,7 +146,7 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
 
     startDate = List.generate(
       widget.exp.positions?.length ?? 0,
-          (index) {
+      (index) {
         final positionStartDate = widget.exp.positions?[index].startDate;
         // print("#startDate: $positionStartDate");
         if (positionStartDate != null) {
@@ -157,7 +167,6 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
       },
     );
 
-
     skills = List.generate(
         len, ((index) => widget.exp.positions?[index].skills ?? []));
 
@@ -169,24 +178,36 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
 
   int? _getMonthFromName(String monthName) {
     const monthNames = {
-      "Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6,
-      "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12
+      "Jan": 1,
+      "Feb": 2,
+      "Mar": 3,
+      "Apr": 4,
+      "May": 5,
+      "Jun": 6,
+      "Jul": 7,
+      "Aug": 8,
+      "Sep": 9,
+      "Oct": 10,
+      "Nov": 11,
+      "Dec": 12
     };
     return monthNames[monthName];
   }
 
   Future<void> fetchCompany() async {
-
     final pro = Provider.of<BucketsProvider>(context, listen: false);
-    pro.bucket2 = "" ;
+    pro.bucket2 = "";
     pro.bucket = "";
 
     String orgId = widget.exp.companyId ?? "";
     if (await OrganizationProfile.checkOrganizationExists(orgId)) {
-      org = Organization.fromJson(await OrganizationProfile.getOrganizationById(orgId));
+      org = Organization.fromJson(
+          await OrganizationProfile.getOrganizationById(orgId));
       titleController.text = org?.name ?? "Unknown";
+      oid = org?.organizationId ?? "";
     } else {
       titleController.text = orgId;
+      oid = orgId;
     }
     setState(() {});
   }
@@ -196,10 +217,10 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
     mq = MediaQuery.of(context).size;
     setState(() {
       final pro = Provider.of<BucketsProvider>(context, listen: true);
-      if(pro.bucket != ""){
-        oid  = pro.bucket  ?? "";
+      if (pro.bucket != "") {
+        oid = pro.bucket ?? "";
       }
-      if(pro.bucket2!="") {
+      if (pro.bucket2 != "") {
         titleController.text = pro.bucket2 ?? "";
       }
       // print("#bucket ${pro.bucket}") ;
@@ -213,8 +234,73 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
             home: Scaffold(
               backgroundColor: AppColors.theme['backgroundColor'],
               appBar: AppBar(
+                centerTitle: true,
+                title: Text18(
+                  text: "Edit Experience",
+                  isWhite: true,
+                ),
                 backgroundColor: AppColors.theme['primaryColor'],
                 toolbarHeight: 50,
+                actions: [
+                  IconButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => Dialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Container(
+                                height: 150,
+                                decoration: BoxDecoration(
+                                  color: AppColors.theme['secondaryColor'],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                width: double.maxFinite,
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      child: Column(
+                                        children: [
+                                          Center(
+                                              child:
+                                                  HeadingText(heading: "Help")),
+                                          Divider(),
+                                        ],
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text16(
+                                            text:
+                                                "Help 1 : * Indicates required field",
+                                            isBold: false,
+                                          ),
+                                          Text16(
+                                            text:
+                                                "Help 2 : Long press to delete position",
+                                            isBold: false,
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                )),
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        Icons.info_outline_rounded,
+                        color: Colors.white,
+                      ))
+                ],
                 leading: IconButton(
                   onPressed: () {
                     Navigator.pop(context);
@@ -235,10 +321,7 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        HeadingText(heading: "Edit Experience"),
-                        NormalText(text: "* Indicates required field"),
                         SizedBox(height: 20),
-
                         // Company Details Section
                         Container(
                           decoration: BoxDecoration(
@@ -263,7 +346,10 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                     Text18(text: "Company Name*"),
                                     InkWell(
                                       onTap: () {
-                                        Navigator.push(context, LeftToRight(AllOrganizationScreenSelectCompany()));
+                                        Navigator.push(
+                                            context,
+                                            LeftToRight(
+                                                AllOrganizationScreenSelectCompany()));
                                       },
                                       child: TextFeild1(
                                         enabled: false,
@@ -356,14 +442,174 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                           itemCount: widget.exp.positions?.length ?? 0,
                           physics: BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
-                            return  Column(
+                            return Column(
                               children: [
                                 InkWell(
                                   onTap: () {
                                     setState(() {
                                       expandedStates[index] =
-                                      !expandedStates[index];
+                                          !expandedStates[index];
                                     });
+                                  },
+                                  onLongPress: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => Dialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Container(
+                                            height: 250,
+                                            decoration: BoxDecoration(
+                                              color: AppColors
+                                                  .theme['secondaryColor'],
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            width: double.maxFinite,
+                                            child: Column(
+                                              children: [
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Container(
+                                                  child: Column(
+                                                    children: [
+                                                      Center(
+                                                          child: HeadingText(
+                                                              heading:
+                                                                  "Confirmation")),
+                                                      Divider(),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Center(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Center(
+                                                          child: Icon(
+                                                        Icons.cancel,
+                                                        color: Colors.red,
+                                                        size: 50,
+                                                      )),
+                                                      Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal:
+                                                                    20.0,
+                                                                vertical: 5),
+                                                        child: Text16(
+                                                          text:
+                                                              "Are you sure you want to delete  position ? ",
+                                                          isBold: false,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 20,
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          InkWell(
+                                                            onTap: () async {
+                                                              widget
+                                                                  .exp.positions
+                                                                  ?.remove(widget
+                                                                          .exp
+                                                                          .positions?[
+                                                                      index]);
+                                                              init();
+                                                              Navigator.pop(
+                                                                  context);
+                                                              appUserProvider
+                                                                  .initUser();
+                                                              setState(() {});
+                                                              HelperFunctions
+                                                                  .showToast(
+                                                                      "Successfully Deleted!");
+                                                            },
+                                                            child: Container(
+                                                              height: 40,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: AppColors
+                                                                        .theme[
+                                                                    'primaryColor'],
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                              child: Padding(
+                                                                padding: EdgeInsets
+                                                                    .symmetric(
+                                                                        horizontal:
+                                                                            30.0),
+                                                                child: Center(
+                                                                    child:
+                                                                        Text16(
+                                                                  text: "Yes",
+                                                                  isWhite: true,
+                                                                )),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 20,
+                                                          ),
+                                                          InkWell(
+                                                            onTap: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: Container(
+                                                                height: 40,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                10),
+                                                                        border:
+                                                                            Border.all(
+                                                                          color:
+                                                                              Colors.red,
+                                                                        )),
+                                                                child: Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .symmetric(
+                                                                    horizontal:
+                                                                        30.0,
+                                                                  ),
+                                                                  child: Center(
+                                                                    child: Text(
+                                                                      "No",
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: Colors
+                                                                            .red,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                )),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            )),
+                                      ),
+                                    );
                                   },
                                   child: AnimatedContainer(
                                     duration: Duration(milliseconds: 500),
@@ -377,16 +623,24 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                       child: SingleChildScrollView(
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-
-                                                Flexible(child: Text16(text: titleControllers[index].text ?? "Position")),
+                                                Flexible(
+                                                    child: Text16(
+                                                        text: titleControllers[
+                                                                    index]
+                                                                .text ??
+                                                            "Position")),
                                                 Icon(expandedStates[index]
-                                                    ? Icons.arrow_drop_up_outlined
-                                                    : Icons.arrow_drop_down_outlined),
+                                                    ? Icons
+                                                        .arrow_drop_up_outlined
+                                                    : Icons
+                                                        .arrow_drop_down_outlined),
                                               ],
                                             ),
                                             if (expandedStates[index]) ...[
@@ -398,30 +652,34 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                   children: [
                                                     // Title
                                                     Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
                                                         Text18(text: "Title*"),
                                                         TextFeild1(
-                                                            controller: titleControllers[index],
-                                                            hintText: 'Ex. Software Developer',
+                                                            controller:
+                                                                titleControllers[
+                                                                    index],
+                                                            hintText:
+                                                                'Ex. Software Developer',
                                                             isNumber: false,
-                                                            prefixicon: Icon(Icons.title),
+                                                            prefixicon: Icon(
+                                                                Icons.title),
                                                             obsecuretext: false,
                                                             onChange: (value) {
                                                               setState(() {});
                                                             },
                                                             validator: (value) {
                                                               if (value ==
-                                                                  null ||
+                                                                      null ||
                                                                   value
                                                                       .isEmpty) {
                                                                 return 'Title is required';
                                                               }
                                                               return null;
                                                             }),
-
                                                         SizedBox(height: 10),
-
                                                       ],
                                                     ),
 
@@ -429,19 +687,26 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                     Row(
                                                       children: [
                                                         Checkbox(
-                                                          value: isCurrentlyWorking[index],
+                                                          value:
+                                                              isCurrentlyWorking[
+                                                                  index],
                                                           onChanged:
                                                               (bool? value) {
                                                             setState(() {
-                                                              isCurrentlyWorking[index] =
+                                                              isCurrentlyWorking[
+                                                                      index] =
                                                                   value ??
                                                                       false;
-                                                              if (isCurrentlyWorking[index]) {
-                                                                endDate[index] = null;
+                                                              if (isCurrentlyWorking[
+                                                                  index]) {
+                                                                endDate[index] =
+                                                                    null;
                                                               }
                                                             });
                                                           },
-                                                          activeColor: AppColors.theme['primaryColor'],
+                                                          activeColor: AppColors
+                                                                  .theme[
+                                                              'primaryColor'],
                                                         ),
                                                         Flexible(
                                                           child: Text(
@@ -456,34 +721,55 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
 
                                                     // Start date picker
                                                     Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
                                                         Text18(
-                                                            text: "Start Date*"),
+                                                            text:
+                                                                "Start Date*"),
                                                         SizedBox(height: 10),
                                                         GestureDetector(
-                                                          onTap: () => _selectDate(context, true, index),
+                                                          onTap: () =>
+                                                              _selectDate(
+                                                                  context,
+                                                                  true,
+                                                                  index),
                                                           child: Container(
-                                                            width: double.infinity,
-                                                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                                                            decoration: BoxDecoration(
-                                                              color: AppColors.theme['backgroundColor'],
+                                                            width:
+                                                                double.infinity,
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        10,
+                                                                    vertical:
+                                                                        15),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: AppColors
+                                                                      .theme[
+                                                                  'backgroundColor'],
                                                               borderRadius:
-                                                              BorderRadius.circular(10),
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
                                                               border:
-                                                              Border.all(
+                                                                  Border.all(
                                                                 color: AppColors
-                                                                    .theme[
-                                                                'primaryColor'],
+                                                                        .theme[
+                                                                    'primaryColor'],
                                                                 width: 1.0,
                                                               ),
                                                             ),
                                                             child: Text(
-                                                              startDate[index] != null
+                                                              startDate[index] !=
+                                                                      null
                                                                   ? "${startDate[index]?.day}/${startDate[index]?.month}/${startDate[index]?.year}"
                                                                   : "Select Start Date",
                                                               style: TextStyle(
-                                                                  color: AppColors.theme['primaryColor']),
+                                                                  color: AppColors
+                                                                          .theme[
+                                                                      'primaryColor']),
                                                             ),
                                                           ),
                                                         ),
@@ -493,37 +779,60 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
 
                                                     // End date picker
                                                     Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
-                                                        Text18(text: "End Date*"),
+                                                        Text18(
+                                                            text: "End Date*"),
                                                         SizedBox(height: 10),
                                                         GestureDetector(
-                                                          onTap: isCurrentlyWorking[index]
+                                                          onTap: isCurrentlyWorking[
+                                                                  index]
                                                               ? null
-                                                              : () => _selectDate(context, false,index),
+                                                              : () =>
+                                                                  _selectDate(
+                                                                      context,
+                                                                      false,
+                                                                      index),
                                                           child: Container(
                                                             width:
-                                                            double.infinity,
-                                                            padding: EdgeInsets.symmetric(
-                                                                horizontal: 10,
-                                                                vertical: 15),
+                                                                double.infinity,
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        10,
+                                                                    vertical:
+                                                                        15),
                                                             decoration:
-                                                            BoxDecoration(
-                                                              color: AppColors.theme['backgroundColor'],
-                                                              borderRadius: BorderRadius.circular(10),
-                                                              border: Border.all(
-                                                                color: AppColors.theme['primaryColor']!,
+                                                                BoxDecoration(
+                                                              color: AppColors
+                                                                      .theme[
+                                                                  'backgroundColor'],
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                              border:
+                                                                  Border.all(
+                                                                color: AppColors
+                                                                        .theme[
+                                                                    'primaryColor']!,
                                                                 width: 1.0,
                                                               ),
                                                             ),
-                                                            child:  Text(
-                                                              isCurrentlyWorking[index]
+                                                            child: Text(
+                                                              isCurrentlyWorking[
+                                                                      index]
                                                                   ? "Present"
-                                                                  : endDate[index] != null
-                                                                  ? "${endDate[index]!.day}/${endDate[index]!.month}/${endDate[index]!.year}"
-                                                                  : "Select End Date",
+                                                                  : endDate[index] !=
+                                                                          null
+                                                                      ? "${endDate[index]!.day}/${endDate[index]!.month}/${endDate[index]!.year}"
+                                                                      : "Select End Date",
                                                               style: TextStyle(
-                                                                  color: AppColors.theme['primaryColor']),
+                                                                  color: AppColors
+                                                                          .theme[
+                                                                      'primaryColor']),
                                                             ),
                                                           ),
                                                         ),
@@ -533,7 +842,9 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
 
                                                     // Description
                                                     Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
                                                         Text16(
                                                           text: "Description",
@@ -541,26 +852,50 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                         Container(
                                                           height: 200,
                                                           decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius.circular(10),
-                                                              color: AppColors.theme['backgroundColor'],
-                                                              border: Border.all(color: AppColors.theme['primaryColor'])),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                              color: AppColors
+                                                                      .theme[
+                                                                  'backgroundColor'],
+                                                              border: Border.all(
+                                                                  color: AppColors
+                                                                          .theme[
+                                                                      'primaryColor'])),
                                                           child: Padding(
-                                                              padding: const EdgeInsets.all(8.0),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
                                                               child: Theme(
                                                                 data: ThemeData(
-                                                                    textSelectionTheme:
-                                                                    TextSelectionThemeData(
-                                                                        selectionHandleColor: AppColors.theme['primaryColor'],
-                                                                        cursorColor: AppColors.theme['primaryColor'],
-                                                                        selectionColor: AppColors.theme['primaryColor'].withOpacity(0.3))),
-                                                                child: TextFormField(
-                                                                  cursorColor: AppColors.theme['primaryColor'],
-                                                                  obscureText: false,
-                                                                  controller: descriptionControllers[index],
-                                                                  maxLines: null,
+                                                                    textSelectionTheme: TextSelectionThemeData(
+                                                                        selectionHandleColor:
+                                                                            AppColors.theme[
+                                                                                'primaryColor'],
+                                                                        cursorColor:
+                                                                            AppColors.theme[
+                                                                                'primaryColor'],
+                                                                        selectionColor: AppColors
+                                                                            .theme['primaryColor']
+                                                                            .withOpacity(0.3))),
+                                                                child:
+                                                                    TextFormField(
+                                                                  cursorColor: AppColors
+                                                                          .theme[
+                                                                      'primaryColor'],
+                                                                  obscureText:
+                                                                      false,
+                                                                  controller:
+                                                                      descriptionControllers[
+                                                                          index],
+                                                                  maxLines:
+                                                                      null,
                                                                   decoration: InputDecoration(
-                                                                      hintText: 'Write description here...',
-                                                                      border: InputBorder.none),
+                                                                      hintText:
+                                                                          'Write description here...',
+                                                                      border: InputBorder
+                                                                          .none),
                                                                   // onSaved: (value) => _about = value,
                                                                 ),
                                                               )),
@@ -572,8 +907,8 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                     // Skills
                                                     Column(
                                                       crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
                                                         Text18(text: "Skills"),
                                                         SizedBox(height: 10),
@@ -582,60 +917,60 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                             Expanded(
                                                                 child: TextFeild1(
                                                                     controller:
-                                                                    skillControllers[
-                                                                    index],
+                                                                        skillControllers[
+                                                                            index],
                                                                     hintText:
-                                                                    "Enter skill",
+                                                                        "Enter skill",
                                                                     isNumber:
-                                                                    false,
+                                                                        false,
                                                                     prefixicon:
-                                                                    Icon(Icons
-                                                                        .code),
+                                                                        Icon(Icons
+                                                                            .code),
                                                                     obsecuretext:
-                                                                    false)),
+                                                                        false)),
                                                             SizedBox(width: 10),
                                                             SizedBox(
                                                               height: 49,
                                                               child:
-                                                              OutlinedButton(
+                                                                  OutlinedButton(
                                                                 onPressed: () {
                                                                   if (skillControllers[
-                                                                  index]
+                                                                          index]
                                                                       .text
                                                                       .trim()
                                                                       .isNotEmpty) {
                                                                     setState(
-                                                                            () {
-                                                                          skills[index].add(skillControllers[
-                                                                          index]
-                                                                              .text
-                                                                              .trim());
-                                                                          skillControllers[
-                                                                          index]
-                                                                              .clear();
-                                                                        });
+                                                                        () {
+                                                                      skills[index].add(skillControllers[
+                                                                              index]
+                                                                          .text
+                                                                          .trim());
+                                                                      skillControllers[
+                                                                              index]
+                                                                          .clear();
+                                                                    });
                                                                   }
                                                                 },
                                                                 child: Icon(
                                                                   Icons.add,
                                                                   size: 25,
                                                                   color: AppColors
-                                                                      .theme[
-                                                                  'primaryColor'],
+                                                                          .theme[
+                                                                      'primaryColor'],
                                                                 ),
                                                                 style: ButtonStyle(
                                                                     side: MaterialStateProperty.all(BorderSide(
                                                                         width:
-                                                                        1,
+                                                                            1,
                                                                         color: AppColors.theme[
-                                                                        'primaryColor']!)),
+                                                                            'primaryColor']!)),
                                                                     shape: MaterialStateProperty.all(RoundedRectangleBorder(
                                                                         borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            10))),
+                                                                            BorderRadius.circular(
+                                                                                10))),
                                                                     backgroundColor:
-                                                                    MaterialStateProperty.all(
-                                                                        Colors.transparent)),
+                                                                        MaterialStateProperty.all(
+                                                                            Colors.transparent)),
                                                               ),
                                                             ),
                                                           ],
@@ -645,31 +980,31 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                           spacing: 5,
                                                           runSpacing: 5,
                                                           children:
-                                                          skills[index]
-                                                              .map(
-                                                                  (skill) =>
-                                                                  Chip(
-                                                                    label:
-                                                                    Text(
-                                                                      skill,
-                                                                      style: TextStyle(color: Colors.white),
-                                                                    ),
-                                                                    backgroundColor:
-                                                                    AppColors.theme['primaryColor'],
-                                                                    deleteIcon:
-                                                                    Icon(
-                                                                      Icons.cancel,
-                                                                      size: 20,
-                                                                      color: Colors.white,
-                                                                    ),
-                                                                    onDeleted:
-                                                                        () {
-                                                                      setState(() {
-                                                                        skills[index].remove(skill);
-                                                                      });
-                                                                    },
-                                                                  ))
-                                                              .toList(),
+                                                              skills[index]
+                                                                  .map(
+                                                                      (skill) =>
+                                                                          Chip(
+                                                                            label:
+                                                                                Text(
+                                                                              skill,
+                                                                              style: TextStyle(color: Colors.white),
+                                                                            ),
+                                                                            backgroundColor:
+                                                                                AppColors.theme['primaryColor'],
+                                                                            deleteIcon:
+                                                                                Icon(
+                                                                              Icons.cancel,
+                                                                              size: 20,
+                                                                              color: Colors.white,
+                                                                            ),
+                                                                            onDeleted:
+                                                                                () {
+                                                                              setState(() {
+                                                                                skills[index].remove(skill);
+                                                                              });
+                                                                            },
+                                                                          ))
+                                                                  .toList(),
                                                         ),
                                                         SizedBox(height: 10),
                                                       ],
@@ -678,7 +1013,6 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                 ),
                                               )
                                             ],
-
                                           ],
                                         ),
                                       ),
@@ -692,6 +1026,33 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                             );
                           },
                         ),
+                        InkWell(
+                          onTap: () {
+                            Positions post = Positions(
+                              title: "Position",
+                              location: "Location",
+                              startDate: DateTime.now().toString(),
+                              endDate: "Present",
+                              description: "Description",
+                              skills: [],
+                            );
+                            widget.exp.positions?.add(post);
+                            init();
+                            setState(() {});
+                            appUserProvider.initUser();
+                          },
+                          child: Container(
+                            height: 50,
+                            width: mq.width * 1,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: AppColors.theme['primaryColor'],
+                              ),
+                            ),
+                            child: Center(child: Text18(text: "ADD POSITION")),
+                          ),
+                        ),
 
                         SizedBox(height: 20),
 
@@ -704,7 +1065,6 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                             textColor: AppColors.theme['secondaryColor'],
                             bgColor: AppColors.theme['primaryColor'],
                             onTap: () async {
-
                               bool isValid = true;
                               for (int i = 0; i < titleControllers.length; i++) {
                                 if (titleControllers[i].text.trim().isEmpty) {
@@ -713,49 +1073,53 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                 }
                               }
 
-                              if (_formKey.currentState!.validate() && isValid) {
-
+                              if (_formKey.currentState!.validate() &&
+                                  isValid) {
                                 setState(() {
                                   isLoading = true;
                                 });
 
-                                // Debug: Print all details to console
-                                print("Start Date List: $startDate");
-                                print("End Date List: $endDate");
-                                print("Descriptions:");
-                                descriptionControllers.forEach((controller) {
-                                  print(controller.text);
-                                });
-                                print("Titles:");
-                                titleControllers.forEach((controller) {
-                                  print(controller.text);
-                                });
-                                print("Locations:");
-                                locationControllers.forEach((controller) {
-                                  print(controller.text);
-                                });
-                                print("Skills:");
-                                skills.forEach((controller) {
-                                   controller.forEach((text){
-                                     print(text);
-                                   });
-                                });
+                                List<Positions> pos  = [];
+
+                                for(int i = 0 ; i<(widget.exp.positions?.length ?? 0)  ; i++){
+
+                                   Positions position = Positions(
+                                     title: titleControllers[i].text == "" ? "" : titleControllers[i].text.trim() ,
+                                     description: descriptionControllers[i].text == "" ? "": descriptionControllers[i].text.trim(),
+                                     skills: skills[i].isEmpty ? [] : skills[i],
+                                     startDate: startDate[i]==null ? "" :DateFormat('MMM yyyy').format(startDate[i]!),
+                                     endDate: isCurrentlyWorking[i]
+                                         ? "Present"
+                                         : (endDate[i] == null ? "" : DateFormat('MMM yyyy').format(endDate[i]!)),
+                                     location: locationControllers[i].text == "" ? "" :locationControllers[i].text.trim() ,
+                                     media: widget.exp.positions?[i].media ?? "",
+                                   ) ;
+                                   pos.add(position);
+                                }
+
+                                print(pos);
+
+                                await UserProfile.updateExperience(
+                                   appUserProvider.user?.userID ,
+                                   oid ?? "",
+                                  selectedEmploymentType ?? "",
+                                  pos
+                                );
 
                                 await appUserProvider.initUser();
 
                                 setState(() {
                                   isLoading = false;
                                 });
-                                // Navigator.pop(context);
-                              }
-                              else {
-                                HelperFunctions.showToast("Company Name,Title and Dates cannot be empty");
+                                Navigator.pop(context);
+                              } else {
+                                HelperFunctions.showToast(
+                                    "Company Name,Title and Dates cannot be empty");
                               }
                             },
                             title: 'Save Experience',
                           ),
                         ),
-
 
                         SizedBox(height: 20),
                       ],

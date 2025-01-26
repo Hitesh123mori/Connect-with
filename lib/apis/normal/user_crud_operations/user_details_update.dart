@@ -9,7 +9,9 @@ import 'package:connect_with/models/user/skills.dart';
 import 'package:connect_with/models/user/speak_language_user.dart';
 import 'package:connect_with/models/user/test_score.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 
 
@@ -148,6 +150,60 @@ class UserProfile {
       }
     } catch (error, stackTrace) {
       log("#addExperience error: $error, $stackTrace");
+      return false;
+    }
+  }
+
+  static Future<bool> updateExperience(
+      String? userId, String companyId, String employmentType, List<Positions> newPositions) async {
+    try {
+      // Fetch the user's document
+      DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
+
+      if (userDoc.exists) {
+        List<dynamic> existingExperiences = userDoc['experiences'] ?? [];
+
+        bool isUpdated = false;
+
+        newPositions.sort((a, b) {
+          DateTime dateA = DateFormat('MMM yyyy').parse(a.startDate ?? "");
+          DateTime dateB = DateFormat('MMM yyyy').parse(b.startDate ?? "");
+          return dateA.compareTo(dateB);
+        });
+
+        Iterable inReverse = newPositions.reversed;
+        var _newPositions = inReverse.toList();
+
+        for (var exp in existingExperiences) {
+          if (exp['companyId'] == companyId) {
+            exp['employementType'] = employmentType;
+            exp['positions'] = _newPositions.map((pos) => pos.toJson()).toList();
+
+            isUpdated = true;
+            break;
+          }
+        }
+        if (!isUpdated) {
+          existingExperiences.add({
+            'companyId': companyId,
+            'employementType': employmentType,
+            'positions': newPositions.map((pos) => pos.toJson()).toList(),
+          });
+        }
+        await _collectionRef.doc(userId).update({
+          'experiences': existingExperiences,
+        });
+
+        HelperFunctions.showToast("Updated Successfully!");
+
+        log("#Positions updated successfully");
+        return true;
+      } else {
+        log("#User not found");
+        return false;
+      }
+    } catch (error, stackTrace) {
+      log("#updateExperience error: $error, $stackTrace");
       return false;
     }
   }
