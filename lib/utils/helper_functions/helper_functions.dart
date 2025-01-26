@@ -15,8 +15,8 @@ class HelperFunctions{
 
 
   /// for show more text
-  static String truncateDescription(String content) {
-    return content.length > 100 ? content.substring(0, 100) + '... ' : content;
+  static String truncateDescription(String content,int size) {
+    return content.length > size ? content.substring(0, size) + '... ' : content;
   }
 
 

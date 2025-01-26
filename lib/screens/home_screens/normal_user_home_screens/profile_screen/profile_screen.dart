@@ -17,6 +17,7 @@ import 'package:connect_with/screens/home_screens/normal_user_home_screens/profi
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_skills.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_testscore.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
+import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/profile_custom_button.dart';
@@ -39,6 +40,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isfirst = true;
+  bool showMore = false;
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
@@ -324,11 +326,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        appUserProvider.user?.about ?? "About",
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            showMore
+                                ? appUserProvider.user?.about ?? "About"
+                                : HelperFunctions.truncateDescription(appUserProvider.user?.about ?? "About", 150),
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          if ((appUserProvider.user?.about?.length ?? 0) > 150) // Only show the button if there's more text
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  showMore = !showMore;
+                                });
+                              },
+                              child: Text(
+                                showMore ? "Show Less" : "Show More",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ],
                   ),
