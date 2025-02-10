@@ -209,7 +209,7 @@ class _AddEducationState extends State<AddEducation> {
                               controller: fieldController,
                               hintText: 'Ex. B-Tech',
                               isNumber: false,
-                              prefixicon: Icon(Icons.title),
+                              prefixicon: Icon(Icons.book_outlined),
                               obsecuretext: false,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -230,7 +230,7 @@ class _AddEducationState extends State<AddEducation> {
                             controller: gradeController,
                             hintText: 'Ex. 9/10',
                             isNumber: false,
-                            prefixicon: Icon(Icons.title),
+                            prefixicon: Icon(Icons.grade),
                             obsecuretext: false,
                           ),
                           SizedBox(height: 10),
@@ -246,7 +246,7 @@ class _AddEducationState extends State<AddEducation> {
                             controller: locationController,
                             hintText: 'Ex.Ahmedabad,Gujarat,India',
                             isNumber: false,
-                            prefixicon: Icon(Icons.title),
+                            prefixicon: Icon(Icons.location_on_outlined),
                             obsecuretext: false,
                           ),
                           SizedBox(height: 10),
@@ -532,8 +532,6 @@ class _AddEducationState extends State<AddEducation> {
                           ),
                         ],
                       ),
-
-
 
                       //  button
                       Center(

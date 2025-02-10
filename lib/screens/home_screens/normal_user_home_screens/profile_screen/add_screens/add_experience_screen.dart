@@ -228,7 +228,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                               controller: locationController,
                               hintText: 'Ex.Ahmedabad,Gujarat,India',
                               isNumber: false,
-                              prefixicon: Icon(Icons.title),
+                              prefixicon: Icon(Icons.location_on_outlined),
                               obsecuretext: false,
                             ),
                             SizedBox(height: 10),
@@ -584,7 +584,6 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                         ),
 
                         //  button
-
                         Center(
                           child: CustomButton1(
                             isLoading: isLoading,

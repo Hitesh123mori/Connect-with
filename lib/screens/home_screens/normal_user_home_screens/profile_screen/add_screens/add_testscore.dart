@@ -158,7 +158,7 @@ class _AddTestscoreState extends State<AddTestscore> {
                                controller: scoreController,
                                hintText: 'Ex. 9/10',
                                isNumber: false,
-                               prefixicon: Icon(Icons.title),
+                               prefixicon: Icon(Icons.grade),
                                obsecuretext: false,
                                validator: (value) {
                                  if (value == null || value.isEmpty) {

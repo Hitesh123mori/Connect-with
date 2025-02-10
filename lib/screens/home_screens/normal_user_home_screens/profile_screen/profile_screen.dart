@@ -32,6 +32,8 @@ import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'edit_screens/Education/edit_education.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -517,7 +519,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                     IconButton(
                                       icon: Icon(Icons.edit),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(context, LeftToRight(EditEducation()));
+                                      },
                                     )
                                   ],
                                 ),

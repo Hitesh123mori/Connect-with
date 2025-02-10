@@ -156,6 +156,7 @@ class UserProfile {
     }
   }
 
+  // update experience
   static Future<bool> updateExperience(
       String? userId, String companyId, String employmentType, List<Positions> newPositions) async {
     try {
@@ -163,6 +164,7 @@ class UserProfile {
       DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
 
       if (userDoc.exists) {
+
         List<dynamic> existingExperiences = userDoc['experiences'] ?? [];
 
         bool isUpdated = false;
@@ -230,6 +232,32 @@ class UserProfile {
       }
     } catch (error, stackTrace) {
       log("#addEducation error: $error, $stackTrace");
+      return false;
+    }
+  }
+
+  // update education
+  static Future<bool> updateEducation(
+      String? userId, Education edu) async {
+    try {
+      // Fetch the user's document
+      DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
+
+      if (userDoc.exists) {
+
+        List<dynamic> existingEducations = userDoc['educations'] ?? [];
+
+        bool isUpdated = false;
+
+
+        log("#education updated successfully");
+        return true;
+      } else {
+        log("#User not found");
+        return false;
+      }
+    } catch (error, stackTrace) {
+      log("#updateEducation error: $error, $stackTrace");
       return false;
     }
   }

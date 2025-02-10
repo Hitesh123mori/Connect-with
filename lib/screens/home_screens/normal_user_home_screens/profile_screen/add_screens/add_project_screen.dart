@@ -223,7 +223,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                               hintText:
                                   'Ex.https://github.com/user/Image_generator',
                               isNumber: false,
-                              prefixicon: Icon(Icons.title),
+                              prefixicon: Icon(Icons.link),
                               obsecuretext: false,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {

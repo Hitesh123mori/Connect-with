@@ -90,6 +90,7 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
   }
 
   Future<void> init() async {
+
     int len = widget.exp.positions?.length ?? 0;
 
     selectedEmploymentType = widget.exp.employementType;
@@ -685,6 +686,32 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                       ],
                                                     ),
 
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .start,
+                                                      children: [
+                                                        Text18(text: "Title*"),
+                                                        TextFeild1(
+                                                            controller:
+                                                            locationControllers[
+                                                            index],
+                                                            hintText:
+                                                            'Ex. Ahmedabad',
+                                                            isNumber: false,
+                                                            prefixicon: Icon(
+                                                                Icons.location_on_outlined),
+                                                            obsecuretext: false,
+                                                            onChange: (value) {
+                                                              setState(() {});
+                                                            },
+                                                            ),
+                                                        SizedBox(height: 10),
+                                                      ],
+                                                    ),
+
+
+
                                                     // Checkbox for current role
                                                     Row(
                                                       children: [
@@ -1123,7 +1150,8 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                     appUserProvider.user?.userID,
                                     oid ?? "",
                                     selectedEmploymentType ?? "",
-                                    pos);
+                                    pos
+                                );
 
                                 AppToasts.InfoToast(context, "Updated Successfully!") ;
 

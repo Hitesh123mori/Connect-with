@@ -187,7 +187,7 @@ class _EditProfileState extends State<EditProfile> {
                               TextFeild1(
                                 hintText: "Enter Name",
                                 isNumber: false,
-                                prefixicon: Icon(Icons.text_format_outlined),
+                                prefixicon: Icon(Icons.person_2_outlined),
                                 obsecuretext: false,
                                 initialText: appUserProvider.user?.userName,
                                 validator: (value) {
@@ -274,7 +274,7 @@ class _EditProfileState extends State<EditProfile> {
                               TextFeild1(
                                 hintText: "Enter pronoun",
                                 isNumber: false,
-                                prefixicon: Icon(Icons.text_format_outlined),
+                                prefixicon: Icon(Icons.person_2_outlined),
                                 obsecuretext: false,
                                 initialText: appUserProvider.user?.pronoun,
                                 onSaved: (value) => _pronoun = value,
@@ -329,7 +329,7 @@ class _EditProfileState extends State<EditProfile> {
                               TextFeild1(
                                 hintText: "Enter link",
                                 isNumber: false,
-                                prefixicon: Icon(Icons.text_format_outlined),
+                                prefixicon: Icon(Icons.link),
                                 obsecuretext: false,
                                 initialText: appUserProvider.user?.button?.link,
                                 onSaved: (value) => _link = value,
@@ -386,7 +386,7 @@ class _EditProfileState extends State<EditProfile> {
                               TextFeild1(
                                 hintText: "Enter CityName",
                                 isNumber: false,
-                                prefixicon: Icon(Icons.text_format_outlined),
+                                prefixicon: Icon(Icons.location_city),
                                 obsecuretext: false,
                                 initialText:
                                     appUserProvider.user?.address?.cityName,
@@ -399,7 +399,7 @@ class _EditProfileState extends State<EditProfile> {
                               TextFeild1(
                                 hintText: "Enter StateName",
                                 isNumber: false,
-                                prefixicon: Icon(Icons.text_format_outlined),
+                                prefixicon: Icon(Icons.location_on_outlined),
                                 obsecuretext: false,
                                 initialText:
                                     appUserProvider.user?.address?.stateName,
@@ -412,7 +412,7 @@ class _EditProfileState extends State<EditProfile> {
                               TextFeild1(
                                 hintText: "Enter CountryName",
                                 isNumber: false,
-                                prefixicon: Icon(Icons.text_format_outlined),
+                                prefixicon: Icon(Icons.location_on_outlined),
                                 obsecuretext: false,
                                 initialText:
                                     appUserProvider.user?.address?.countryName,
