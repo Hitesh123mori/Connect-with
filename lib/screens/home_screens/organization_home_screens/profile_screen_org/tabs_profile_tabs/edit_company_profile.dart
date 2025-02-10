@@ -2,6 +2,7 @@ import 'package:connect_with/apis/organization/organization_crud_operation/organ
 import 'package:connect_with/main.dart';
 import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
 import 'package:connect_with/utils/widgets/common_widgets/other_widgets/image_uploader_container.dart';
@@ -68,9 +69,12 @@ class _EditCompanyProfileState extends State<EditCompanyProfile> {
       await Future.delayed(Duration(seconds: 2));
 
       if (success) {
-        HelperFunctions.showToast("Profile updated successfully!");
+
+        AppToasts.InfoToast(context, "Profile updated successfully!") ;
+
       } else {
-        HelperFunctions.showToast("Profile not updated!");
+
+        AppToasts.ErrorToast(context, "Profile not updated!");
       }
     }
   }

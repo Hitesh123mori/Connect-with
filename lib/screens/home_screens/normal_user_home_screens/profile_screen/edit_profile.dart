@@ -2,6 +2,7 @@ import 'package:connect_with/apis/normal/user_crud_operations/user_details_updat
 import 'package:connect_with/main.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
@@ -100,9 +101,9 @@ class _EditProfileState extends State<EditProfile> {
       await Future.delayed(Duration(seconds: 2));
 
       if (success) {
-        HelperFunctions.showToast("Profile updated successfully!");
+        AppToasts.InfoToast(context, "Profile updated successfully!") ;
       } else {
-        HelperFunctions.showToast("Profile not updated!");
+        AppToasts.ErrorToast(context, "Profile not updated!") ;
       }
     }
   }

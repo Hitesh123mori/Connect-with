@@ -2,6 +2,7 @@ import 'package:connect_with/apis/common/auth_apis.dart';
 import 'package:connect_with/screens/auth_screens/register_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,13 +26,13 @@ class _LoginScreenState extends State<LoginScreen> {
   // internal function for login
   Future<void> loginUser(String email, String password) async {
     if (email.isEmpty || password.isEmpty) {
-      HelperFunctions.showToast("Fill Email and Password") ;
+      AppToasts.WarningToast(context,"Fill Email and Password");
       return;
     }
     try {
       await AuthApi.signIn(context, email, password);
       } catch (e) {
-      HelperFunctions.showToast("Something went wrong!");
+      AppToasts.ErrorToast(context,"Email or password wrong or check internet connection");
     }
   }
 

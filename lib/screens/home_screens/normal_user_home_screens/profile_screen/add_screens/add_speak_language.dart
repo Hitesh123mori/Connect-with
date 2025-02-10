@@ -4,6 +4,7 @@ import 'package:connect_with/models/user/speak_language_user.dart';
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
@@ -42,9 +43,11 @@ class _AddSpeakLanguageState extends State<AddSpeakLanguage> {
           context.read<AppUserProvider>().user?.userID, lan);
 
       if (isAdded) {
-        HelperFunctions.showToast("Language added successfully");
+
+        AppToasts.InfoToast(context, "Language added successfully") ;
       } else {
-        HelperFunctions.showToast("Failed to update Language.");
+
+        AppToasts.ErrorToast(context, "Failed to update Language.") ;
         Navigator.pop(context);
       }
     }

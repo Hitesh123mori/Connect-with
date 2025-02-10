@@ -8,6 +8,7 @@ import 'package:connect_with/screens/home_screens/normal_user_home_screens/home_
 import 'package:connect_with/screens/home_screens/organization_home_screens/home_organization_main_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,8 @@ class AuthApi {
         password: password,
       );
 
-      HelperFunctions.showToast("Login Successful!");
+      AppToasts.SuccessToast(context, "Login Successful!");
+
 
       final isOrg = await AuthApi.userExistsEmail(email, false);
 
@@ -31,9 +33,11 @@ class AuthApi {
       }
 
     } on FirebaseAuthException catch (e) {
-      HelperFunctions.showToast("Something went wrong");
+      AppToasts.ErrorToast(context,"Email or password wrong or check internet connection");
+
     } catch (e) {
-      HelperFunctions.showToast("Something went wrong");
+      AppToasts.ErrorToast(context,"Email or password wrong or check internet connection");
+
     }
   }
 
@@ -42,7 +46,8 @@ class AuthApi {
     try {
       final existingUser = await AuthApi.userExistsEmail(email, isOrganization);
       if (existingUser) {
-        HelperFunctions.showToast('This email is already in use.');
+        AppToasts.WarningToast(context,"This email is already in use.");
+
         return;
       }
       UserCredential userCredential =
@@ -52,7 +57,8 @@ class AuthApi {
       );
       await createUserEmail(
           userCredential, email, password, name, isOrganization);
-      HelperFunctions.showToast("Successfully registered!");
+      AppToasts.SuccessToast(context,"Successfully registered!");
+
 
       isOrganization == false
           ? await Navigator.pushReplacement(context, LeftToRight(HomeScreen()))
@@ -70,9 +76,12 @@ class AuthApi {
         errorMessage = 'An unknown error occurred.';
       }
 
-      HelperFunctions.showToast(errorMessage);
+      AppToasts.ErrorToast(context,errorMessage);
+
     } catch (e) {
-      HelperFunctions.showToast("Something went wrong!");
+
+      AppToasts.ErrorToast(context,"Something went wrong!");
+
     }
   }
 

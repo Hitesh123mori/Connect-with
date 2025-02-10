@@ -4,6 +4,7 @@ import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/auth_screens/login_screen.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
@@ -42,7 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
     } catch (error) {
       print(error);
-      HelperFunctions.showToast("Something went wrong!");
+      AppToasts.ErrorToast(context, "Something went wrong!");
     }
 
   }
@@ -176,7 +177,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         });
                                       });
                                     } else {
-                                      HelperFunctions.showToast("Please fill in all fields correctly");
+                                      AppToasts.WarningToast(context, "Please fill in all fields correctly");
                                     }
                                   },
                                   title: 'Register',

@@ -10,6 +10,7 @@ import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/home_screens/common_screens/all_organization_screen_select_company.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
@@ -91,7 +92,7 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
   Future<void> init() async {
     int len = widget.exp.positions?.length ?? 0;
 
-    selectedEmploymentType = widget.exp.employementType ;
+    selectedEmploymentType = widget.exp.employementType;
 
     expandedStates = List<bool>.generate(len, (index) => false);
     skillControllers = List.generate(len, (index) => TextEditingController());
@@ -532,9 +533,10 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                               appUserProvider
                                                                   .initUser();
                                                               setState(() {});
-                                                              HelperFunctions
-                                                                  .showToast(
-                                                                      "Successfully Deleted!");
+
+                                                              AppToasts.InfoToast(
+                                                                  context,
+                                                                  "Successfully Deleted!");
                                                             },
                                                             child: Container(
                                                               height: 40,
@@ -1066,7 +1068,9 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                             bgColor: AppColors.theme['primaryColor'],
                             onTap: () async {
                               bool isValid = true;
-                              for (int i = 0; i < titleControllers.length; i++) {
+                              for (int i = 0;
+                                  i < titleControllers.length;
+                                  i++) {
                                 if (titleControllers[i].text.trim().isEmpty) {
                                   isValid = false;
                                   break;
@@ -1079,32 +1083,47 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                   isLoading = true;
                                 });
 
-                                List<Positions> pos  = [];
+                                List<Positions> pos = [];
 
-                                for(int i = 0 ; i<(widget.exp.positions?.length ?? 0)  ; i++){
-
-                                   Positions position = Positions(
-                                     title: titleControllers[i].text == "" ? "" : titleControllers[i].text.trim() ,
-                                     description: descriptionControllers[i].text == "" ? "": descriptionControllers[i].text.trim(),
-                                     skills: skills[i].isEmpty ? [] : skills[i],
-                                     startDate: startDate[i]==null ? "" :DateFormat('MMM yyyy').format(startDate[i]!),
-                                     endDate: isCurrentlyWorking[i]
-                                         ? "Present"
-                                         : (endDate[i] == null ? "" : DateFormat('MMM yyyy').format(endDate[i]!)),
-                                     location: locationControllers[i].text == "" ? "" :locationControllers[i].text.trim() ,
-                                     media: widget.exp.positions?[i].media ?? "",
-                                   ) ;
-                                   pos.add(position);
+                                for (int i = 0;
+                                    i < (widget.exp.positions?.length ?? 0);
+                                    i++) {
+                                  Positions position = Positions(
+                                    title: titleControllers[i].text == ""
+                                        ? ""
+                                        : titleControllers[i].text.trim(),
+                                    description:
+                                        descriptionControllers[i].text == ""
+                                            ? ""
+                                            : descriptionControllers[i]
+                                                .text
+                                                .trim(),
+                                    skills: skills[i].isEmpty ? [] : skills[i],
+                                    startDate: startDate[i] == null
+                                        ? ""
+                                        : DateFormat('MMM yyyy')
+                                            .format(startDate[i]!),
+                                    endDate: isCurrentlyWorking[i]
+                                        ? "Present"
+                                        : (endDate[i] == null
+                                            ? ""
+                                            : DateFormat('MMM yyyy')
+                                                .format(endDate[i]!)),
+                                    location: locationControllers[i].text == ""
+                                        ? ""
+                                        : locationControllers[i].text.trim(),
+                                    media: widget.exp.positions?[i].media ?? "",
+                                  );
+                                  pos.add(position);
                                 }
 
                                 print(pos);
 
                                 await UserProfile.updateExperience(
-                                   appUserProvider.user?.userID ,
-                                   oid ?? "",
-                                  selectedEmploymentType ?? "",
-                                  pos
-                                );
+                                    appUserProvider.user?.userID,
+                                    oid ?? "",
+                                    selectedEmploymentType ?? "",
+                                    pos);
 
                                 await appUserProvider.initUser();
 
@@ -1113,7 +1132,7 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                 });
                                 Navigator.pop(context);
                               } else {
-                                HelperFunctions.showToast(
+                                AppToasts.WarningToast(context,
                                     "Company Name,Title and Dates cannot be empty");
                               }
                             },

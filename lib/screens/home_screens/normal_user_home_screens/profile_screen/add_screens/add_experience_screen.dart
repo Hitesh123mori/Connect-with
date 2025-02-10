@@ -10,6 +10,7 @@ import 'package:connect_with/screens/home_screens/common_screens/all_organizatio
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
 import 'package:connect_with/utils/widgets/common_widgets/other_widgets/image_uploader_container.dart';
@@ -88,9 +89,9 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
       bucketProvider.bucket = "";
 
       if (isAdded) {
-        HelperFunctions.showToast("Experience added successfully");
+        AppToasts.InfoToast(context, "Experience added successfully") ;
       } else {
-        HelperFunctions.showToast("Failed to update experience.");
+        AppToasts.ErrorToast(context,"Failed to update experience." ) ;
         Navigator.pop(context);
       }
     }

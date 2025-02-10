@@ -5,6 +5,7 @@ import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_profile_tabs/job_screens_org/jobs_show_more_org.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
@@ -74,9 +75,9 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
       await provider.initOrganization() ;
 
       if (isAdded) {
-        HelperFunctions.showToast("Job added successfully");
+        AppToasts.InfoToast(context, "Job added successfully") ;
       } else {
-        HelperFunctions.showToast("Failed to update Job.");
+        AppToasts.ErrorToast(context, "Failed to update Job.") ;
         Navigator.pop(context);
       }
     }

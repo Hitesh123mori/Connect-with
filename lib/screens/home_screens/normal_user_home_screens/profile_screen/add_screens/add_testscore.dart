@@ -3,6 +3,7 @@ import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/test_score.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
@@ -79,9 +80,9 @@ class _AddTestscoreState extends State<AddTestscore> {
           context.read<AppUserProvider>().user?.userID, testScore);
 
       if (isAdded) {
-        HelperFunctions.showToast("Test Score added successfully");
+        AppToasts.InfoToast(context, "Test Score added successfully") ;
       } else {
-        HelperFunctions.showToast("Failed to update Test Score.");
+        AppToasts.ErrorToast(context, "Failed to update Test Score.") ;
         Navigator.pop(context);
       }
     }

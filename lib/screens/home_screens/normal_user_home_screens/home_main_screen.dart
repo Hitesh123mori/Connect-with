@@ -13,6 +13,8 @@ import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/drawer_container.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -119,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   InkWell(
                     onTap: () async {
                       await appUserProvider.logOut();
-                      HelperFunctions.showToast("Logout successfully");
+                      AppToasts.SuccessToast(context, "Logout successfully") ;
                       await Navigator.pushReplacement(
                           context, RightToLeft(LoginScreen()));
                     },

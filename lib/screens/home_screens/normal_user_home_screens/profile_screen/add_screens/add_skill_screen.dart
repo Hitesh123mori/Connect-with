@@ -4,6 +4,7 @@ import 'package:connect_with/models/user/skills.dart';
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
@@ -39,9 +40,9 @@ class _AddSkillScreenState extends State<AddSkillScreen> {
           context.read<AppUserProvider>().user?.userID, skill);
 
       if (isAdded) {
-        HelperFunctions.showToast("Skill added successfully");
+        AppToasts.InfoToast(context, "Skill added successfully") ;
       } else {
-        HelperFunctions.showToast("Failed to add Skill.");
+        AppToasts.ErrorToast(context, "Failed to add Skill.") ;
         Navigator.pop(context);
       }
     }

@@ -6,6 +6,7 @@ import 'package:connect_with/screens/home_screens/organization_home_screens/prof
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:connect_with/providers/organization_provider.dart';
@@ -224,7 +225,8 @@ class _CompanyProfileState extends State<CompanyProfile> {
                                   text: 'Employees',
                                   onTap: () {
                                     if(orgProvider.organization?.employees?.length==0){
-                                      HelperFunctions.showToast("No Employee till now!");
+                                      AppToasts.InfoToast(context, "No Employee till now!") ;
+
                                     }else{
                                       // navigate to employee screen
                                     }

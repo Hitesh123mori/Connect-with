@@ -9,6 +9,7 @@ import 'package:connect_with/screens/home_screens/common_screens/all_organizatio
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/custom_button_1.dart';
 import 'package:connect_with/utils/widgets/common_widgets/other_widgets/image_uploader_container.dart';
@@ -112,9 +113,9 @@ class _AddEducationState extends State<AddEducation> {
 
 
       if (isAdded) {
-        HelperFunctions.showToast("Education added successfully");
+        AppToasts.InfoToast(context, "Education added successfully") ;
       } else {
-        HelperFunctions.showToast("Failed to update education.");
+        AppToasts.ErrorToast(context,"Failed to update education.") ;
         Navigator.pop(context);
       }
     }

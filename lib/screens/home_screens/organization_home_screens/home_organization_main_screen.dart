@@ -10,6 +10,7 @@ import 'package:connect_with/screens/home_screens/organization_home_screens/prof
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/drawer_container.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';
@@ -134,7 +135,7 @@ class _HomeOrganizationMainScreenState
                   InkWell(
                     onTap: () async {
                       await organizationProvider.logOut();
-                      HelperFunctions.showToast("Logout successfully");
+                      AppToasts.SuccessToast(context, "Logout successfully") ;
                       await Navigator.pushReplacement(
                           context, RightToLeft(LoginScreen()));
                     },
