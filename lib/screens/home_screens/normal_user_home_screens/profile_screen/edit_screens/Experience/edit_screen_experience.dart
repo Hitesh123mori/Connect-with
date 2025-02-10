@@ -1125,6 +1125,9 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                     selectedEmploymentType ?? "",
                                     pos);
 
+                                AppToasts.InfoToast(context, "Updated Successfully!") ;
+
+
                                 await appUserProvider.initUser();
 
                                 setState(() {

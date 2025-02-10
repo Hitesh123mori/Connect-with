@@ -10,6 +10,8 @@ import 'package:connect_with/models/user/speak_language_user.dart';
 import 'package:connect_with/models/user/test_score.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
+import 'package:connect_with/utils/theme/colors.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
@@ -193,8 +195,6 @@ class UserProfile {
         await _collectionRef.doc(userId).update({
           'experiences': existingExperiences,
         });
-
-        HelperFunctions.showToast("Updated Successfully!");
 
         log("#Positions updated successfully");
         return true;

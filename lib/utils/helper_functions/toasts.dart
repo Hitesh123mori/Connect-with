@@ -66,6 +66,7 @@ class AppToasts{
         autoDismiss: true,
         toastPosition: Position.top,
         animationType: AnimationType.fromTop,
+        animationDuration: const Duration(milliseconds: 1000),
         title: const Text(
           'Information',
           style: TextStyle(
