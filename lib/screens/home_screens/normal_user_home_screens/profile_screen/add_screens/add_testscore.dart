@@ -234,7 +234,7 @@ class _AddTestscoreState extends State<AddTestscore> {
                            textColor: AppColors.theme['secondaryColor'],
                            bgColor: AppColors.theme['primaryColor'],
                            onTap: () async {
-                             if (_formKey.currentState!.validate()) {
+                             if (_formKey.currentState!.validate() && ExamDate!=null) {
 
                                setState(() {
                                  isLoading = true;
@@ -249,6 +249,8 @@ class _AddTestscoreState extends State<AddTestscore> {
                                await appUserProvider.initUser();
 
                                Navigator.pop(context);
+                             }else{
+                               AppToasts.WarningToast(context, "Make sure all necessary details are filled") ;
                              }
                            },
                            title: 'Save Test Score',

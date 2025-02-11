@@ -350,7 +350,7 @@ class _ExperienceCardState extends State<ExperienceCard> {
     final years = totalDays ~/ 365;
     final months = (totalDays % 365) ~/ 30;
 
-    return "${years > 0 ? "$years yr " : ""}${months > 0 ? "$months mos" : ""}".trim();
+    return "${years > 0 ? "$years yr " : ""}${months >= 0 ? "$months mos" : ""}".trim();
   }
 
 

@@ -24,7 +24,9 @@ class UserProfile {
   static final _collectionRef = Config.firestore.collection("users");
 
 
+  /// BASIC FUNCTIONALITY APIS
 
+  ///--------------------------------------------------------------------------------
   // upload image
   static Future<String?> uploadMedia(File file, String path, String userId) async {
     final fileName = basename(file.path);
@@ -91,7 +93,6 @@ class UserProfile {
     }
   }
 
-
   // get user by id
   static Future<dynamic> getUser(String userId) async {
     try {
@@ -108,8 +109,6 @@ class UserProfile {
       };
     }
   }
-
-
 
  // get list of all users
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllAppUsers() {
@@ -130,7 +129,11 @@ class UserProfile {
     });
   }
 
+  ///---------------------------------------------------------------------------------
 
+
+
+  /// EXPERIENCE APIS
   // adding experience
   static Future<bool> addExperience(String? userId, Experience experience) async {
     try {

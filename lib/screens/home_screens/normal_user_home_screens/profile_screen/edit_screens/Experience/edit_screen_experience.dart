@@ -376,7 +376,7 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text18(text: "Employment Type"),
+                                    Text18(text: "Employment Type*"),
                                     SizedBox(height: 10),
                                     Container(
                                       width: double.infinity,
@@ -1096,8 +1096,11 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                               for (int i = 0;
                                   i < titleControllers.length;
                                   i++) {
-                                if (titleControllers[i].text.trim().isEmpty) {
+                                if (titleControllers[i].text.trim().isEmpty && startDate[i]==null && endDate[i]==null && selectedEmploymentType=="") {
                                   isValid = false;
+
+                                  AppToasts.WarningToast(context, "Make sure all necessary details are filled") ;
+
                                   break;
                                 }
                               }

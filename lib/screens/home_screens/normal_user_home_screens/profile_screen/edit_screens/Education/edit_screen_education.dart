@@ -532,7 +532,7 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
                             bgColor: AppColors.theme['primaryColor'],
                             onTap: () async {
 
-                              if(_formKey.currentState!.validate()){
+                              if(_formKey.currentState!.validate() && startDate!=null && (endDate!=null||isCurrentlyStuding)){
 
                                 Education edu = Education(
                                   id: widget.edu.id,
@@ -564,7 +564,7 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
                                 await appUserProvider.initUser() ;
 
                                 if(isUpdated){
-                                  AppToasts.SuccessToast(context, "Education updated successfully!") ;
+                                  AppToasts.InfoToast(context, "Education updated successfully!") ;
                                 }else{
                                   AppToasts.ErrorToast(context, "Failed to update education!") ;
                                 }

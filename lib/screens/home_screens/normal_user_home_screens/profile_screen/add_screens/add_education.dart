@@ -545,7 +545,7 @@ class _AddEducationState extends State<AddEducation> {
                           textColor: AppColors.theme['secondaryColor'],
                           bgColor: AppColors.theme['primaryColor'],
                           onTap: () async {
-                            if (_formKey.currentState!.validate()) {
+                            if (_formKey.currentState!.validate() && startDate!=null && (endDate!=null || isCurrentlyStuding)) {
                               setState(() {
                                 isLoading = true;
                               });
@@ -567,6 +567,8 @@ class _AddEducationState extends State<AddEducation> {
                               await appUserProvider.initUser();
 
                               Navigator.pop(context);
+                            }else{
+                              AppToasts.WarningToast(context, "Make sure all necessary details are filled") ;
                             }
                           },
                           title: 'Save Education',

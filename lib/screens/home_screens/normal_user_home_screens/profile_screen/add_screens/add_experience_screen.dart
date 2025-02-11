@@ -240,7 +240,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text18(text: "Employment Type"),
+                            Text18(text: "Employment Type*"),
                             SizedBox(height: 10),
                             Container(
                               width: double.infinity,
@@ -594,7 +594,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                             textColor: AppColors.theme['secondaryColor'],
                             bgColor: AppColors.theme['primaryColor'],
                             onTap: () async {
-                              if (_formKey.currentState!.validate()) {
+                              if (_formKey.currentState!.validate() && startDate!=null && (endDate!=null || isCurrentlyWorking) && selectedEmploymentType!="") {
                                 setState(() {
                                   isLoading = true;
                                 });
@@ -615,6 +615,8 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                                 await appUserProvider.initUser();
 
                                 Navigator.pop(context);
+                              }else{
+                                AppToasts.WarningToast(context, "Make sure all necessary details are filled") ;
                               }
                             },
                             title: 'Save Experience',

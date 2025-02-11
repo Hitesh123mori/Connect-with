@@ -581,7 +581,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                           textColor: AppColors.theme['secondaryColor'],
                           bgColor: AppColors.theme['primaryColor'],
                           onTap: () async {
-                            if (_formKey.currentState!.validate()) {
+                            if (_formKey.currentState!.validate() && startDate!=null && (endDate!=null || isCurrentlyWorking)) {
                               setState(() {
                                 isLoading = true;
                               });
@@ -609,6 +609,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                                bucketProvider.notify();
 
                               Navigator.pop(context);
+                            }else{
+                              AppToasts.WarningToast(context, "Make sure all necessary details are filled") ;
                             }
                           },
                           title: 'Save Project',
