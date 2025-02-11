@@ -67,6 +67,7 @@ _intializeFirebase() async {
   if (defaultTargetPlatform == TargetPlatform.android) {
     await Firebase.initializeApp(
         name: 'connect_with_2',
+        //
         options: const FirebaseOptions(
           apiKey: 'AIzaSyCDoxpe3BSbOqy-aA4I2iLmuPS2j5J3HHU',
           appId: '1:1011888016997:android:77bf8f56888fb1a0ac008c',
