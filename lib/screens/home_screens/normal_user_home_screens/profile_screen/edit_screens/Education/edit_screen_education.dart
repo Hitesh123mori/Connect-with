@@ -302,6 +302,36 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
                                     ),
                                     SizedBox(height: 10),
 
+                                    Row(
+                                      children: [
+                                        Checkbox(
+                                          value:
+                                          isCurrentlyStuding,
+                                          onChanged:
+                                              (bool? value) {
+                                            setState(() {
+                                              isCurrentlyStuding =
+                                                  value ??
+                                                      false;
+                                              if (isCurrentlyStuding) {
+                                                endDate = DateTime.now();
+                                              }
+                                            });
+                                          },
+                                          activeColor: AppColors
+                                              .theme[
+                                          'primaryColor'],
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            "I am currently studying here",
+                                            style: TextStyle(
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
                                     // start date
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -396,6 +426,7 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+
                                 SizedBox(height: 10),
                                 Center(child: Text18(text: "Other Details")),
                                 Divider(color: AppColors.theme['primaryColor']),
