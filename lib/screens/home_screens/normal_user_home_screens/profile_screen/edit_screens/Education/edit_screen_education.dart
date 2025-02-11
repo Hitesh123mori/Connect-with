@@ -555,7 +555,7 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
                                   isLoading = true;
                                 });
 
-                                await UserProfile.updateEducation(appUserProvider.user?.userID,edu) ;
+                                bool isUpdated = await UserProfile.updateEducation(appUserProvider.user?.userID,edu) ;
 
                                 setState(() {
                                   isLoading = false;
@@ -563,7 +563,12 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
 
                                 await appUserProvider.initUser() ;
 
-                                AppToasts.SuccessToast(context, "Education updated successfully!") ;
+                                if(isUpdated){
+                                  AppToasts.SuccessToast(context, "Education updated successfully!") ;
+                                }else{
+                                  AppToasts.ErrorToast(context, "Failed to update education!") ;
+                                }
+
 
                                 Navigator.pop(context) ;
 

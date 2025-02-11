@@ -691,7 +691,7 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                       CrossAxisAlignment
                                                           .start,
                                                       children: [
-                                                        Text18(text: "Title*"),
+                                                        Text18(text: "Location"),
                                                         TextFeild1(
                                                             controller:
                                                             locationControllers[
@@ -709,8 +709,6 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                         SizedBox(height: 10),
                                                       ],
                                                     ),
-
-
 
                                                     // Checkbox for current role
                                                     Row(
@@ -1146,15 +1144,19 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
 
                                 print(pos);
 
-                                await UserProfile.updateExperience(
+                                bool isUpdated = await UserProfile.updateExperience(
                                     appUserProvider.user?.userID,
+                                    widget.exp.id ?? "",
                                     oid ?? "",
                                     selectedEmploymentType ?? "",
-                                    widget.exp.id ?? "",
                                     pos
                                 );
 
-                                AppToasts.InfoToast(context, "Updated Successfully!") ;
+                                if(isUpdated){
+                                  AppToasts.SuccessToast(context, "Experience updated successfully!") ;
+                                }else{
+                                  AppToasts.ErrorToast(context, "Failed to update experience!") ;
+                                }
 
 
                                 await appUserProvider.initUser();

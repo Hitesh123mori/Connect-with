@@ -113,7 +113,6 @@ class _AddEducationState extends State<AddEducation> {
 
       await OrganizationProfile.addEmployee(oid ?? "",context.read<AppUserProvider>().user?.userID ?? "") ;
 
-
       if (isAdded) {
         AppToasts.InfoToast(context, "Education added successfully") ;
       } else {
