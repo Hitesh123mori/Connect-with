@@ -1,3 +1,4 @@
+import 'package:connect_with/apis/normal/user_crud_operations/language_crud.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/speak_language_user.dart';
@@ -41,7 +42,7 @@ class _AddSpeakLanguageState extends State<AddSpeakLanguage> {
          proficiency: selectedLanguageProf=="" ? "" : selectedLanguageProf,
       );
 
-      bool isAdded = await UserProfile.addLangauge(
+      bool isAdded = await LanguageCrud.addLangauge(
           context.read<AppUserProvider>().user?.userID, lan);
 
       if (isAdded) {

@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:connect_with/apis/normal/user_crud_operations/education_crud.dart';
+import 'package:connect_with/apis/normal/user_crud_operations/experience_crud.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
@@ -81,7 +83,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
         positions: [newPosition],
       );
 
-      bool isAdded = await UserProfile.addExperience(
+      bool isAdded = await ExperienceCrud.addExperience(
           context.read<AppUserProvider>().user?.userID, experience);
 
       await OrganizationProfile.addEmployee(oid ?? "",context.read<AppUserProvider>().user?.userID ?? "") ;

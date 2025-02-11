@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:connect_with/apis/normal/user_crud_operations/project_crud.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/project.dart';
@@ -73,7 +74,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
         coverImage: downloadUrl,
       );
 
-      bool isAdded = await UserProfile.addProject(
+      bool isAdded = await ProjectCrud.addProject(
           context.read<AppUserProvider>().user?.userID, project);
 
       if (isAdded) {

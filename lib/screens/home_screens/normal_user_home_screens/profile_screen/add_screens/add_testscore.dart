@@ -1,3 +1,4 @@
+import 'package:connect_with/apis/normal/user_crud_operations/test_scores_crud.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/test_score.dart';
@@ -77,7 +78,7 @@ class _AddTestscoreState extends State<AddTestscore> {
             : descriptionController.text.trim(),
       );
 
-      bool isAdded = await UserProfile.addTestScore(
+      bool isAdded = await TestScoreCrud.addTestScore(
           context.read<AppUserProvider>().user?.userID, testScore);
 
       if (isAdded) {

@@ -1,3 +1,4 @@
+import 'package:connect_with/apis/normal/user_crud_operations/skills_crud.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/skills.dart';
@@ -37,7 +38,7 @@ class _AddSkillScreenState extends State<AddSkillScreen> {
         projects: selectedProjects,
       );
 
-      bool isAdded = await UserProfile.addSkills(
+      bool isAdded = await SkillsCrud.addSkills(
           context.read<AppUserProvider>().user?.userID, skill);
 
       if (isAdded) {
@@ -114,10 +115,13 @@ class _AddSkillScreenState extends State<AddSkillScreen> {
                         ],
                       ),
 
+
+                      if(userProjects.length!=0)
                       // Projects List
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          SizedBox(height: 10,),
                           Text18(text: "Select Projects"),
                           ListView.builder(
                             shrinkWrap: true,
@@ -143,6 +147,7 @@ class _AddSkillScreenState extends State<AddSkillScreen> {
                               );
                             },
                           ),
+                          SizedBox(height: 10,),
 
                         ],
                       ),

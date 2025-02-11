@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:connect_with/apis/normal/user_crud_operations/education_crud.dart';
+import 'package:connect_with/apis/normal/user_crud_operations/experience_crud.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
@@ -1147,7 +1149,7 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
 
                                 print(pos);
 
-                                bool isUpdated = await UserProfile.updateExperience(
+                                bool isUpdated = await ExperienceCrud.updateExperience(
                                     appUserProvider.user?.userID,
                                     widget.exp.id ?? "",
                                     oid ?? "",

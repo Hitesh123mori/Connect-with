@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:connect_with/apis/normal/user_crud_operations/education_crud.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
@@ -105,7 +106,7 @@ class _AddEducationState extends State<AddEducation> {
         media: downloadUrl,
       );
 
-      bool isAdded = await UserProfile.addEducation(
+      bool isAdded = await EducationCrud.addEducation(
           context.read<AppUserProvider>().user?.userID, education);
 
       final bucketsProvider = Provider.of<BucketsProvider>(context, listen: false);

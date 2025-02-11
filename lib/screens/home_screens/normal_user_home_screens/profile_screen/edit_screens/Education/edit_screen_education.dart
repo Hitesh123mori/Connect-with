@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:connect_with/apis/normal/user_crud_operations/education_crud.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
@@ -586,7 +587,7 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
                                   isLoading = true;
                                 });
 
-                                bool isUpdated = await UserProfile.updateEducation(appUserProvider.user?.userID,edu) ;
+                                bool isUpdated = await EducationCrud.updateEducation(appUserProvider.user?.userID,edu) ;
 
                                 setState(() {
                                   isLoading = false;
