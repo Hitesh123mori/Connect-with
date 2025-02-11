@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1011888016997",
+    "project_id": "mori-hitesh",
+    "storage_bucket": "mori-hitesh.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011888016997:android:77bf8f56888fb1a0ac008c",
+        "android_client_info": {
+          "package_name": "com.example.connect_with"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDoxpe3BSbOqy-aA4I2iLmuPS2j5J3HHU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
