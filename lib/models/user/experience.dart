@@ -45,17 +45,20 @@ class Positions {
 class Experience {
   String? employementType;
   String? companyId;
+  String? id ;
   List<Positions>? positions;
 
   Experience({
     this.employementType,
     this.companyId,
+    this.id,
     this.positions,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'employementType': employementType,
+       'id' : id,
       'companyId': companyId,
       'positions': positions?.map((position) => position.toJson()).toList(),
     };
@@ -65,6 +68,7 @@ class Experience {
     return Experience(
       employementType: json['employementType'],
       companyId: json['companyId'],
+      id : json['id'],
       positions: (json['positions'] as List<dynamic>?)
           ?.map((position) => Positions.fromJson(position))
           .toList(),

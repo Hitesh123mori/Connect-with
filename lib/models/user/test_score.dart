@@ -4,8 +4,10 @@ class TestScores {
   String? score;
   String? testDate;
   String? description;
+  String? id;
 
   TestScores({
+    this.id,
     this.title,
     this.score,
     this.testDate,
@@ -16,6 +18,7 @@ class TestScores {
     final map = <String, dynamic>{};
     map['title'] = title;
     map['score'] = score;
+    map['id']  = id ;
     map['testDate'] = testDate;
     map['description'] = description;
 
@@ -26,6 +29,7 @@ class TestScores {
     return TestScores(
       title: json['title'],
       score: json['score'],
+      id : json['id'],
       testDate: json['testDate'],
       description: json['description'],
     );

@@ -1150,6 +1150,7 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                     appUserProvider.user?.userID,
                                     oid ?? "",
                                     selectedEmploymentType ?? "",
+                                    widget.exp.id ?? "",
                                     pos
                                 );
 

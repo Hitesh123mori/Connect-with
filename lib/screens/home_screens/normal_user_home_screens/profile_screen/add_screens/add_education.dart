@@ -26,6 +26,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class AddEducation extends StatefulWidget {
   const AddEducation({super.key});
@@ -84,6 +85,7 @@ class _AddEducationState extends State<AddEducation> {
   Future<void> _saveEducation(String downloadUrl) async {
     if (_formKey.currentState!.validate()) {
       Education education = Education(
+        id: HelperFunctions.getUuid(),
         fieldOfStudy:
             fieldController.text.isEmpty ? "" : fieldController.text.trim(),
         schoolId:oid,
@@ -123,6 +125,7 @@ class _AddEducationState extends State<AddEducation> {
 
   @override
   Widget build(BuildContext context) {
+
     setState(() {
       final pro = Provider.of<BucketsProvider>(context, listen: true);
       schoolController.text = pro.bucket2 ?? "";

@@ -77,6 +77,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
       Experience experience = Experience(
         employementType: selectedEmploymentType,
         companyId:oid,
+        id: HelperFunctions.getUuid(),
         positions: [newPosition],
       );
 

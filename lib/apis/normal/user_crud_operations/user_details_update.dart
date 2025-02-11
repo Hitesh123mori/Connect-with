@@ -158,7 +158,7 @@ class UserProfile {
 
   // update experience
   static Future<bool> updateExperience(
-      String? userId, String companyId, String employmentType, List<Positions> newPositions) async {
+      String? userId,String eid ,String companyId, String employmentType, List<Positions> newPositions) async {
     try {
       // Fetch the user's document
       DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
@@ -179,7 +179,7 @@ class UserProfile {
         var _newPositions = inReverse.toList();
 
         for (var exp in existingExperiences) {
-          if (exp['companyId'] == companyId) {
+          if (exp['id'] == eid ) {
             exp['employementType'] = employmentType;
             exp['positions'] = _newPositions.map((pos) => pos.toJson()).toList();
 
@@ -237,20 +237,28 @@ class UserProfile {
   }
 
   // update education
-  static Future<bool> updateEducation(
-      String? userId, Education edu) async {
+  static Future<bool> updateEducation(String? userId, Education edu) async {
     try {
-      // Fetch the user's document
       DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
 
       if (userDoc.exists) {
-
         List<dynamic> existingEducations = userDoc['educations'] ?? [];
-
         bool isUpdated = false;
 
+        for (int i = 0; i < existingEducations.length; i++) {
+          if (existingEducations[i]['id'] == edu.id) {
+            existingEducations[i] = edu.toJson();
+            isUpdated = true;
+            break;
+          }
+        }
 
-        log("#education updated successfully");
+        if (!isUpdated) {
+          existingEducations.add(edu.toJson());
+        }
+
+        await _collectionRef.doc(userId).update({'educations': existingEducations});
+        log("#Education updated successfully");
         return true;
       } else {
         log("#User not found");
@@ -261,7 +269,6 @@ class UserProfile {
       return false;
     }
   }
-
 
   // adding testscore
   static Future<bool> addTestScore(String? userId, TestScores ts) async {

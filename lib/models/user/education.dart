@@ -1,6 +1,7 @@
 class Education {
 
   String? schoolId;
+  String? id;
   String? fieldOfStudy;
   String? startDate;
   String? endDate;
@@ -16,6 +17,7 @@ class Education {
     this.startDate,
     this.endDate,
     this.grade,
+    this.id,
     this.description,
     this.skills,
     this.location,
@@ -26,6 +28,7 @@ class Education {
     final map = <String, dynamic>{};
     map['schoolId'] = schoolId;
     map['location'] = location;
+    map['id'] = id;
     map['fieldOfStudy'] = fieldOfStudy;
     map['startDate'] = startDate;
     map['endDate'] = endDate;
@@ -45,6 +48,7 @@ class Education {
       endDate: json['endDate'],
       grade: json['grade'],
       location:json['location'],
+      id : json['id'],
       description: json['description'],
       skills: json['skills'].cast<String>(),
       media: json['media'],

@@ -57,6 +57,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
       String downloadUrl, AppUserProvider provider) async {
     if (_formKey.currentState!.validate()) {
       Project project = Project(
+        proID: HelperFunctions.getUuid(),
         name: nameController.text.isEmpty ? "" : nameController.text.trim(),
         description: descriptionController.text.isEmpty
             ? ""

@@ -61,6 +61,7 @@ class _AddTestscoreState extends State<AddTestscore> {
     if (_formKey.currentState!.validate()) {
 
       TestScores testScore = TestScores(
+        id: HelperFunctions.getUuid(),
         title: titleController.text.isEmpty
             ? ""
             : titleController.text.trim(),

@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
 import '../theme/colors.dart';
 
 class HelperFunctions{
@@ -11,6 +12,12 @@ class HelperFunctions{
   static void launchURL(String url) {
     url = "https://" + url ;
     launchUrl(Uri.parse(url));
+  }
+
+  static String getUuid(){
+    var uuid = Uuid();
+    // print(uuid.v1()) ;
+    return uuid.v1() ;
   }
 
 

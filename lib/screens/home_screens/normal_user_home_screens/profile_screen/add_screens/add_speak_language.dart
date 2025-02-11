@@ -33,7 +33,9 @@ class _AddSpeakLanguageState extends State<AddSpeakLanguage> {
     if (_formKey.currentState!.validate()) {
 
       SpeakLanguageUser lan = SpeakLanguageUser(
-         name: nameController.text.isEmpty
+        id: HelperFunctions.getUuid(),
+
+        name: nameController.text.isEmpty
              ? ""
              : nameController.text.trim(),
          proficiency: selectedLanguageProf=="" ? "" : selectedLanguageProf,

@@ -55,8 +55,7 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
   TextEditingController gradeController = new TextEditingController() ;
   TextEditingController descriptionController = new TextEditingController() ;
   TextEditingController skillController = new TextEditingController() ;
-
-
+  TextEditingController degreeController = new TextEditingController() ;
 
 
   @override
@@ -82,6 +81,8 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
       } catch (e) {
         print("Error parsing startDate: $e");
       }
+    }else{
+      startDate = DateTime.now() ;
     }
 
     final String? endDateStr = widget.edu.endDate;
@@ -104,12 +105,14 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
           print("Error parsing startDate: $e");
         }
       }
+    }else{
+      endDate = DateTime.now() ;
     }
 
     locationController.text = widget.edu.location ?? "" ;
-
     gradeController.text = widget.edu.grade ?? "";
     skills = widget.edu.skills ?? [] ;
+    degreeController.text = widget.edu.fieldOfStudy ?? "" ;
     descriptionController.text  = widget.edu.description ?? "";
 
     fetchCompany();
@@ -528,6 +531,45 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
                             textColor: AppColors.theme['secondaryColor'],
                             bgColor: AppColors.theme['primaryColor'],
                             onTap: () async {
+
+                              if(_formKey.currentState!.validate()){
+
+                                Education edu = Education(
+                                  id: widget.edu.id,
+                                  startDate: startDate == null
+                                      ? DateFormat('MMM yyyy').format(DateTime.now())
+                                      : DateFormat('MMM yyyy').format(startDate!),
+                                  endDate: isCurrentlyStuding
+                                      ? "Present"
+                                      : (endDate == null ? "" : DateFormat('MMM yyyy').format(endDate!)),
+                                  skills: skills,
+                                  schoolId: oid,
+                                  grade: gradeController.text ?? "",
+                                  location: locationController.text ?? "",
+                                  media: widget.edu.media,
+                                  description: descriptionController.text.trim() ?? "",
+                                  fieldOfStudy: degreeController.text.trim() ?? "",
+                                );
+
+                                setState(() {
+                                  isLoading = true;
+                                });
+
+                                await UserProfile.updateEducation(appUserProvider.user?.userID,edu) ;
+
+                                setState(() {
+                                  isLoading = false;
+                                });
+
+                                await appUserProvider.initUser() ;
+
+                                AppToasts.SuccessToast(context, "Education updated successfully!") ;
+
+                                Navigator.pop(context) ;
+
+                              }else {
+                                AppToasts.WarningToast(context, "School Name,Field of study,Start Date and End Date cannot be empty");
+                              }
 
                             },
                             title: 'Save Education',

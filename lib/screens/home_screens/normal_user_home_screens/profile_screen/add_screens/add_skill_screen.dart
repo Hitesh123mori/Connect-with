@@ -32,6 +32,7 @@ class _AddSkillScreenState extends State<AddSkillScreen> {
     if (_formKey.currentState!.validate()) {
 
       Skill skill = Skill(
+        id: HelperFunctions.getUuid(),
         name:  nameController.text.trim(),
         projects: selectedProjects,
       );
