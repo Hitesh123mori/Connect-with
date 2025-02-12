@@ -10,7 +10,9 @@ import 'package:connect_with/models/user/experience.dart';
 import 'package:connect_with/providers/buckets_provider.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/home_screens/common_screens/all_organization_screen_select_company.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_screens/Experience/edit_experience.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
+import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
@@ -1167,7 +1169,9 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                 setState(() {
                                   isLoading = false;
                                 });
-                                Navigator.pop(context);
+                                // Navigator.pop(context);
+                                Navigator.pushReplacement(context, RightToLeft(EditExperience())) ;
+
                               } else {
                                 AppToasts.WarningToast(context,
                                     "Company Name,Title and Dates cannot be empty");

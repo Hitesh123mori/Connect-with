@@ -14,7 +14,9 @@ import 'package:connect_with/providers/buckets_provider.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/home_screens/common_screens/all_organization_screen_select_company.dart';
 import 'package:connect_with/screens/home_screens/common_screens/all_user_screen_select_users.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_screens/Projects/edit_project.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
+import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
@@ -662,7 +664,9 @@ class _EditScreenProjectState extends State<EditScreenProject> {
                                   }
 
 
-                                  Navigator.pop(context) ;
+                                  // Navigator.pop(context) ;
+                                  Navigator.pushReplacement(context, RightToLeft(EditProject())) ;
+
 
                                 }else {
                                   AppToasts.WarningToast(context, "Project Name,Project Url,Start Date and End Date cannot be empty");

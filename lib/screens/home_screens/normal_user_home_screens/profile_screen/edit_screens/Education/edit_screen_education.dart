@@ -11,6 +11,7 @@ import 'package:connect_with/providers/buckets_provider.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/home_screens/common_screens/all_organization_screen_select_company.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
+import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
@@ -27,6 +28,8 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import 'edit_education.dart';
 
 class EditScreenEducation extends StatefulWidget {
 
@@ -602,7 +605,8 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
                                   AppToasts.ErrorToast(context, "Failed to update education!") ;
                                 }
 
-                                Navigator.pop(context) ;
+                                // Navigator.pop(context) ;
+                                Navigator.pushReplacement(context, RightToLeft(EditEducation())) ;
 
                               }else {
                                 AppToasts.WarningToast(context, "School Name,Field of study,Start Date and End Date cannot be empty");

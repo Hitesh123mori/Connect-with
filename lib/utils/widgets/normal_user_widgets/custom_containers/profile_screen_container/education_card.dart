@@ -29,6 +29,7 @@ class _EducationCardState extends State<EducationCard> {
   }
 
   Future<Organization?> _fetchOrganization() async {
+    print("#called");
     await Future.delayed(Duration(seconds: 2));
 
     String orgId = widget.education.schoolId ?? "";
