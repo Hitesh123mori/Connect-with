@@ -29,6 +29,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class EditScreenEducation extends StatefulWidget {
+
   final Education edu;
 
   const EditScreenEducation({super.key, required this.edu});
@@ -600,7 +601,6 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
                                 }else{
                                   AppToasts.ErrorToast(context, "Failed to update education!") ;
                                 }
-
 
                                 Navigator.pop(context) ;
 

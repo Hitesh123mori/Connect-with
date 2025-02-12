@@ -64,6 +64,8 @@ class _EditExperienceState extends State<EditExperience> {
                                 Navigator.push(context, LeftToRight(EditScreenExperience(exp:appUserProvider.user?.experiences?[index] ?? Experience())));
                               },
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+
                                 children: [
                                   Container(
                                     child: ExperienceCard(

@@ -1,24 +1,26 @@
 import 'package:connect_with/models/user/education.dart';
 import 'package:connect_with/models/user/experience.dart';
+import 'package:connect_with/models/user/project.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_screens/Experience/edit_screen_experience.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/education_card.dart';
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/experience_card.dart';
+import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/project_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'edit_screen_education.dart';
+import 'edit_screen_project.dart';
 
-class EditEducation extends StatefulWidget {
-  const EditEducation({super.key});
+class EditProject extends StatefulWidget {
+  const EditProject({super.key});
 
   @override
-  State<EditEducation> createState() => _EditEducationState();
+  State<EditProject> createState() => _EditProjectState();
 }
 
-class _EditEducationState extends State<EditEducation> {
+class _EditProjectState extends State<EditProject> {
   @override
   Widget build(BuildContext context) {
     return Consumer<AppUserProvider>(
@@ -46,12 +48,12 @@ class _EditEducationState extends State<EditEducation> {
                 child: Padding(
                   padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                  child: appUserProvider.user?.educations != null
+                  child: appUserProvider.user?.projects != null
                       ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Edit Education",
+                        "Edit Projects",
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
@@ -61,20 +63,19 @@ class _EditEducationState extends State<EditEducation> {
                       ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: appUserProvider.user?.educations?.length,
+                        itemCount: appUserProvider.user?.projects?.length,
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: (){
-                              Navigator.push(context, LeftToRight(EditScreenEducation(edu:appUserProvider.user?.educations?[index] ?? Education())));
+                              Navigator.push(context, LeftToRight(EditScreenProject(pro:appUserProvider.user?.projects?[index] ?? Project())));
                             },
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-
                               children: [
                                 Container(
-                                  child: EducationCard(
-                                      education: appUserProvider
-                                          .user!.educations![index]),
+                                  child: ProjectCard(
+                                      project: appUserProvider
+                                          .user!.projects![index]),
                                 ),
                                 Divider(),
                               ],
@@ -89,7 +90,7 @@ class _EditEducationState extends State<EditEducation> {
                     children: [
                       Center(
                           child: Text(
-                            "Please add education first",
+                            "Please add project first",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,

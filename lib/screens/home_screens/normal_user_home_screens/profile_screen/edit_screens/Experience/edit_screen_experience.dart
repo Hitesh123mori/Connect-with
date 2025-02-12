@@ -1147,8 +1147,6 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                   pos.add(position);
                                 }
 
-                                print(pos);
-
                                 bool isUpdated = await ExperienceCrud.updateExperience(
                                     appUserProvider.user?.userID,
                                     widget.exp.id ?? "",

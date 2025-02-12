@@ -4,6 +4,7 @@ import 'package:connect_with/apis/normal/user_crud_operations/user_details_updat
 import 'package:connect_with/models/user/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AppUserProvider extends ChangeNotifier {
   AppUser? user;
