@@ -45,6 +45,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isfirst = true;
   bool showMore = false;
+
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
@@ -404,7 +405,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     IconButton(
                                       icon: Icon(Icons.edit),
                                       onPressed: () {
-                                        Navigator.push(context,
+                                        Navigator.pushReplacement(context,
                                             LeftToRight(EditExperience()));
                                       },
                                     ),
@@ -521,7 +522,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     IconButton(
                                       icon: Icon(Icons.edit),
                                       onPressed: () {
-                                        Navigator.push(context, LeftToRight(EditEducation()));
+                                        Navigator.pushReplacement(context, LeftToRight(EditEducation()));
                                       },
                                     )
                                   ],
@@ -637,7 +638,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     IconButton(
                                       icon: Icon(Icons.edit),
                                       onPressed: () {
-                                        Navigator.push(context, LeftToRight(EditProject())) ;
+                                        Navigator.pushReplacement(context, LeftToRight(EditProject())) ;
                                       },
                                     )
                                   ],
@@ -1049,7 +1050,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                   ],
                 ),
-
                 SizedBox(
                   height: 40,
                 ),

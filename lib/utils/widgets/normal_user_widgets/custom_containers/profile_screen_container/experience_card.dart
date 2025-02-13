@@ -42,6 +42,7 @@ class _ExperienceCardState extends State<ExperienceCard> {
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
     return FutureBuilder<Organization?>(
+      key: ValueKey(widget.experience.companyId),
       future: _organizationFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {

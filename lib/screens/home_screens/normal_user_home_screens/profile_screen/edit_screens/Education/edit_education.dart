@@ -2,7 +2,9 @@ import 'package:connect_with/models/user/education.dart';
 import 'package:connect_with/models/user/experience.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_screens/Experience/edit_screen_experience.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/profile_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
+import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/education_card.dart';
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/experience_card.dart';
@@ -18,7 +20,7 @@ class EditEducation extends StatefulWidget {
   State<EditEducation> createState() => _EditEducationState();
 }
 
-class _EditEducationState extends State<EditEducation> {
+class _EditEducationState extends State<EditEducation>{
   @override
   Widget build(BuildContext context) {
     return Consumer<AppUserProvider>(
@@ -32,7 +34,7 @@ class _EditEducationState extends State<EditEducation> {
                 toolbarHeight: 50,
                 leading: IconButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(context, RightToLeft(ProfileScreen())) ;
                   },
                   icon: Icon(
                     Icons.keyboard_arrow_left_rounded,
@@ -63,22 +65,19 @@ class _EditEducationState extends State<EditEducation> {
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: appUserProvider.user?.educations?.length,
                         itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: (){
-                              Navigator.push(context, LeftToRight(EditScreenEducation(edu:appUserProvider.user?.educations?[index] ?? Education())));
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-
-                              children: [
-                                Container(
-                                  child: EducationCard(
-                                      education: appUserProvider
-                                          .user!.educations![index]),
-                                ),
-                                Divider(),
-                              ],
-                            ),
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                child: EducationCard(
+                                    onTap: ()async{
+                                      await Navigator.pushReplacement(context, LeftToRight(EditScreenEducation(edu:appUserProvider.user?.educations?[index] ?? Education())));
+                                    },
+                                    education: appUserProvider
+                                        .user!.educations![index]),
+                              ),
+                              Divider(),
+                            ],
                           );
                         },
                       ),

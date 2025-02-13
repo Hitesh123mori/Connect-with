@@ -62,7 +62,7 @@ class ExperienceCrud{
           if (exp['id'] == eid ) {
             exp['employementType'] = employmentType;
             exp['positions'] = _newPositions.map((pos) => pos.toJson()).toList();
-
+            exp['companyId'] = companyId ;
             isUpdated = true;
             break;
           }
