@@ -34,6 +34,7 @@ import 'package:provider/provider.dart';
 
 import 'edit_screens/Education/edit_education.dart';
 import 'edit_screens/Projects/edit_project.dart';
+import 'edit_screens/Skills/edit_skill.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -753,7 +754,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                     IconButton(
                                       icon: Icon(Icons.edit),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(context, LeftToRight(EditSkill())) ;
+                                      },
                                     )
                                   ],
                                 ),

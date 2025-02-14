@@ -35,5 +35,44 @@ class SkillsCrud{
     }
   }
 
+  //update skill
+  static Future<bool> updateSkill(String? userId, Skill skill) async {
+    try {
+      DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
+
+      if (userDoc.exists) {
+        List<dynamic> existingSkills = userDoc['skills'] ?? [];
+
+        bool isUpdated = false;
+
+        for (int i = 0; i < existingSkills.length; i++) {
+          if (existingSkills[i]['id'] == skill.id) {
+            existingSkills[i] = skill.toJson();
+            isUpdated = true;
+            break;
+          }
+        }
+
+        if (!isUpdated) {
+          existingSkills.add(skill.toJson());
+        }
+
+        await _collectionRef.doc(userId).update({'skills': existingSkills});
+
+
+        log("#Skill updated successfully");
+        return true;
+      } else {
+        log("#User not found");
+        return false;
+      }
+    } catch (error, stackTrace) {
+      log("#updateSkill error: $error, $stackTrace");
+      return false;
+    }
+  }
+
+
+
 
 }
