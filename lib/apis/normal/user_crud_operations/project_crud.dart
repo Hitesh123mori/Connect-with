@@ -73,4 +73,28 @@ class ProjectCrud{
     }
   }
 
+
+  // delete project
+  static Future<bool> deleteProject(String? userId, String proId) async {
+    try {
+      DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
+
+      if (userDoc.exists) {
+        List<dynamic> existingProjects = userDoc['projects'] ?? [];
+        existingProjects.removeWhere((pro) => pro['proID'] == proId);
+
+        await _collectionRef.doc(userId).update({'projects': existingProjects});
+        log("#Project deleted successfully");
+        return true;
+      } else {
+        log("#User not found");
+        return false;
+      }
+    } catch (error, stackTrace) {
+      log("#deleteProject error: $error, $stackTrace");
+      return false;
+    }
+  }
+
+
 }

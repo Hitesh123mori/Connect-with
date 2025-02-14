@@ -35,7 +35,7 @@ class LanguageCrud{
     }
   }
 
-  // update crud
+  // update lan
   static Future<bool> updateLan(String? userId, SpeakLanguageUser lan) async {
     try {
       DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
@@ -70,6 +70,30 @@ class LanguageCrud{
       return false;
     }
   }
+
+
+ // delete lan
+  static Future<bool> deleteLanguage(String? userId, String lanId) async {
+    try {
+      DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
+
+      if (userDoc.exists) {
+        List<dynamic> existingLanguages = userDoc['languages'] ?? [];
+        existingLanguages.removeWhere((lan) => lan['id'] == lanId);
+
+        await _collectionRef.doc(userId).update({'languages': existingLanguages});
+        log("#Language deleted successfully");
+        return true;
+      } else {
+        log("#User not found");
+        return false;
+      }
+    } catch (error, stackTrace) {
+      log("#deleteLanguage error: $error, $stackTrace");
+      return false;
+    }
+  }
+
 
 
 }

@@ -74,5 +74,28 @@ class TestScoreCrud{
     }
   }
 
+  // delete test score
+  static Future<bool> deleteScore(String? userId, String id) async {
+    try {
+      DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
+
+      if (userDoc.exists) {
+        List<dynamic> existingScore = userDoc['testScores'] ?? [];
+        existingScore.removeWhere((score) => score['id'] == id);
+
+        await _collectionRef.doc(userId).update({'testScores': existingScore});
+        log("#Score deleted successfully");
+        return true;
+      } else {
+        log("#User not found");
+        return false;
+      }
+    } catch (error, stackTrace) {
+      log("#deleteScore error: $error, $stackTrace");
+      return false;
+    }
+  }
+
+
 
 }

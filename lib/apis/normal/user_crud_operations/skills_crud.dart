@@ -73,6 +73,30 @@ class SkillsCrud{
   }
 
 
+  // delete skill
+  static Future<bool> deleteSkill(String? userId, String id) async {
+    try {
+      DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
+
+      if (userDoc.exists) {
+        List<dynamic> existingSkills = userDoc['skills'] ?? [];
+        existingSkills.removeWhere((skill) => skill['id'] == id);
+
+        await _collectionRef.doc(userId).update({'skills': existingSkills});
+        log("#Skill deleted successfully");
+        return true;
+      } else {
+        log("#User not found");
+        return false;
+      }
+    } catch (error, stackTrace) {
+      log("#deleteSkill error: $error, $stackTrace");
+      return false;
+    }
+  }
+
+
+
 
 
 }

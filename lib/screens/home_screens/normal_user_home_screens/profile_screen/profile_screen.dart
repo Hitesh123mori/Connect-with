@@ -30,6 +30,7 @@ import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/skill_card.dart';
 import 'package:connect_with/utils/widgets/normal_user_widgets/custom_containers/profile_screen_container/test_score_card.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'edit_screens/Education/edit_education.dart';
@@ -388,7 +389,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "experience",
+                                  "Experiences",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
@@ -422,8 +423,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             if (appUserProvider.user?.experiences?.length == 0)
                               Center(
                                 child: Text(
-                                  "No experiences added yet.",
-                                  style: TextStyle(
+                                  "No Experiences",
+                                  style: GoogleFonts.poppins(
                                       color: Colors.grey, fontSize: 16),
                                 ),
                               ),
@@ -508,7 +509,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "education",
+                                  "Educations",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
@@ -537,9 +538,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             if (appUserProvider.user?.educations?.length == 0)
                               Center(
-                                child: Text(
-                                  "No education added yet.",
-                                  style: TextStyle(
+                                child:Text(
+                                  "No Educations",
+                                  style: GoogleFonts.poppins(
                                       color: Colors.grey, fontSize: 16),
                                 ),
                               ),
@@ -624,7 +625,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "projects",
+                                  "Projects",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
@@ -653,9 +654,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             if (appUserProvider.user?.projects?.length == 0)
                               Center(
-                                child: Text(
-                                  "No project added yet.",
-                                  style: TextStyle(
+                                child:Text(
+                                  "No Projects",
+                                  style: GoogleFonts.poppins(
                                       color: Colors.grey, fontSize: 16),
                                 ),
                               ),
@@ -740,7 +741,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "skills",
+                                  "Skills",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
@@ -770,8 +771,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             if (appUserProvider.user?.skills?.length == 0)
                               Center(
                                 child: Text(
-                                  "No skills added yet.",
-                                  style: TextStyle(
+                                  "No Skills",
+                                  style: GoogleFonts.poppins(
                                       color: Colors.grey, fontSize: 16),
                                 ),
                               ),
@@ -881,8 +882,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 appUserProvider.user!.testScores!.isEmpty)
                               Center(
                                 child: Text(
-                                  "No test scores added yet.",
-                                  style: TextStyle(
+                                  "No TestScores",
+                                  style: GoogleFonts.poppins(
                                       color: Colors.grey, fontSize: 16),
                                 ),
                               )
@@ -995,9 +996,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             if (appUserProvider.user?.languages == null ||
                                 appUserProvider.user!.languages!.isEmpty)
                               Center(
-                                child: Text(
-                                  "No language added yet.",
-                                  style: TextStyle(
+                                child:Text(
+                                  "No Languages",
+                                  style: GoogleFonts.poppins(
                                       color: Colors.grey, fontSize: 16),
                                 ),
                               )

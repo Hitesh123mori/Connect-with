@@ -90,4 +90,26 @@ class ExperienceCrud{
     }
   }
 
+  // delete experience
+  static Future<bool> deleteExperience(String? userId, String expId) async {
+    try {
+      DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
+
+      if (userDoc.exists) {
+        List<dynamic> existingExperiences = userDoc['experiences'] ?? [];
+        existingExperiences.removeWhere((exp) => exp['id'] == expId);
+
+        await _collectionRef.doc(userId).update({'experiences': existingExperiences});
+        log("#experience deleted successfully");
+        return true;
+      } else {
+        log("#User not found");
+        return false;
+      }
+    } catch (error, stackTrace) {
+      log("#deleteExperience error: $error, $stackTrace");
+      return false;
+    }
+  }
+
 }
