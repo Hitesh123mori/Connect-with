@@ -489,19 +489,19 @@ class _EditProfileState extends State<EditProfile> {
                               (value) {
                             setState(() => showButton = value);
                           }),
-                          _buildToggleOption("Show Experience", showExperience,
+                          _buildToggleOption("Show experience", showExperience,
                               (value) {
                             setState(() => showExperience = value);
                           }),
-                          _buildToggleOption("Show Education", showEducation,
+                          _buildToggleOption("Show education", showEducation,
                               (value) {
                             setState(() => showEducation = value);
                           }),
-                          _buildToggleOption("Show Projects", showProjects,
+                          _buildToggleOption("Show projects", showProjects,
                               (value) {
                             setState(() => showProjects = value);
                           }),
-                          _buildToggleOption("Show Skills", showSkills,
+                          _buildToggleOption("Show skills", showSkills,
                               (value) {
                             setState(() => showSkills = value);
                           }),

@@ -36,4 +36,43 @@ class TestScoreCrud{
     }
   }
 
+  // update score
+
+  static Future<bool> updateScore(String? userId, TestScores score) async {
+    try {
+      DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
+
+      if (userDoc.exists) {
+        List<dynamic> existingScores= userDoc['testScores'] ?? [];
+
+        bool isUpdated = false;
+
+        for (int i = 0; i < existingScores.length; i++) {
+          if (existingScores[i]['id'] == score.id) {
+            existingScores[i] = score.toJson();
+            isUpdated = true;
+            break;
+          }
+        }
+
+        if (!isUpdated) {
+          existingScores.add(score.toJson());
+        }
+
+        await _collectionRef.doc(userId).update({'testScores': existingScores});
+
+
+        log("#Score updated successfully");
+        return true;
+      } else {
+        log("#User not found");
+        return false;
+      }
+    } catch (error, stackTrace) {
+      log("#updateScore error: $error, $stackTrace");
+      return false;
+    }
+  }
+
+
 }

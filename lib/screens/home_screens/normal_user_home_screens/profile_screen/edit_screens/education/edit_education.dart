@@ -53,7 +53,7 @@ class _EditEducationState extends State<EditEducation>{
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Edit Education",
+                        "Edit education",
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),

@@ -245,7 +245,7 @@ class _JobShowMoreScreenCompanyState extends State<JobShowMoreScreenCompany> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(height: 10),
-                Center(child: HeadingText(heading: "Choose Experience Level")),
+                Center(child: HeadingText(heading: "Choose experience Level")),
                 SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -525,7 +525,7 @@ class _JobShowMoreScreenCompanyState extends State<JobShowMoreScreenCompany> {
                             label: Row(
                               children: [
                                 Text(
-                                  "Experience Level",
+                                  "experience Level",
                                   style: TextStyle(
                                     color: _selectedExperienceType.isNotEmpty
                                         ? AppColors.theme['secondaryColor']

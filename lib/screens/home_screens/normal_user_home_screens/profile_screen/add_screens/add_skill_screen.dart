@@ -122,7 +122,7 @@ class _AddSkillScreenState extends State<AddSkillScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 10,),
-                          Text18(text: "Select Projects"),
+                          Text18(text: "Select projects"),
                           ListView.builder(
                             shrinkWrap: true,
                             physics: const BouncingScrollPhysics(),

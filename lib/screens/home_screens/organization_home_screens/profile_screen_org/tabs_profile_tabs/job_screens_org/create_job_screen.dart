@@ -393,7 +393,7 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text16(
-                                    text: 'Experience Level*',
+                                    text: 'experience Level*',
                                   ),
                                   Container(
                                     width: double.infinity,
@@ -412,7 +412,7 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
                                       isExpanded: true,
                                       underline: SizedBox(),
                                       hint: Text(
-                                        'Select Experience Type',
+                                        'Select experience Type',
                                         style: TextStyle(
                                             color: AppColors
                                                 .theme['primaryColor']),

@@ -398,7 +398,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text18(text: "Skills"),
+                          Text18(text: "skills"),
                           SizedBox(height: 10),
                           Row(
                             children: [

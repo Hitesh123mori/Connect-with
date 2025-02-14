@@ -51,7 +51,7 @@ class _EditSkillState extends State<EditSkill> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Edit Skills",
+                        "Edit skills",
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),

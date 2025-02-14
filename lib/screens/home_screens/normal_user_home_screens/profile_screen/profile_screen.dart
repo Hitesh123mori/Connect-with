@@ -35,6 +35,7 @@ import 'package:provider/provider.dart';
 import 'edit_screens/Education/edit_education.dart';
 import 'edit_screens/Projects/edit_project.dart';
 import 'edit_screens/Skills/edit_skill.dart';
+import 'edit_screens/test_score/edit_test_score.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -386,7 +387,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Experience",
+                                  "experience",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
@@ -506,7 +507,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Education",
+                                  "education",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
@@ -622,7 +623,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Projects",
+                                  "projects",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
@@ -738,7 +739,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Skills",
+                                  "skills",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
@@ -864,7 +865,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                     IconButton(
                                       icon: Icon(Icons.edit),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(context, LeftToRight(EditTestScore())) ;
+                                      },
                                     )
                                   ],
                                 ),

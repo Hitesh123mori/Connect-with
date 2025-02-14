@@ -200,7 +200,7 @@ class _EditScreenProjectState extends State<EditScreenProject> {
               appBar: AppBar(
                 centerTitle: true,
                 title: Text18(
-                  text: "Edit Projects",
+                  text: "Edit projects",
                   isWhite: true,
                 ),
                 backgroundColor: AppColors.theme['primaryColor'],
@@ -460,7 +460,7 @@ class _EditScreenProjectState extends State<EditScreenProject> {
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text18(text: "Skills"),
+                                          Text18(text: "skills"),
                                           SizedBox(height: 10),
                                           Row(
                                             children: [

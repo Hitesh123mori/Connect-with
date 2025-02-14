@@ -24,7 +24,7 @@ class ExperienceCrud{
           'experiences': existingExperiences,
         });
 
-        log("#Experience added successfully");
+        log("#experience added successfully");
         return true;
       } else {
         log("#User not found");

@@ -27,7 +27,7 @@ class _ShowMoreSkillsState extends State<ShowMoreSkills> {
           toolbarHeight: 50,
           centerTitle: true,
           title: Text(
-            "Skills",
+            "skills",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: AppColors.theme['secondaryColor']),
           ),
           leading: IconButton(

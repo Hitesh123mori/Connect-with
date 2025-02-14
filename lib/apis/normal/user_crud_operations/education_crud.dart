@@ -23,7 +23,7 @@ class EducationCrud{
           'educations': existingEducations,
         });
 
-        log("#Education added successfully");
+        log("#education added successfully");
         return true;
       } else {
         log("#User not found");
@@ -57,7 +57,7 @@ class EducationCrud{
         }
 
         await _collectionRef.doc(userId).update({'educations': existingEducations});
-        log("#Education updated successfully");
+        log("#education updated successfully");
         return true;
       } else {
         log("#User not found");

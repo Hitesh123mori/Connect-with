@@ -115,7 +115,7 @@ class _AddEducationState extends State<AddEducation> {
       await OrganizationProfile.addEmployee(oid ?? "",context.read<AppUserProvider>().user?.userID ?? "") ;
 
       if (isAdded) {
-        AppToasts.InfoToast(context, "Education added successfully") ;
+        AppToasts.InfoToast(context, "education added successfully") ;
       } else {
         AppToasts.ErrorToast(context,"Failed to update education.") ;
         Navigator.pop(context);
@@ -169,7 +169,7 @@ class _AddEducationState extends State<AddEducation> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       HeadingText(
-                        heading: 'Add Education',
+                        heading: 'Add education',
                       ),
                       NormalText(
                         text: '* Indicates required field',
@@ -372,7 +372,7 @@ class _AddEducationState extends State<AddEducation> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text18(text: "Skills"),
+                          Text18(text: "skills"),
                           SizedBox(height: 10),
                           Row(
                             children: [
@@ -572,7 +572,7 @@ class _AddEducationState extends State<AddEducation> {
                               AppToasts.WarningToast(context, "Make sure all necessary details are filled") ;
                             }
                           },
-                          title: 'Save Education',
+                          title: 'Save education',
                         ),
                       ),
 

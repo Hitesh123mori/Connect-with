@@ -92,7 +92,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
       bucketProvider.bucket = "";
 
       if (isAdded) {
-        AppToasts.InfoToast(context, "Experience added successfully") ;
+        AppToasts.InfoToast(context, "experience added successfully") ;
       } else {
         AppToasts.ErrorToast(context,"Failed to update experience." ) ;
         Navigator.pop(context);
@@ -169,7 +169,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        HeadingText(heading: "Add Experience"),
+                        HeadingText(heading: "Add experience"),
                         NormalText(text: "* Indicates required field"),
                         SizedBox(height: 20),
 
@@ -407,7 +407,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text18(text: "Skills"),
+                            Text18(text: "skills"),
                             SizedBox(height: 10),
                             Row(
                               children: [
@@ -621,7 +621,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                                 AppToasts.WarningToast(context, "Make sure all necessary details are filled") ;
                               }
                             },
-                            title: 'Save Experience',
+                            title: 'Save experience',
                           ),
                         ),
 

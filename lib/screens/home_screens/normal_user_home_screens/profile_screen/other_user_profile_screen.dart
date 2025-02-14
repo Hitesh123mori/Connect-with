@@ -353,7 +353,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Experience",
+                                "experience",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
@@ -451,7 +451,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Education",
+                                "education",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18),
@@ -548,7 +548,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Projects",
+                                "projects",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18),
@@ -645,7 +645,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Skills",
+                                "skills",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18),

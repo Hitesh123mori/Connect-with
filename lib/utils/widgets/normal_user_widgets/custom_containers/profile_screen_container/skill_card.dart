@@ -38,7 +38,7 @@ class _SkillCardState extends State<SkillCard> {
               Container(
                 child: Column(
                   children: [
-                    Center(child: HeadingText(heading: "Projects")),
+                    Center(child: HeadingText(heading: "projects")),
                     Divider(),
                   ],
                 ),

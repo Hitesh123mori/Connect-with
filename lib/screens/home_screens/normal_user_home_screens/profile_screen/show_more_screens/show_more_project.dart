@@ -26,7 +26,7 @@ class _ShowMoreProjectState extends State<ShowMoreProject> {
           toolbarHeight: 50,
           centerTitle: true,
           title: Text(
-            "Projects",
+            "projects",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: AppColors.theme['secondaryColor']),
           ),
           leading: IconButton(

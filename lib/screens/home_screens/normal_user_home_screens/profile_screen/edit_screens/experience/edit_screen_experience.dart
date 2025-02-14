@@ -242,7 +242,7 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
               appBar: AppBar(
                 centerTitle: true,
                 title: Text18(
-                  text: "Edit Experience",
+                  text: "Edit experience",
                   isWhite: true,
                 ),
                 backgroundColor: AppColors.theme['primaryColor'],
@@ -941,7 +941,7 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        Text18(text: "Skills"),
+                                                        Text18(text: "skills"),
                                                         SizedBox(height: 10),
                                                         Row(
                                                           children: [
@@ -1158,7 +1158,7 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                 );
 
                                 if(isUpdated){
-                                  AppToasts.SuccessToast(context, "Experience updated successfully!") ;
+                                  AppToasts.SuccessToast(context, "experience updated successfully!") ;
                                 }else{
                                   AppToasts.ErrorToast(context, "Failed to update experience!") ;
                                 }
@@ -1177,7 +1177,7 @@ class _EditScreenExperienceState extends State<EditScreenExperience> {
                                     "Company Name,Title and Dates cannot be empty");
                               }
                             },
-                            title: 'Save Experience',
+                            title: 'Save experience',
                           ),
                         ),
 

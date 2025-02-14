@@ -215,7 +215,7 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
               appBar: AppBar(
                 centerTitle: true,
                 title: Text18(
-                  text: "Edit Education",
+                  text: "Edit education",
                   isWhite: true,
                 ),
                 backgroundColor: AppColors.theme['primaryColor'],
@@ -472,7 +472,7 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text18(text: "Skills"),
+                                        Text18(text: "skills"),
                                         SizedBox(height: 10),
                                         Row(
                                           children: [
@@ -600,7 +600,7 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
                                 await appUserProvider.initUser() ;
 
                                 if(isUpdated){
-                                  AppToasts.InfoToast(context, "Education updated successfully!") ;
+                                  AppToasts.InfoToast(context, "education updated successfully!") ;
                                 }else{
                                   AppToasts.ErrorToast(context, "Failed to update education!") ;
                                 }
@@ -613,7 +613,7 @@ class _EditScreenEducationState extends State<EditScreenEducation> {
                               }
 
                             },
-                            title: 'Save Education',
+                            title: 'Save education',
                           ),
                         ),
 
