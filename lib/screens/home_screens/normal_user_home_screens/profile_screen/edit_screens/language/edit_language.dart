@@ -68,7 +68,7 @@ class _EditLanguageState extends State<EditLanguage> {
                 child: Padding(
                   padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                  child: appUserProvider.user?.testScores?.length !=0
+                  child: appUserProvider.user?.languages?.length !=0
                       ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
