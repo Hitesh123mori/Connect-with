@@ -7,6 +7,7 @@ import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/jobs/job_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/network/network_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/notification/notification_screen.dart';
+import 'package:connect_with/side_transitions/bottom_top.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/theme/colors.dart';
@@ -165,7 +166,9 @@ class _HomeScreenState extends State<HomeScreen> {
           elevation: 1,
           actions: [
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, BottomToTop(CreatePostScreen()));
+                },
                 icon: Icon(Icons.add_box, color: Colors.black)),
             IconButton(
                 onPressed: () {},
