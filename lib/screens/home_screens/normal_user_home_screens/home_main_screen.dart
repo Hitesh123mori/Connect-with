@@ -1,3 +1,4 @@
+import 'package:connect_with/main.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/auth_screens/login_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/post_screen.dart';
@@ -8,13 +9,13 @@ import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/notification/notification_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
-import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/drawer_container.dart';
+import 'package:connect_with/utils/widgets/common_widgets/text_feild_1.dart';
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:connect_with/utils/helper_functions/toasts.dart';
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> children = [
     PostScreen(),
     NetWorkScreen(),
-    CreatePostScreen(),
     NotificationScreen(),
     JobScreen(),
   ];
@@ -37,10 +37,10 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<String> titles = [
     'Posts',
     'Network',
-    'Create Post',
     'Notifications',
     'Jobs',
   ];
+
   void init(AppUserProvider appUserProvider) async {
     await appUserProvider.initUser();
   }
@@ -49,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    mq = MediaQuery.of(context).size;
     return Consumer<AppUserProvider>(
         builder: (context, appUserProvider, child) {
       if (isFirst) {
@@ -56,7 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
         isFirst = false;
       }
       return Scaffold(
-        // backgroundColor: AppColors.theme['backgroundColor'],
         drawer: Drawer(
           backgroundColor: AppColors.theme['backgroundColor'],
           child: Padding(
@@ -78,8 +78,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             CircleAvatar(
                               backgroundColor: AppColors.theme['primaryColor'],
-                              backgroundImage:
-                                  appUserProvider.user?.profilePath!=""  ? NetworkImage(appUserProvider.user?.profilePath ?? "") : AssetImage("assets/other_images/photo.png"),
+                              backgroundImage: appUserProvider
+                                          .user?.profilePath !=
+                                      ""
+                                  ? NetworkImage(
+                                      appUserProvider.user?.profilePath ?? "")
+                                  : AssetImage("assets/other_images/photo.png"),
                             ),
                             SizedBox(
                               width: 10,
@@ -96,9 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Text(
                     appUserProvider.user?.headLine ?? "Headline",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16),
+                    style: TextStyle(color: Colors.black, fontSize: 16),
                   ),
                   Divider(),
                   DrawerContainer(
@@ -121,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   InkWell(
                     onTap: () async {
                       await appUserProvider.logOut();
-                      AppToasts.SuccessToast(context, "Logout successfully") ;
+                      AppToasts.SuccessToast(context, "Logout successfully");
                       await Navigator.pushReplacement(
                           context, RightToLeft(LoginScreen()));
                     },
@@ -159,6 +161,19 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         appBar: AppBar(
+          surfaceTintColor: AppColors.theme['primaryColor'],
+          elevation: 1,
+          actions: [
+            IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.add_box, color: Colors.black)),
+            IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.chat_outlined,
+                  color: Colors.black,
+                ))
+          ],
           leading: Container(
             child: Builder(
                 builder: (context) => InkWell(
@@ -169,9 +184,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.only(
                             left: 5.0, top: 10, bottom: 10),
                         child: CircleAvatar(
-                          backgroundColor: AppColors.theme['backgroundColor'].withOpacity(0.3),
+                          backgroundColor: AppColors.theme['backgroundColor']
+                              .withOpacity(0.3),
                           backgroundImage:
-                              appUserProvider.user?.profilePath!="" ? NetworkImage(appUserProvider.user!.profilePath ?? "") : AssetImage("assets/other_images/photo.png"),
+                              appUserProvider.user?.profilePath != ""
+                                  ? NetworkImage(
+                                      appUserProvider.user!.profilePath ?? "")
+                                  : AssetImage("assets/other_images/photo.png"),
                           // backgroundColor: AppColors.theme['secondaryColor'].withOpacity(0.5),
                           radius: 20,
                           // child: Center(child: Text(appUserProvider.user?.userName?[0] ?? "U",style: TextStyle(color:
@@ -180,46 +199,104 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     )),
           ),
-          backgroundColor: AppColors.theme['primaryColor'],
+          backgroundColor: AppColors.theme['secondaryColor'],
           centerTitle: true,
-          title: Text(
-            titles[_currentIndex],
-            style: TextStyle(
-              color: AppColors.theme['secondaryColor'],
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
+          title: Container(
+            width: mq.width * 0.5,
+            height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: AppColors.theme['primaryColor'].withOpacity(0.1),
+            ),
+            child: Theme(
+              data: ThemeData(
+                textSelectionTheme: TextSelectionThemeData(
+                  selectionHandleColor: AppColors.theme['primaryColor'].withOpacity(0.3),
+                  cursorColor: AppColors.theme['primaryColor'].withOpacity(0.3),
+                  selectionColor: AppColors.theme['primaryColor'].withOpacity(0.2),
+                ),
+              ),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: AppColors.theme['backgroundColor'],
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  hintText: 'Search Here...',
+                  hintStyle: TextStyle(
+                    fontSize: 15,
+                    color: AppColors.theme['tertiaryColor']!.withOpacity(0.5),
+                  ),
+                  prefixIcon: Icon(Icons.search, color: AppColors.theme['tertiaryColor']!.withOpacity(0.5)),
+                ),
+              ),
             ),
           ),
+
         ),
         body: _buildBody(),
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: onTabTapped,
-          selectedItemColor: AppColors.theme['primaryColor'],
-          unselectedItemColor: Colors.grey,
-          showUnselectedLabels: true,
-          currentIndex: _currentIndex,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people_outline_sharp),
-              label: 'Network',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add_box_rounded),
-              label: 'Post',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.notifications_active_outlined),
-              label: 'Notifications',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.all_inbox_outlined),
-              label: 'Jobs',
-            ),
-          ],
+        bottomNavigationBar: Container(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 5),
+          decoration: BoxDecoration(
+            color: AppColors.theme['secondaryColor'],
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 10,
+                color: Colors.black.withOpacity(0.1),
+              )
+            ],
+          ),
+          child: GNav(
+            padding: EdgeInsets.all(12),
+            gap: 8,
+            color: AppColors.theme['secondaryColor'],
+            activeColor: AppColors.theme['primaryColor'],
+            backgroundColor: AppColors.theme['secondaryColor'],
+            tabBackgroundColor: AppColors.theme['primaryColor'],
+            selectedIndex: _currentIndex,
+            onTabChange: onTabTapped,
+            tabs: [
+              GButton(
+                icon: Icons.home_outlined,
+                text: 'Home',
+                iconActiveColor: AppColors.theme['secondaryColor'],
+                iconColor: AppColors.theme['primaryColor'],
+                textColor: AppColors.theme['secondaryColor'],
+              ),
+              GButton(
+                icon: Icons.people_outline_sharp,
+                text: 'Network',
+                iconActiveColor: AppColors.theme['secondaryColor'],
+                iconColor: AppColors.theme['primaryColor'],
+                textColor: AppColors.theme['secondaryColor'],
+              ),
+              GButton(
+                iconActiveColor: AppColors.theme['secondaryColor'],
+                icon: Icons.notifications_active_outlined,
+                text: 'Notifications',
+                iconColor: AppColors.theme['primaryColor'],
+                textColor: AppColors.theme['secondaryColor'],
+              ),
+              GButton(
+                iconActiveColor: AppColors.theme['secondaryColor'],
+                icon: Icons.all_inbox_outlined,
+                text: 'Jobs',
+                iconColor: AppColors.theme['primaryColor'],
+                textColor: AppColors.theme['secondaryColor'],
+              ),
+            ],
+          ),
         ),
       );
     });

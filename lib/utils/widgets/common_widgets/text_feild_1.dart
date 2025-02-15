@@ -42,7 +42,8 @@ class TextFeild1 extends StatelessWidget {
                     AppColors.theme['primaryColor'],
                 cursorColor: AppColors.theme['primaryColor'],
                 selectionColor:
-                    AppColors.theme['primaryColor'].withOpacity(0.3))),
+                    AppColors.theme['primaryColor'].withOpacity(0.3))
+        ),
         child: TextFormField(
           enabled: enabled,
           cursorColor: AppColors.theme['primaryColor'],

@@ -263,7 +263,7 @@ class _EditExperienceState extends State<EditExperience> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset("assets/other_images/no_items.png",height: 300,width: 300,),
+                        Image.asset("assets/ils/no_items.png",height: 300,width: 300,),
                         Text(
                           "No Items",
                           style: GoogleFonts.poppins(

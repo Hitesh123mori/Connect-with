@@ -83,7 +83,7 @@ class _JobContentCompanyProfileState extends State<JobContentCompanyProfile> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image.asset("assets/other_images/no_job.png"),
+                                Image.asset("assets/ils/no_job.png"),
                                 SizedBox(height: 10),
                                 Text(
                                   "NO JOBS FOUND!",
