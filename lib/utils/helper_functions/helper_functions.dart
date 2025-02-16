@@ -14,6 +14,8 @@ class HelperFunctions{
     launchUrl(Uri.parse(url));
   }
 
+
+
   static String getUuid(){
     var uuid = Uuid();
     // print(uuid.v1()) ;
@@ -49,11 +51,10 @@ class HelperFunctions{
           style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
           recognizer: TapGestureRecognizer()
             ..onTap = () {
-              HelperFunctions.launchURL(url);
+              launchUrl(Uri.parse(url));
             },
         ),
       );
-
       currentIndex = end;
     }
 

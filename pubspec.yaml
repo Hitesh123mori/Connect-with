@@ -54,6 +54,7 @@ dependencies:
   internet_connection_checker:
   uuid: ^4.5.1
   flutter_expandable_fab: ^2.3.0
+  font_awesome_flutter: ^10.8.0
   google_nav_bar: ^5.0.7
 #  connectivity_plus:
   photo_view: ^0.15.0
