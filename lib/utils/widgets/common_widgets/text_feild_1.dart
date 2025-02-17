@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class TextFeild1 extends StatelessWidget {
   final String hintText;
-  final bool enabled; // Make enabled optional, default to true
+  final bool enabled;
   final TextEditingController? controller;
   final bool isNumber;
   final FormFieldValidator<String>? validator;
@@ -18,7 +18,7 @@ class TextFeild1 extends StatelessWidget {
     Key? key,
     required this.hintText,
     this.controller,
-    this.enabled = true, // Default to true
+    this.enabled = true,
     required this.isNumber,
     this.validator,
     this.initialText,

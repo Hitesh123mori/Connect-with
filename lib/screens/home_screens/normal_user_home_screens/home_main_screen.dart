@@ -1,9 +1,9 @@
 import 'package:connect_with/main.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/screens/auth_screens/login_screen.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/post_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/profile_screen.dart';
-import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/create_post/create_post_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/jobs/job_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/network/network_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/notification/notification_screen.dart';

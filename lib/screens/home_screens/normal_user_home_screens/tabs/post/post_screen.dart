@@ -12,19 +12,16 @@ class PostScreen extends StatefulWidget {
 class _PostScreenState extends State<PostScreen> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: AppColors.theme['backgroundColor'].withOpacity(0.7),
-        body: ListView.builder(
-          shrinkWrap: true,
-          physics: BouncingScrollPhysics(),
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            return PostCard();
-          },
-        ),
+    return Scaffold(
+      backgroundColor: AppColors.theme['secondaryColor'].withOpacity(0.9),
+      body: ListView.builder(
+        shrinkWrap: true,
+        physics: BouncingScrollPhysics(),
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return PostCard();
+        },
       ),
-    );
+    ) ;
   }
 }

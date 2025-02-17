@@ -1,4 +1,6 @@
 import 'package:connect_with/main.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/full_view_post.dart';
+import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
@@ -8,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PostCard extends StatefulWidget {
-  const PostCard({super.key});
+  final bool isElevation ;
+  final bool onTapDisable;
+   PostCard({super.key, this.isElevation = true,this.onTapDisable = false});
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -27,12 +31,12 @@ class _PostCardState extends State<PostCard> {
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
-            BoxShadow(
+            widget.isElevation ? BoxShadow(
               color: Colors.black.withOpacity(0.1),
               blurRadius: 15,
               spreadRadius: 1,
               offset: Offset(0, 1),
-            ),
+            ) : BoxShadow(),
           ],
           borderRadius: BorderRadius.circular(10),
         ),
@@ -95,16 +99,21 @@ class _PostCardState extends State<PostCard> {
             ),
 
             // main description
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 1),
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(5),
-                  topLeft: Radius.circular(5),
-                )),
-                child: buildDescription(
-                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s https://github.com/login, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."),
+            GestureDetector(
+              onTap: widget.onTapDisable ? (){} : (){
+                Navigator.push(context, LeftToRight(FullViewPost())) ;
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 1),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(5),
+                    topLeft: Radius.circular(5),
+                  )),
+                  child: buildDescription(
+                      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s https://github.com/login, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."),
+                ),
               ),
             ),
 
@@ -139,13 +148,18 @@ class _PostCardState extends State<PostCard> {
                       ],
                     ),
                   ),
-                  Row(
-                    children: [
-                      Text("200",style: TextStyle(fontSize: 14,color: AppColors.theme['tertiaryColor'].withOpacity(0.5)),),
-                      Text(" comments ",style: TextStyle(fontSize: 14,color: AppColors.theme['tertiaryColor'].withOpacity(0.5)),),
-                      Text("• 4 ",style: TextStyle(fontSize: 14,color: AppColors.theme['tertiaryColor'].withOpacity(0.5)),),
-                      Text("reposts",style: TextStyle(fontSize: 14,color: AppColors.theme['tertiaryColor'].withOpacity(0.5)),),
-                    ],
+                  GestureDetector(
+                    onTap: widget.onTapDisable ? (){} :(){
+                      Navigator.push(context, LeftToRight(FullViewPost())) ;
+                    },
+                    child: Row(
+                      children: [
+                        Text("200",style: TextStyle(fontSize: 14,color: AppColors.theme['tertiaryColor'].withOpacity(0.5)),),
+                        Text(" comments ",style: TextStyle(fontSize: 14,color: AppColors.theme['tertiaryColor'].withOpacity(0.5)),),
+                        Text("• 4 ",style: TextStyle(fontSize: 14,color: AppColors.theme['tertiaryColor'].withOpacity(0.5)),),
+                        Text("reposts",style: TextStyle(fontSize: 14,color: AppColors.theme['tertiaryColor'].withOpacity(0.5)),),
+                      ],
+                    ),
                   )
                 ],
               ),
