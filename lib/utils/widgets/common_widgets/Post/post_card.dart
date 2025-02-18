@@ -4,15 +4,14 @@ import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
-import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';
-import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_18.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_reaction/flutter_animated_reaction.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PostCard extends StatefulWidget {
-  final bool isElevation ;
+  final bool isElevation;
   final bool onTapDisable;
-   PostCard({super.key, this.isElevation = true,this.onTapDisable = false});
+  PostCard({super.key, this.isElevation = true, this.onTapDisable = false});
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -20,6 +19,8 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   bool showMore = false;
+  GlobalKey key = GlobalKey();
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +32,14 @@ class _PostCardState extends State<PostCard> {
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
-            widget.isElevation ? BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 15,
-              spreadRadius: 1,
-              offset: Offset(0, 1),
-            ) : BoxShadow(),
+            widget.isElevation
+                ? BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 15,
+                    spreadRadius: 1,
+                    offset: Offset(0, 1),
+                  )
+                : BoxShadow(),
           ],
           borderRadius: BorderRadius.circular(10),
         ),
@@ -76,7 +79,10 @@ class _PostCardState extends State<PostCard> {
                             Text14(text: "Hitesh Mori"),
                             Text(
                               "Application Developer",
-                              style: TextStyle(fontSize: 12,color: AppColors.theme['tertiaryColor'].withOpacity(0.5)),
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.theme['tertiaryColor']
+                                      .withOpacity(0.5)),
                             ),
                           ],
                         )
@@ -100,9 +106,11 @@ class _PostCardState extends State<PostCard> {
 
             // main description
             GestureDetector(
-              onTap: widget.onTapDisable ? (){} : (){
-                Navigator.push(context, LeftToRight(FullViewPost())) ;
-              },
+              onTap: widget.onTapDisable
+                  ? () {}
+                  : () {
+                      Navigator.push(context, LeftToRight(FullViewPost()));
+                    },
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 1),
                 child: Container(
@@ -123,7 +131,7 @@ class _PostCardState extends State<PostCard> {
 
             //reaction
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0,vertical: 1),
+              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 1),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -137,11 +145,34 @@ class _PostCardState extends State<PostCard> {
                           child: Stack(
                             clipBehavior: Clip.none,
                             children: [
-                              Positioned(left: 0, child: _reactionIcon(FontAwesomeIcons.thumbsUp, Colors.blueAccent)),
-                              Positioned(left: 15, child: _reactionIcon(FontAwesomeIcons.lightbulb, Colors.orangeAccent)),
-                              Positioned(left: 30, child: _reactionIcon(FontAwesomeIcons.heart, Colors.redAccent)),
-                              Positioned(left: 45, child: _reactionIcon(FontAwesomeIcons.handsClapping, Colors.green)),
-                              Positioned(left : 70,child: Text("303",style: TextStyle(fontSize: 15,color: AppColors.theme['tertiaryColor'].withOpacity(0.5)),)),
+                              Positioned(
+                                  left: 0,
+                                  child: _reactionIcon(
+                                      FontAwesomeIcons.thumbsUp,
+                                      Colors.blueAccent)),
+                              Positioned(
+                                  left: 15,
+                                  child: _reactionIcon(
+                                      FontAwesomeIcons.lightbulb,
+                                      Colors.orangeAccent)),
+                              Positioned(
+                                  left: 30,
+                                  child: _reactionIcon(FontAwesomeIcons.heart,
+                                      Colors.redAccent)),
+                              Positioned(
+                                  left: 45,
+                                  child: _reactionIcon(
+                                      FontAwesomeIcons.handsClapping,
+                                      Colors.green)),
+                              Positioned(
+                                  left: 70,
+                                  child: Text(
+                                    "303",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: AppColors.theme['tertiaryColor']
+                                            .withOpacity(0.5)),
+                                  )),
                             ],
                           ),
                         ),
@@ -149,15 +180,42 @@ class _PostCardState extends State<PostCard> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: widget.onTapDisable ? (){} :(){
-                      Navigator.push(context, LeftToRight(FullViewPost())) ;
-                    },
+                    onTap: widget.onTapDisable
+                        ? () {}
+                        : () {
+                            Navigator.push(
+                                context, LeftToRight(FullViewPost()));
+                          },
                     child: Row(
                       children: [
-                        Text("200",style: TextStyle(fontSize: 14,color: AppColors.theme['tertiaryColor'].withOpacity(0.5)),),
-                        Text(" comments ",style: TextStyle(fontSize: 14,color: AppColors.theme['tertiaryColor'].withOpacity(0.5)),),
-                        Text("• 4 ",style: TextStyle(fontSize: 14,color: AppColors.theme['tertiaryColor'].withOpacity(0.5)),),
-                        Text("reposts",style: TextStyle(fontSize: 14,color: AppColors.theme['tertiaryColor'].withOpacity(0.5)),),
+                        Text(
+                          "200",
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: AppColors.theme['tertiaryColor']
+                                  .withOpacity(0.5)),
+                        ),
+                        Text(
+                          " comments ",
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: AppColors.theme['tertiaryColor']
+                                  .withOpacity(0.5)),
+                        ),
+                        Text(
+                          "• 4 ",
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: AppColors.theme['tertiaryColor']
+                                  .withOpacity(0.5)),
+                        ),
+                        Text(
+                          "reposts",
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: AppColors.theme['tertiaryColor']
+                                  .withOpacity(0.5)),
+                        ),
                       ],
                     ),
                   )
@@ -171,7 +229,8 @@ class _PostCardState extends State<PostCard> {
 
             // like,share,comment
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 2),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
               child: Container(
                 // height: 40,
                 decoration: BoxDecoration(
@@ -184,26 +243,88 @@ class _PostCardState extends State<PostCard> {
                   children: [
                     Column(
                       children: [
-                          FaIcon(FontAwesomeIcons.thumbsUp,color: AppColors.theme['tertiaryColor'].withOpacity(0.5),size: 18,),
-                          Text("Like",style: TextStyle(color :AppColors.theme['tertiaryColor'].withOpacity(0.5),fontSize: 12,fontWeight: FontWeight.bold),)
+                        GestureDetector(
+                          key : key,
+                            child: FaIcon(
+                          FontAwesomeIcons.thumbsUp,
+                          color:
+                              AppColors.theme['tertiaryColor'].withOpacity(0.5),
+                          size: 18,
+                        ),
+                          onTap: (){},
+                          onLongPress: (){
+                            print("hell");
+                            AnimatedFlutterReaction().showOverlay(
+                                context: context,
+                                key: key,
+                                onReaction: (val) {
+                                  print(val) ;
+                                }
+                                );
+                          },
+                        ),
+                        Text(
+                          "Like",
+                          style: TextStyle(
+                              color: AppColors.theme['tertiaryColor']
+                                  .withOpacity(0.5),
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold),
+                        )
                       ],
                     ),
                     Column(
                       children: [
-                        FaIcon(FontAwesomeIcons.comment,color: AppColors.theme['tertiaryColor'].withOpacity(0.5),size: 18,),
-                        Text("Comment",style: TextStyle(color :AppColors.theme['tertiaryColor'].withOpacity(0.5),fontSize: 12,fontWeight: FontWeight.bold),)
+                        FaIcon(
+                          FontAwesomeIcons.comment,
+                          color:
+                              AppColors.theme['tertiaryColor'].withOpacity(0.5),
+                          size: 18,
+                        ),
+                        Text(
+                          "Comment",
+                          style: TextStyle(
+                              color: AppColors.theme['tertiaryColor']
+                                  .withOpacity(0.5),
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold),
+                        )
                       ],
                     ),
                     Column(
                       children: [
-                        FaIcon(FontAwesomeIcons.retweet,color: AppColors.theme['tertiaryColor'].withOpacity(0.5),size: 18,),
-                        Text("Repost",style: TextStyle(color :AppColors.theme['tertiaryColor'].withOpacity(0.5),fontSize: 12,fontWeight: FontWeight.bold),)
+                        FaIcon(
+                          FontAwesomeIcons.retweet,
+                          color:
+                              AppColors.theme['tertiaryColor'].withOpacity(0.5),
+                          size: 18,
+                        ),
+                        Text(
+                          "Repost",
+                          style: TextStyle(
+                              color: AppColors.theme['tertiaryColor']
+                                  .withOpacity(0.5),
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold),
+                        )
                       ],
                     ),
                     Column(
                       children: [
-                        FaIcon(FontAwesomeIcons.share,color: AppColors.theme['tertiaryColor'].withOpacity(0.5),size: 18,),
-                        Text("Share",style: TextStyle(color :AppColors.theme['tertiaryColor'].withOpacity(0.5),fontSize: 12,fontWeight: FontWeight.bold),)
+                        FaIcon(
+                          FontAwesomeIcons.share,
+                          color:
+                              AppColors.theme['tertiaryColor'].withOpacity(0.5),
+                          size: 18,
+                        ),
+                        Text(
+                          "Share",
+                          style: TextStyle(
+                              color: AppColors.theme['tertiaryColor']
+                                  .withOpacity(0.5),
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold),
+                        )
                       ],
                     ),
                   ],
@@ -240,7 +361,6 @@ class _PostCardState extends State<PostCard> {
       ],
     );
   }
-
 
   //icon buidler
   Widget _reactionIcon(IconData icon, Color color) {
