@@ -5,7 +5,6 @@ import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animated_reaction/flutter_animated_reaction.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PostCard extends StatefulWidget {
@@ -254,13 +253,7 @@ class _PostCardState extends State<PostCard> {
                           onTap: (){},
                           onLongPress: (){
                             print("hell");
-                            AnimatedFlutterReaction().showOverlay(
-                                context: context,
-                                key: key,
-                                onReaction: (val) {
-                                  print(val) ;
-                                }
-                                );
+
                           },
                         ),
                         Text(

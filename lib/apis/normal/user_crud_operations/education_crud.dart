@@ -5,6 +5,7 @@ import 'package:connect_with/apis/init/config.dart';
 import 'package:connect_with/models/user/education.dart';
 
 class EducationCrud {
+
   static final _collectionRef = Config.firestore.collection("users");
 
   // Adding education

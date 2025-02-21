@@ -1,6 +1,7 @@
 import 'package:connect_with/providers/buckets_provider.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/providers/organization_provider.dart';
+import 'package:connect_with/providers/post_provider.dart';
 import 'package:connect_with/screens/onboard_screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -21,6 +22,7 @@ void main()async{
       providers: [
         ChangeNotifierProvider(create: (context)=>AppUserProvider()),
         ChangeNotifierProvider(create: (context)=>OrganizationProvider()),
+        ChangeNotifierProvider(create: (context) => PostProvider()),
         ChangeNotifierProvider(create: (context)=>BucketsProvider()),
 
       ],
@@ -77,3 +79,4 @@ _intializeFirebase() async {
   }
 
 }
+
