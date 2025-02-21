@@ -89,7 +89,11 @@ class _AttackImagesScreenState extends State<AttackImagesScreen> {
                           postProvider.post.imageUrls = _images.map((file) => file.path).toList();
 
                           AppToasts.InfoToast(context, "Images Attached");
+
+                          postProvider.notify() ;
+
                           Navigator.pop(context);
+
                         } else {
                           AppToasts.WarningToast(context, "Please upload image or Give attachment name");
                         }

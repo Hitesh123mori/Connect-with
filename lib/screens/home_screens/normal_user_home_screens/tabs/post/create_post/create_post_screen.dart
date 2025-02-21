@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connect_with/providers/post_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post/attach_article.dart';
@@ -8,6 +10,8 @@ import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
 import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
+import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
+import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:provider/provider.dart';
@@ -28,10 +32,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController descriptionController = TextEditingController();
   bool isFirst = true;
-
+  List<String> hashtags = [] ;
 
   // image controller
-  void _removeImage(int index,PostProvider postProvider) {
+  void _removeImage(int index, PostProvider postProvider) {
     setState(() {
       postProvider.post.imageUrls?.removeAt(index);
       AppToasts.InfoToast(context, "Image successfully discarded");
@@ -45,10 +49,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   }
 
   void updateButtonState() {
-      setState(() {
-        isButtonEnabled = descriptionController.text.isNotEmpty;
-      });
-
+    setState(() {
+      isButtonEnabled = descriptionController.text.isNotEmpty;
+    });
   }
 
   @override
@@ -59,7 +62,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PostProvider>(builder: (context,postProvider,child){
+    return Consumer<PostProvider>(builder: (context, postProvider, child) {
       return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: MaterialApp(
@@ -89,7 +92,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 Row(
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: AppColors.theme['secondaryColor'],
                         borderRadius: BorderRadius.circular(8),
@@ -113,7 +117,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       backgroundColor: AppColors.theme['primaryColor'],
                       onPressed: () {
                         Navigator.push(context, LeftToRight(AttachPdfScreen()));
-
                       },
                       child: Icon(
                         Icons.picture_as_pdf_outlined,
@@ -125,7 +128,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 Row(
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: AppColors.theme['secondaryColor'],
                         borderRadius: BorderRadius.circular(8),
@@ -148,7 +152,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     FloatingActionButton.small(
                       backgroundColor: AppColors.theme['primaryColor'],
                       onPressed: () {
-                        Navigator.push(context, LeftToRight(AttackImagesScreen()));
+                        Navigator.push(
+                            context, LeftToRight(AttackImagesScreen()));
                       },
                       child: Icon(
                         Icons.image_outlined,
@@ -160,7 +165,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 Row(
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: AppColors.theme['secondaryColor'],
                         borderRadius: BorderRadius.circular(8),
@@ -183,8 +189,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     FloatingActionButton.small(
                       backgroundColor: AppColors.theme['primaryColor'],
                       onPressed: () {
-                        Navigator.push(context, LeftToRight(AttachArticleScreen()));
-
+                        Navigator.push(
+                            context, LeftToRight(AttachArticleScreen()));
                       },
                       child: Icon(
                         Icons.article_outlined,
@@ -196,7 +202,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 Row(
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: AppColors.theme['secondaryColor'],
                         borderRadius: BorderRadius.circular(8),
@@ -219,7 +226,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     FloatingActionButton.small(
                       backgroundColor: AppColors.theme['primaryColor'],
                       onPressed: () {
-                        Navigator.push(context, LeftToRight(AttachCertificateScreen()));
+                        Navigator.push(
+                            context, LeftToRight(AttachCertificateScreen()));
                       },
                       child: Icon(
                         Icons.celebration_outlined,
@@ -231,7 +239,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 Row(
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: AppColors.theme['secondaryColor'],
                         borderRadius: BorderRadius.circular(8),
@@ -254,8 +263,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     FloatingActionButton.small(
                       backgroundColor: AppColors.theme['primaryColor'],
                       onPressed: () {
-                        Navigator.push(context, LeftToRight(AttachPollScreen()));
-
+                        Navigator.push(
+                            context, LeftToRight(AttachPollScreen()));
                       },
                       child: Icon(
                         Icons.poll_outlined,
@@ -291,6 +300,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         // Simulate a delay
                         await Future.delayed(Duration(seconds: 2));
 
+                        postProvider.post.hashtags = hashtags ;
+                        postProvider.notify();
+
                         print("This runs after 2 seconds");
 
                         setState(() {
@@ -300,9 +312,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         AppToasts.InfoToast(context, "Successfully Posted");
 
                         Navigator.pop(context);
-
-                      }else{
-                        AppToasts.WarningToast(context, "Description cannot be empty");
+                      } else {
+                        AppToasts.WarningToast(
+                            context, "Description cannot be empty");
                       }
                     },
                     child: AnimatedContainer(
@@ -312,24 +324,24 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       width: isLoading ? 50 : 100,
                       child: !isLoading
                           ? Center(
-                        child: Text(
-                          "Create",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: isButtonEnabled
-                                ? AppColors.theme['secondaryColor']
-                                : AppColors.theme['tertiaryColor']
-                                .withOpacity(0.5),
-                          ),
-                        ),
-                      )
+                              child: Text(
+                                "Create",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: isButtonEnabled
+                                      ? AppColors.theme['secondaryColor']
+                                      : AppColors.theme['tertiaryColor']
+                                          .withOpacity(0.5),
+                                ),
+                              ),
+                            )
                           : Center(
-                          child: Container(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                              ))),
+                              child: Container(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ))),
                       decoration: BoxDecoration(
                         color: isButtonEnabled
                             ? AppColors.theme['primaryColor']
@@ -357,7 +369,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             body: Form(
               key: _formKey,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                 child: SingleChildScrollView(
                   physics: BouncingScrollPhysics(),
                   child: Column(
@@ -365,10 +378,14 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
 
-                      buildDescriptionTextField(),
+                      buildDescriptionTextField(hashtags),
 
                       // displaying image if not empty
-                      buildImageSection(postProvider),
+                      if (postProvider.post.imageUrls?.isNotEmpty ?? false)
+                        buildImageSection(postProvider),
+
+                      //displa all hasta
+
 
                     ],
                   ),
@@ -378,31 +395,36 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           ),
         ),
       );
-    }) ;
+    });
   }
 
   // description
-  Widget buildDescriptionTextField() {
+  Widget buildDescriptionTextField(List<String> hashtags) {
+
+    void _extractHashtags(String text) {
+      RegExp exp = RegExp(r'\B#\w+');
+      hashtags.clear();
+      hashtags.addAll(exp.allMatches(text).map((match) => match.group(0)!));
+    }
+
     return Container(
       child: Theme(
         data: ThemeData(
-            textSelectionTheme: TextSelectionThemeData(
-                selectionHandleColor:
-                AppColors.theme['primaryColor'],
-                cursorColor: AppColors.theme['primaryColor'],
-                selectionColor:
-                AppColors.theme['primaryColor'].withOpacity(0.3))
-         ),
+          textSelectionTheme: TextSelectionThemeData(
+            selectionHandleColor: AppColors.theme['primaryColor'],
+            cursorColor: AppColors.theme['primaryColor'],
+            selectionColor: AppColors.theme['primaryColor'].withOpacity(0.3),
+          ),
+        ),
         child: TextFormField(
-          onChanged: (_) {
-
+          onChanged: (text) {
+            _extractHashtags(text);
           },
           controller: descriptionController,
           cursorColor: AppColors.theme['primaryColor'],
           maxLines: null,
           validator: (val) {
             if (val == null || val.isEmpty) {
-              
               return "Description cannot be empty";
             }
             return null;
@@ -418,96 +440,173 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
 
   // image section
- Widget buildImageSection(PostProvider postProvider){
+  Widget buildImageSection(PostProvider postProvider) {
     return Column(
       children: [
         SizedBox(height: 40),
-        if (postProvider.post.imageUrls?.isNotEmpty ?? false)
-          Column(
-            children: [
-              CarouselSlider.builder(
-                itemCount: postProvider.post.imageUrls?.length,
-                options: CarouselOptions(
-                  height: 250,
-                  enableInfiniteScroll: false,
-                  enlargeCenterPage: true,
-                ),
-                itemBuilder: (context, index, realIndex) {
-                  return Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.asset(
-                          postProvider.post.imageUrls?[index] ?? "",
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Positioned(
-                        top: 10,
-                        right: 10,
-                        child: GestureDetector(
-                          onTap: () => _removeImage(index,postProvider),
-                          child: Container(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text("Remove",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                            ),
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 10,
-                                  spreadRadius: 1,
-                                  offset: Offset(2, 2),
-                                ),
-                              ],
-                              color:Colors.red,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 10,
-                        left: 10,
-                        child: GestureDetector(
-                          onTap: (){
-                            Navigator.push(context, LeftToRight(ImageViewScreen(path: postProvider.post.imageUrls?[index] ?? "", isFile: true,))) ;
-                          },
-                          child: Container(
-                            child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(Icons.open_in_full)
-                            ),
-                            decoration: BoxDecoration(
-                              color:Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 1,
-                                  spreadRadius: 1,
-                                  offset: Offset(2, 2),
-                                ),
-                              ],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.theme['primaryColor'].withOpacity(0.09),
+                borderRadius: BorderRadius.circular(10),
               ),
-            ],
-          ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text16(
+                            text: postProvider.post.attachmentName ?? "",
+                            isBold: true,
+                          ),
+                          Text14(
+                            text:
+                                "${postProvider.post.imageUrls?.length.toString()} Images",
+                            isBold: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CarouselSlider.builder(
+                      itemCount: postProvider.post.imageUrls?.length,
+                      options: CarouselOptions(
+                        height: 300,
+                        enableInfiniteScroll: true,
+                        autoPlay: true,
+                        enlargeCenterPage: true,
+                      ),
+                      itemBuilder: (context, index, realIndex) {
+                        return Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.file(
+                                File(postProvider.post.imageUrls?[index] ?? ""),
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Positioned(
+                              top: 10,
+                              right: 10,
+                              child: GestureDetector(
+                                onTap: () => _removeImage(index, postProvider),
+                                child: Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Remove",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        blurRadius: 10,
+                                        spreadRadius: 1,
+                                        offset: Offset(2, 2),
+                                      ),
+                                    ],
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 10,
+                              left: 10,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      LeftToRight(ImageViewScreen(
+                                        path: postProvider
+                                                .post.imageUrls?[index] ??
+                                            "",
+                                        isFile: true,
+                                      )));
+                                },
+                                child: Container(
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(Icons.open_in_full)),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        blurRadius: 1,
+                                        spreadRadius: 1,
+                                        offset: Offset(2, 2),
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height:2,),
+            GestureDetector(
+              onTap: (){
+                print("clicked");
+
+                postProvider.post.imageUrls = [] ;
+                postProvider.post.attachmentName = "";
+
+                postProvider.notify();
+
+                setState(() {
+
+                });
+
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.redAccent.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.remove_circle_outline_sharp,color: Colors.red,),
+                      SizedBox(width: 5,),
+                      Text14(text: "Remove images")
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+          ],
+        )
       ],
     );
- }
-
-
+  }
 }
-
-

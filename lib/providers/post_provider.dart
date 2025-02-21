@@ -5,7 +5,6 @@ class PostProvider extends ChangeNotifier {
 
   PostModel post = PostModel() ;
 
-
   void notify() {
     notifyListeners();
   }
