@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'package:connect_with/apis/common/post/post_api.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
+import 'package:connect_with/models/common/post_models/hashtag_model.dart';
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/other_user_profile_screen.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/hash_tag_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/gestures.dart';
@@ -113,12 +116,31 @@ class HelperFunctions{
   }
 
 
-  /// description formatter
 
-  static Widget parseText(String text,BuildContext context) {
+  /// formate number
+
+  static String formatNumber(dynamic number) {
+    if (number == null) return "0";
+
+    double value = double.tryParse(number.toString()) ?? 0;
+
+    if (value >= 1000000000) {
+      return "${(value / 1000000000).toStringAsFixed(1)}B";
+    } else if (value >= 1000000) {
+      return "${(value / 1000000).toStringAsFixed(1)}M";
+    } else if (value >= 1000) {
+      return "${(value / 1000).toStringAsFixed(1)}k";
+    } else {
+      return value.toStringAsFixed(0);
+    }
+  }
+
+
+  /// description formatter
+  static Widget parseText(String text,BuildContext context,bool onHashOpen) {
 
     RegExp mentionRegex = RegExp(r'@\[__(.*?)__\]\(__(.*?)__\)');
-    RegExp hashtagRegex = RegExp(r'\#\[__(.*?)__\]\(__(.*?)__\)');
+    RegExp hashtagRegex = RegExp(r'#(?:\[__(.*?)__\]\(__(.*?)__\)|(\w+))');
     RegExp urlRegex = RegExp(r'((https?:\/\/|www\.)[^\s]+|[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/[^\s]*)?)\b');
 
     List<TextSpan> spans = [];
@@ -149,15 +171,51 @@ class HelperFunctions{
           ),
         );
       } else if (match.pattern == hashtagRegex) {
-        spans.add(
-          TextSpan(
-            text: "#${match[2]}",
-            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () => print("Hashtag ID: ${match[1]}"),
-          ),
-        );
-      } else if (match.pattern == urlRegex) {
+        if (match[3] != null) {
+          // Case: Simple hashtag like #Flutter
+          spans.add(
+            TextSpan(
+              text: "#",
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold), // Color only #
+            ),
+          );
+          spans.add(
+            TextSpan(
+              text: match[3],
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              recognizer: TapGestureRecognizer()
+                ..onTap = onHashOpen
+                    ? () async {
+                  HashTagsModel? hashTagsModel = await fetchHashTag(match[3] ?? "", match[3] ?? "");
+                  Navigator.push(context, LeftToRight(HashTagScreen(htm: hashTagsModel ?? HashTagsModel())));
+                }
+                    : () {},
+            ),
+          );
+        } else {
+          // Case: Formatted hashtag #[__ID__](__Text__)
+          spans.add(
+            TextSpan(
+              text: "#",
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold), // Color only #
+            ),
+          );
+          spans.add(
+            TextSpan(
+              text: match[2],
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              recognizer: TapGestureRecognizer()
+                ..onTap = onHashOpen
+                    ? () async {
+                  HashTagsModel? hashTagsModel = await fetchHashTag(match[1] ?? "", match[2] ?? "");
+                  Navigator.push(context, LeftToRight(HashTagScreen(htm: hashTagsModel ?? HashTagsModel())));
+                }
+                    : () {},
+            ),
+          );
+        }
+      }
+      else if (match.pattern == urlRegex) {
 
         String url = match[0]!.trim();
 
@@ -191,10 +249,21 @@ class HelperFunctions{
     );
   }
 
+
+  // temp functions
   static Future<AppUser?> fetchUser(String userId) async {
     final userData = await UserProfile.getUser(userId);
     if (userData is Map<String, dynamic>) {
       return AppUser.fromJson(userData);
+    }
+    return null;
+  }
+
+  static Future<HashTagsModel?> fetchHashTag(String hid,String name) async {
+    final hasTag = await PostApis.getHashTag(hid,name);
+
+    if (hasTag is Map<String, dynamic>) {
+      return HashTagsModel.fromJson(hasTag);
     }
     return null;
   }
