@@ -1,7 +1,12 @@
 import 'dart:convert';
+import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
+import 'package:connect_with/models/user/user.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/other_user_profile_screen.dart';
+import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 import '../theme/colors.dart';
@@ -10,7 +15,9 @@ class HelperFunctions{
 
   /// for launch url
   static void launchURL(String url) {
-    url = "https://" + url ;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://$url';
+    }
     launchUrl(Uri.parse(url));
   }
 
@@ -106,6 +113,91 @@ class HelperFunctions{
   }
 
 
+  /// description formatter
+
+  static Widget parseText(String text,BuildContext context) {
+
+    RegExp mentionRegex = RegExp(r'@\[__(.*?)__\]\(__(.*?)__\)');
+    RegExp hashtagRegex = RegExp(r'\#\[__(.*?)__\]\(__(.*?)__\)');
+    RegExp urlRegex = RegExp(r'((https?:\/\/|www\.)[^\s]+|[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/[^\s]*)?)\b');
+
+    List<TextSpan> spans = [];
+    int lastIndex = 0;
+
+    List<RegExpMatch> matches = [
+      ...mentionRegex.allMatches(text),
+      ...hashtagRegex.allMatches(text),
+      ...urlRegex.allMatches(text),
+    ]..sort((a, b) => a.start.compareTo(b.start));
+
+    for (final match in matches) {
+      if (match.start > lastIndex) {
+        spans.add(TextSpan(text: text.substring(lastIndex, match.start)));
+      }
+
+      if (match.pattern == mentionRegex) {
+        spans.add(
+          TextSpan(
+            text: "${match[2]}",
+            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+            recognizer: TapGestureRecognizer()
+              ..onTap = ()async{
+                print("Mention ID: ${match[1]}") ;
+               AppUser? user =  await fetchUser(match[1] ?? "") ;
+               Navigator.push(context, LeftToRight(OtherUserProfileScreen(user : user ?? AppUser())));
+              },
+          ),
+        );
+      } else if (match.pattern == hashtagRegex) {
+        spans.add(
+          TextSpan(
+            text: "#${match[2]}",
+            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => print("Hashtag ID: ${match[2]}"),
+          ),
+        );
+      } else if (match.pattern == urlRegex) {
+
+        String url = match[0]!.trim();
+
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          url = 'https://$url';
+        }
+
+        spans.add(
+          TextSpan(
+            text: match[0],
+            style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline,fontWeight: FontWeight.bold),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () async {
+                await launchUrl(Uri.parse(url));
+              },
+          ),
+        );
+      }
+      lastIndex = match.end;
+    }
+
+    if (lastIndex < text.length) {
+      spans.add(TextSpan(text: text.substring(lastIndex)));
+    }
+
+    return RichText(
+      text: TextSpan(
+        style: TextStyle(color: Colors.black, fontSize: 16),
+        children: spans,
+      ),
+    );
+  }
+
+  static Future<AppUser?> fetchUser(String userId) async {
+    final userData = await UserProfile.getUser(userId);
+    if (userData is Map<String, dynamic>) {
+      return AppUser.fromJson(userData);
+    }
+    return null;
+  }
 
 
 }

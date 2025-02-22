@@ -1,21 +1,24 @@
 import 'dart:io';
-
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/providers/post_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post/attach_article.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post/attach_certificate.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post/attach_pdf.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post/attach_poll.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
+import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
 import 'package:connect_with/utils/helper_functions/toasts.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:provider/provider.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'attack_images.dart';
 
 class CreatePostScreen extends StatefulWidget {
@@ -30,9 +33,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   bool isButtonEnabled = false;
   bool isLoading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController descriptionController = TextEditingController();
+  GlobalKey<FlutterMentionsState> mentions_key =
+      GlobalKey<FlutterMentionsState>();
   bool isFirst = true;
-  List<String> hashtags = [] ;
 
   // image controller
   void _removeImage(int index, PostProvider postProvider) {
@@ -42,21 +45,45 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     });
   }
 
+  //fetch all users
+  List<Map<String, dynamic>> refinedUsers = [];
+  Future<List<Map<String, dynamic>>> fetchUsers() async {
+    List<Map<String, dynamic>> users = await UserProfile.getAllAppUsersList();
+
+    refinedUsers = users.map((user) {
+      return {
+        'id': user['userID'],
+        'display': user['userName'],
+        'full_name': user['userName'],
+        'description' : user['headLine'],
+        'photo': user['profilePath'] ?? "",
+      };
+    }).toList();
+
+    return refinedUsers;
+  }
+
   @override
   void initState() {
     super.initState();
-    descriptionController.addListener(updateButtonState);
+    fetchUsers();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      mentions_key.currentState?.controller?.addListener(updateButtonState);
+      updateButtonState();
+    });
   }
 
   void updateButtonState() {
     setState(() {
-      isButtonEnabled = descriptionController.text.isNotEmpty;
+      String description =
+          mentions_key.currentState?.controller?.markupText ?? "";
+      isButtonEnabled = description.isNotEmpty;
     });
   }
 
   @override
   void dispose() {
-    descriptionController.removeListener(updateButtonState);
+    mentions_key.currentState?.controller?.removeListener(updateButtonState);
     super.dispose();
   }
 
@@ -290,9 +317,14 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               actions: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: InkWell(
+                  child: GestureDetector(
                     onTap: () async {
-                      if (_formKey.currentState!.validate()) {
+                      String description =
+                          mentions_key.currentState?.controller?.markupText ??
+                              "";
+
+                      if (_formKey.currentState!.validate() &&
+                          description.isNotEmpty) {
                         setState(() {
                           isLoading = true;
                         });
@@ -300,7 +332,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         // Simulate a delay
                         await Future.delayed(Duration(seconds: 2));
 
-                        postProvider.post.hashtags = hashtags ;
+                        print("#before formatting :" + description);
+
                         postProvider.notify();
 
                         print("This runs after 2 seconds");
@@ -377,16 +410,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-
-                      buildDescriptionTextField(hashtags),
+                      buildDescriptionTextField(),
 
                       // displaying image if not empty
                       if (postProvider.post.imageUrls?.isNotEmpty ?? false)
                         buildImageSection(postProvider),
-
-                      //displa all hasta
-
-
                     ],
                   ),
                 ),
@@ -399,45 +427,67 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   }
 
   // description
-  Widget buildDescriptionTextField(List<String> hashtags) {
-
-    void _extractHashtags(String text) {
-      RegExp exp = RegExp(r'\B#\w+');
-      hashtags.clear();
-      hashtags.addAll(exp.allMatches(text).map((match) => match.group(0)!));
-    }
-
+  Widget buildDescriptionTextField() {
     return Container(
       child: Theme(
         data: ThemeData(
           textSelectionTheme: TextSelectionThemeData(
             selectionHandleColor: AppColors.theme['primaryColor'],
             cursorColor: AppColors.theme['primaryColor'],
-            selectionColor: AppColors.theme['primaryColor'].withOpacity(0.3),
+            selectionColor: AppColors.theme['primaryColor']!.withOpacity(0.3),
           ),
         ),
-        child: TextFormField(
-          onChanged: (text) {
-            _extractHashtags(text);
-          },
-          controller: descriptionController,
-          cursorColor: AppColors.theme['primaryColor'],
-          maxLines: null,
-          validator: (val) {
-            if (val == null || val.isEmpty) {
-              return "Description cannot be empty";
-            }
-            return null;
-          },
+        child: FlutterMentions(
+          key: mentions_key,
+          suggestionPosition: SuggestionPosition.Bottom,
+          maxLength: null,
+          minLines: 1,
           decoration: InputDecoration(
             hintText: 'Start writing your description here',
             border: InputBorder.none,
           ),
+          mentions: [
+            Mention(
+              trigger: '@',
+              style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),
+              data: refinedUsers,
+              suggestionBuilder: (data) {
+                return ListTile(
+                  leading: data['photo']=="" ? CircleAvatar(
+                      radius: 24,
+                     backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.1),
+                      backgroundImage: AssetImage("assets/other_images/photo.png")
+                  ) :CircleAvatar(
+                      radius: 24,
+                      backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.1),
+                      backgroundImage: NetworkImage(data['photo'])
+                   ),
+                  title: Text(
+                    data['full_name'],
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    "${data['description']}",
+                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                );
+              },
+            ),
+            Mention(
+              trigger: '#',
+              style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),
+              data: [
+                {'id': 'reactjs_id', 'display': 'reactjs'},
+                {'id': 'javascript_id', 'display': 'javascript'},
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
-
 
   // image section
   Widget buildImageSection(PostProvider postProvider) {
@@ -570,20 +620,19 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 ),
               ),
             ),
-            SizedBox(height:2,),
+            SizedBox(
+              height: 2,
+            ),
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 print("clicked");
 
-                postProvider.post.imageUrls = [] ;
+                postProvider.post.imageUrls = [];
                 postProvider.post.attachmentName = "";
 
                 postProvider.notify();
 
-                setState(() {
-
-                });
-
+                setState(() {});
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -595,15 +644,19 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.remove_circle_outline_sharp,color: Colors.red,),
-                      SizedBox(width: 5,),
+                      Icon(
+                        Icons.remove_circle_outline_sharp,
+                        color: Colors.red,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
                       Text14(text: "Remove images")
                     ],
                   ),
                 ),
               ),
             ),
-
           ],
         )
       ],

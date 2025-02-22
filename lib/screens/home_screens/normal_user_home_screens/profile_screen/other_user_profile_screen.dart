@@ -1,3 +1,4 @@
+import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/project.dart';
 import 'package:connect_with/models/user/skills.dart';
@@ -33,6 +34,11 @@ class OtherUserProfileScreen extends StatefulWidget {
 }
 
 class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
+
+  @override
+  void initState(){
+    super.initState() ;
+  }
   bool showMore = false;
   @override
   Widget build(BuildContext context) {

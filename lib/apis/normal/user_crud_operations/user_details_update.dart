@@ -8,6 +8,7 @@ import 'package:connect_with/models/user/project.dart';
 import 'package:connect_with/models/user/skills.dart';
 import 'package:connect_with/models/user/speak_language_user.dart';
 import 'package:connect_with/models/user/test_score.dart';
+import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/toasts.dart';
@@ -107,10 +108,18 @@ class UserProfile {
     }
   }
 
- // get list of all users
+ // get snapshots of all users
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllAppUsers() {
     return _collectionRef.snapshots();
   }
+
+   // list of all users
+  static Future<List<Map<String, dynamic>>> getAllAppUsersList() async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await _collectionRef.get();
+    return snapshot.docs.map((doc) => doc.data()).toList();
+  }
+
+
 
   // update profile details
   static Future<bool> updateUserProfile(String? userId,
