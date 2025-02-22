@@ -3,6 +3,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connect_with/apis/common/post/post_api.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/models/common/post_models/hashtag_model.dart';
+import 'package:connect_with/models/common/post_models/post_model.dart';
+import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/providers/post_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post/attach_article.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post/attach_certificate.dart';
@@ -27,6 +29,7 @@ class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
 
   @override
+
   State<CreatePostScreen> createState() => _CreatePostScreenState();
 }
 
@@ -73,7 +76,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       } ;
     }).toList() ;
 
-    print(refinedHashTags) ;
+    // print(refinedHashTags) ;
 
     return refinedHashTags;
   }
@@ -104,7 +107,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PostProvider>(builder: (context, postProvider, child) {
+    return Consumer2<PostProvider,AppUserProvider>(builder: (context, postProvider,appUserProvider, child) {
       return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: MaterialApp(
@@ -334,32 +337,54 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: GestureDetector(
                     onTap: () async {
-                      String description =
-                          mentions_key.currentState?.controller?.markupText ??
-                              "";
+
+                      String description = mentions_key.currentState?.controller?.markupText ?? "";
 
                       if (_formKey.currentState!.validate() &&
                           description.isNotEmpty) {
+
                         setState(() {
                           isLoading = true;
                         });
 
-                        // Simulate a delay
-                        await Future.delayed(Duration(seconds: 2));
+                        String descode = HelperFunctions.stringToBase64(description) ;
 
-                        print("#before formatting :" + HelperFunctions.stringToBase64(description));
+                        PostModel postmodel = PostModel(
+                          postId:  "",
+                          userId: appUserProvider.user?.userID,
+                          description: descode,
+                          hasImage: postProvider.post.hasImage,
+                          hasPdf: postProvider.post.hasPdf,
+                          hasPoll: postProvider.post.hasPoll,
+                          imageUrls: [],
+                          pdfUrl: postProvider.post.pdfUrl,
+                          pollData: postProvider.post.pollData,
+                          funnyCount: "0",
+                          likeCount: "0",
+                          insightfulCount:"0",
+                          heartCount: "0",
+                          repostCount: "0",
+                          attachmentName: postProvider.post.attachmentName,
+                          time: DateTime.now().microsecondsSinceEpoch.toString(),
+                          clapCount: "0",
+                          comments: [],
+                          reactions: [],
+                        );
+
+
+                        print("#before formatting :" + descode);
+
+                        await PostApis.addPost(postmodel, context, postProvider, postProvider.images);
 
                         postProvider.notify();
-
-                        print("This runs after 2 seconds");
+                        appUserProvider.notify();
 
                         setState(() {
                           isLoading = false;
                         });
 
-                        AppToasts.InfoToast(context, "Successfully Posted");
-
                         Navigator.pop(context);
+
                       } else {
                         AppToasts.WarningToast(
                             context, "Description cannot be empty");
@@ -650,6 +675,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             ),
             GestureDetector(
               onTap: () {
+
                 print("clicked");
 
                 postProvider.post.imageUrls = [];

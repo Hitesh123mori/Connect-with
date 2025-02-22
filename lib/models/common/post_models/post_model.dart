@@ -11,13 +11,13 @@ class PostModel {
   List<String>? imageUrls;
   String? pdfUrl;
   String? pollData;
-  int? funnyCount;
-  int? likeCount;
-  int? clapCount;
-  int? insightfulCount;
-  int? heartCount;
+  String? funnyCount;
+  String? likeCount;
+  String? clapCount;
+  String? insightfulCount;
+  String? heartCount;
   List<Reaction>? reactions;
-  int? repostCount;
+  String? repostCount;
   String? attachmentName;
   String? time;
   List<Comment>? comments;
@@ -119,11 +119,11 @@ class Comment {
   String? userId;
   String? postId;
   String? description;
-  int? funnyCount;
-  int? likeCount;
-  int? clapCount;
-  int? insightfulCount;
-  int? heartCount;
+  String? funnyCount;
+  String? likeCount;
+  String? clapCount;
+  String? insightfulCount;
+  String? heartCount;
   String? time;
   List<Comment>? comments;
 
