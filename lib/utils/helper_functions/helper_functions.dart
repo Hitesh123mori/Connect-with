@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'package:connect_with/apis/common/post/post_api.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
+import 'package:connect_with/models/common/post_models/hashtag_model.dart';
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/other_user_profile_screen.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/hash_tag_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/gestures.dart';
@@ -115,7 +118,7 @@ class HelperFunctions{
 
   /// description formatter
 
-  static Widget parseText(String text,BuildContext context) {
+  static Widget parseText(String text,BuildContext context,bool onHashOpen) {
 
     RegExp mentionRegex = RegExp(r'@\[__(.*?)__\]\(__(.*?)__\)');
     RegExp hashtagRegex = RegExp(r'\#\[__(.*?)__\]\(__(.*?)__\)');
@@ -154,7 +157,10 @@ class HelperFunctions{
             text: "#${match[2]}",
             style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
             recognizer: TapGestureRecognizer()
-              ..onTap = () => print("Hashtag ID: ${match[1]}"),
+              ..onTap = onHashOpen ? ()async{
+                HashTagsModel? hashTagsModel =  await fetchHashTag(match[1] ?? "",match[2] ?? "") ;
+                Navigator.push(context, LeftToRight(HashTagScreen(htm : hashTagsModel ?? HashTagsModel())));
+              } : (){},
           ),
         );
       } else if (match.pattern == urlRegex) {
@@ -191,10 +197,20 @@ class HelperFunctions{
     );
   }
 
+
+  // temp functions
   static Future<AppUser?> fetchUser(String userId) async {
     final userData = await UserProfile.getUser(userId);
     if (userData is Map<String, dynamic>) {
       return AppUser.fromJson(userData);
+    }
+    return null;
+  }
+
+  static Future<HashTagsModel?> fetchHashTag(String hid,String name) async {
+    final userData = await PostApis.getHashTag(hid,name);
+    if (userData is Map<String, dynamic>) {
+      return HashTagsModel.fromJson(userData);
     }
     return null;
   }

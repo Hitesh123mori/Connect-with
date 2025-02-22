@@ -19,7 +19,10 @@ class _PostScreenState extends State<PostScreen> {
         physics: BouncingScrollPhysics(),
         itemCount: 10,
         itemBuilder: (context, index) {
-          return PostCard();
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 10),
+            child: PostCard(),
+          );
         },
       ),
     ) ;

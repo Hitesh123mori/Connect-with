@@ -23,8 +23,7 @@ class _FullViewPostState extends State<FullViewPost> {
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child:
-          Consumer<AppUserProvider>(builder: (context, appUserProvider, child) {
+      child: Consumer<AppUserProvider>(builder: (context, appUserProvider, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           home: Scaffold(

@@ -31,6 +31,38 @@ class PostApis{
   }
 
 
+  //get hashtag by id
+  static Future<dynamic> getHashTag(String hid,String name) async {
+    try {
+      final docSnapshot = await _collectionRefHashTags.doc(hid).get();
+
+      if (docSnapshot.exists) {
+        return docSnapshot.data();
+      } else {
+
+        HashTagsModel newHashTag = HashTagsModel(
+          id: hid,
+          name: name,
+          followers: "0",
+          posts: [],
+        );
+
+        await _collectionRefHashTags.doc(hid).set(newHashTag.toJson());
+        print("New Hashtag created with ID: $hid");
+
+        return newHashTag.toJson();
+
+      }
+    } catch (error, stackTrace) {
+      return {
+        "error": error.toString(),
+        "stackTrace": stackTrace.toString(),
+      };
+    }
+  }
+
+
+
 
 
 }
