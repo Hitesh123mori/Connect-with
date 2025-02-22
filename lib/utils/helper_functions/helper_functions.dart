@@ -116,12 +116,31 @@ class HelperFunctions{
   }
 
 
-  /// description formatter
 
+  /// formate number
+
+  static String formatNumber(dynamic number) {
+    if (number == null) return "0";
+
+    double value = double.tryParse(number.toString()) ?? 0;
+
+    if (value >= 1000000000) {
+      return "${(value / 1000000000).toStringAsFixed(1)}B";
+    } else if (value >= 1000000) {
+      return "${(value / 1000000).toStringAsFixed(1)}M";
+    } else if (value >= 1000) {
+      return "${(value / 1000).toStringAsFixed(1)}k";
+    } else {
+      return value.toStringAsFixed(0);
+    }
+  }
+
+
+  /// description formatter
   static Widget parseText(String text,BuildContext context,bool onHashOpen) {
 
     RegExp mentionRegex = RegExp(r'@\[__(.*?)__\]\(__(.*?)__\)');
-    RegExp hashtagRegex = RegExp(r'\#\[__(.*?)__\]\(__(.*?)__\)');
+    RegExp hashtagRegex = RegExp(r'#(?:\[__(.*?)__\]\(__(.*?)__\)|(\w+))');
     RegExp urlRegex = RegExp(r'((https?:\/\/|www\.)[^\s]+|[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/[^\s]*)?)\b');
 
     List<TextSpan> spans = [];
@@ -152,18 +171,51 @@ class HelperFunctions{
           ),
         );
       } else if (match.pattern == hashtagRegex) {
-        spans.add(
-          TextSpan(
-            text: "#${match[2]}",
-            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
-            recognizer: TapGestureRecognizer()
-              ..onTap = onHashOpen ? ()async{
-                HashTagsModel? hashTagsModel =  await fetchHashTag(match[1] ?? "",match[2] ?? "") ;
-                Navigator.push(context, LeftToRight(HashTagScreen(htm : hashTagsModel ?? HashTagsModel())));
-              } : (){},
-          ),
-        );
-      } else if (match.pattern == urlRegex) {
+        if (match[3] != null) {
+          // Case: Simple hashtag like #Flutter
+          spans.add(
+            TextSpan(
+              text: "#",
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold), // Color only #
+            ),
+          );
+          spans.add(
+            TextSpan(
+              text: match[3],
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              recognizer: TapGestureRecognizer()
+                ..onTap = onHashOpen
+                    ? () async {
+                  HashTagsModel? hashTagsModel = await fetchHashTag(match[3] ?? "", match[3] ?? "");
+                  Navigator.push(context, LeftToRight(HashTagScreen(htm: hashTagsModel ?? HashTagsModel())));
+                }
+                    : () {},
+            ),
+          );
+        } else {
+          // Case: Formatted hashtag #[__ID__](__Text__)
+          spans.add(
+            TextSpan(
+              text: "#",
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold), // Color only #
+            ),
+          );
+          spans.add(
+            TextSpan(
+              text: match[2],
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              recognizer: TapGestureRecognizer()
+                ..onTap = onHashOpen
+                    ? () async {
+                  HashTagsModel? hashTagsModel = await fetchHashTag(match[1] ?? "", match[2] ?? "");
+                  Navigator.push(context, LeftToRight(HashTagScreen(htm: hashTagsModel ?? HashTagsModel())));
+                }
+                    : () {},
+            ),
+          );
+        }
+      }
+      else if (match.pattern == urlRegex) {
 
         String url = match[0]!.trim();
 
@@ -208,9 +260,10 @@ class HelperFunctions{
   }
 
   static Future<HashTagsModel?> fetchHashTag(String hid,String name) async {
-    final userData = await PostApis.getHashTag(hid,name);
-    if (userData is Map<String, dynamic>) {
-      return HashTagsModel.fromJson(userData);
+    final hasTag = await PostApis.getHashTag(hid,name);
+
+    if (hasTag is Map<String, dynamic>) {
+      return HashTagsModel.fromJson(hasTag);
     }
     return null;
   }

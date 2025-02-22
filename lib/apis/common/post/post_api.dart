@@ -31,28 +31,40 @@ class PostApis{
   }
 
 
-  //get hashtag by id
-  static Future<dynamic> getHashTag(String hid,String name) async {
+  //get hashtag by id and name
+  static Future<dynamic> getHashTag(String hid, String name) async {
     try {
-      final docSnapshot = await _collectionRefHashTags.doc(hid).get();
 
-      if (docSnapshot.exists) {
-        return docSnapshot.data();
-      } else {
-
-        HashTagsModel newHashTag = HashTagsModel(
-          id: hid,
-          name: name,
-          followers: "0",
-          posts: [],
-        );
-
-        await _collectionRefHashTags.doc(hid).set(newHashTag.toJson());
-        print("New Hashtag created with ID: $hid");
-
-        return newHashTag.toJson();
-
+      if (hid.isNotEmpty) {
+        final docSnapshot = await _collectionRefHashTags.doc(hid).get();
+        if (docSnapshot.exists) {
+          return docSnapshot.data();
+        }
       }
+
+
+      final querySnapshot = await _collectionRefHashTags
+          .where('name', isEqualTo: name.trim().toLowerCase())
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs.first.data();
+      }
+
+      DocumentReference docRef = _collectionRefHashTags.doc();
+      HashTagsModel newHashTag = HashTagsModel(
+        id: docRef.id,
+        name: name.trim().toLowerCase(),
+        followers: "0",
+        posts: [],
+      );
+
+      await docRef.set(newHashTag.toJson());
+
+      print("New Hashtag created with ID: ${docRef.id}");
+      return newHashTag.toJson();
+
     } catch (error, stackTrace) {
       return {
         "error": error.toString(),

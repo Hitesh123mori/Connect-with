@@ -1,6 +1,7 @@
 import 'package:connect_with/apis/common/post/post_api.dart';
 import 'package:connect_with/models/common/post_models/hashtag_model.dart';
 import 'package:connect_with/models/user/user.dart';
+import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/Post/post_card.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
@@ -92,7 +93,8 @@ class _HashTagScreenState extends State<HashTagScreen> {
                             isBold: false,
                             text: widget.htm.followers == "0"
                                 ? "Be the first follower"
-                                : "${widget.htm.followers.toString()} + Followers"),
+                                : "${HelperFunctions.formatNumber(widget.htm.followers.toString())}  Followers"
+                        ),
                         SizedBox(
                           height: 10,
                         ),
