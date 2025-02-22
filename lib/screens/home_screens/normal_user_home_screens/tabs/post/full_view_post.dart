@@ -1,4 +1,5 @@
 import 'package:connect_with/main.dart';
+import 'package:connect_with/models/common/post_models/post_model.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/Post/comment_card.dart';
@@ -8,7 +9,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class FullViewPost extends StatefulWidget {
-  const FullViewPost({super.key});
+  final PostModel post;
+  const FullViewPost({super.key, required this.post});
 
   @override
   State<FullViewPost> createState() => _FullViewPostState();
@@ -59,9 +61,13 @@ class _FullViewPostState extends State<FullViewPost> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          PostCard(
-                            isElevation: false,
-                            onTapDisable: true,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: PostCard(
+                              isElevation: false,
+                              onTapDisable: true,
+                              post: widget.post,
+                            ),
                           ),
                           Divider(color: Colors.grey.shade200),
                           // reactions

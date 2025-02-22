@@ -15,6 +15,7 @@ class AppUserProvider extends ChangeNotifier {
 
   Future initUser() async {
     String? uid = Config.auth.currentUser?.uid;
+
     // log("#authId: $uid");
     if (uid != null) {
       user = AppUser.fromJson(await UserProfile.getUser(uid));
@@ -23,6 +24,8 @@ class AppUserProvider extends ChangeNotifier {
     notifyListeners();
     log("#initUser complete");
   }
+
+
 
   Future logOut() async {
     await Config.auth.signOut();

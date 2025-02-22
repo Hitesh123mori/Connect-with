@@ -82,7 +82,6 @@ class PostApis{
   }
 
 
-
   //add post
   static Future<String?> addPost(PostModel postmodel,BuildContext context,PostProvider postProvider,List<File> files) async {
 
@@ -114,9 +113,7 @@ class PostApis{
     }
   }
 
-
-
-  //uploading images
+  //upload images
   static Future<List<String>> uploadMedia(List<File> files, String path, String postId) async {
 
     List<String> downloadUrls = [];
@@ -153,6 +150,24 @@ class PostApis{
     return downloadUrls;
   }
 
+  //fetch all posts
+  static Future<List<PostModel>> getAllPosts() async {
+    List<PostModel> posts = [];
+
+    try {
+      final querySnapshot = await _collectionRefPost.get();
+
+      for (var doc in querySnapshot.docs) {
+        posts.add(PostModel.fromJson(doc.data()));
+      }
+
+      log('Fetched ${posts.length} posts successfully');
+    } catch (e) {
+      log('Error fetching posts: $e');
+    }
+
+    return posts;
+  }
 
 
 }
