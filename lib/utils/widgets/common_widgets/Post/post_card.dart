@@ -1,25 +1,56 @@
+import 'dart:developer';
+
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/main.dart';
+import 'package:connect_with/models/common/post_models/post_model.dart';
+import 'package:connect_with/models/user/user.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/other_user_profile_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/full_view_post.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
+import 'package:connect_with/utils/helper_functions/photo_view.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
+import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PostCard extends StatefulWidget {
+  final PostModel post;
   final bool isElevation;
   final bool onTapDisable;
   final bool onHashOpen ;
-  PostCard({super.key, this.isElevation = true, this.onTapDisable = false,this.onHashOpen = true});
+  PostCard({super.key, this.isElevation = true, this.onTapDisable = false,this.onHashOpen = true, required this.post});
 
   @override
   State<PostCard> createState() => _PostCardState();
 }
 
 class _PostCardState extends State<PostCard> {
+
   bool showMore = false;
   GlobalKey key = GlobalKey();
+
+  AppUser? user  ;
+
+  Future<void> fetchUser() async {
+    try {
+      var userData = await UserProfile.getUser(widget.post.userId ?? "");
+      setState(() {
+        user = AppUser.fromJson(userData);
+      });
+    } catch (e) {
+      log("Error while fetching user in post card: $e");
+    }
+  }
+
+
+  @override
+  void initState(){
+    super.initState() ;
+    fetchUser() ;
+  }
 
 
   @override
@@ -59,33 +90,50 @@ class _PostCardState extends State<PostCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage:
-                            AssetImage("assets/other_images/photo.png"),
-                        backgroundColor:
-                            AppColors.theme['primaryColor'].withOpacity(0.1),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text14(text: "Hitesh Mori"),
-                          Text(
-                            "Application Developer",
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: AppColors.theme['tertiaryColor']
-                                    .withOpacity(0.5)),
-                          ),
-                        ],
-                      )
-                    ],
+
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, LeftToRight(OtherUserProfileScreen(user: user ?? AppUser(),)));
+                    },
+                    child: Row(
+                      children: [
+                        user?.profilePath =="" ? CircleAvatar(
+                          radius: 30,
+                          backgroundImage: AssetImage("assets/other_images/photo.png"),
+                          backgroundColor:
+                              AppColors.theme['primaryColor'].withOpacity(0.1),
+                        ) : CircleAvatar(
+                          radius: 30,
+                          backgroundImage: NetworkImage(user?.profilePath ?? ""),
+                          backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.1),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text14(text: user?.userName ?? "Name"),
+                            Container(
+                              width: mq.width*0.4,
+                              child: Text(
+                                user?.headLine ?? "",
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                softWrap: true,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.theme['tertiaryColor']?.withOpacity(0.5),
+                                ),
+                              ),
+                            ),
+                    
+                          ],
+                        )
+                      ],
+                    ),
                   ),
+                  
                   TextButton(
                     onPressed: () {},
                     child: Text(
@@ -107,7 +155,7 @@ class _PostCardState extends State<PostCard> {
             onTap: widget.onTapDisable
                 ? () {}
                 : () {
-                    Navigator.push(context, LeftToRight(FullViewPost()));
+                    Navigator.push(context, LeftToRight(FullViewPost(post: widget.post,)));
                   },
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 1),
@@ -117,10 +165,13 @@ class _PostCardState extends State<PostCard> {
                   topRight: Radius.circular(5),
                   topLeft: Radius.circular(5),
                 )),
-                child: buildDescription(HelperFunctions.base64ToString("SGVsbG8gQ29ubmVjdGlvbnMg8J+RiyAKCkkgYW0gYmVjb21lIGtuaWdodAoKCkBbX19Ra1FaeFNqQkdpVVEyWmFSZ3hxUzlpUll0MGwxX19dKF9fSGl0ZXNoIE1vcmlfXykgQFtfX2FzYjN2Q0d6eEFmTUJMcXBOWGZoanRYVEhMOTJfX10oX19Kb3MgSmFpbl9fKSBAW19fYlNzNGNsRWsyS08ycU5uY0V4SHpqWFM4aHdCM19fXShfX0hpdHJhal9fKSAKCgojbGVldGNvZGUgI2RzYSA="),context,widget.onHashOpen) ,
+                child: buildDescription(HelperFunctions.base64ToString(widget.post.description ?? ""),context,widget.onHashOpen) ,
               ),
             ),
           ),
+
+          if(widget.post.hasImage ?? false)
+           buildImageSection(widget.post.imageUrls?? [],widget.post.attachmentName ?? ""),
 
           Divider(
             color: Colors.grey.shade200,
@@ -181,7 +232,7 @@ class _PostCardState extends State<PostCard> {
                       ? () {}
                       : () {
                           Navigator.push(
-                              context, LeftToRight(FullViewPost()));
+                              context, LeftToRight(FullViewPost(post: widget.post,)));
                         },
                   child: Row(
                     children: [
@@ -219,6 +270,7 @@ class _PostCardState extends State<PostCard> {
               ],
             ),
           ),
+
 
           Divider(
             color: Colors.grey.shade200,
@@ -345,4 +397,117 @@ class _PostCardState extends State<PostCard> {
       ),
     );
   }
+
+
+  // image displayer
+
+  Widget buildImageSection(List<String> images,String attachmentName) {
+    return Column(
+      children: [
+        SizedBox(height: 10,),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text16(
+                              text:attachmentName ,
+                              isBold: true,
+                            ),
+                            Text14(
+                              text:
+                              "${images.length.toString()} Images",
+                              isBold: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        color: Colors.grey,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CarouselSlider.builder(
+                        itemCount: images.length,
+                        options: CarouselOptions(
+                          height: 300,
+                          enableInfiniteScroll: true,
+                          autoPlay: true,
+                          enlargeCenterPage: true,
+                        ),
+                        itemBuilder: (context, index, realIndex) {
+                          return Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  images[index],
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 10,
+                                left: 10,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        LeftToRight(
+                                            ImageViewScreen(
+                                          path: images[index],
+                                          isFile: false,
+                                        )));
+                                  },
+                                  child: Container(
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Icon(Icons.open_in_full)),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          blurRadius: 1,
+                                          spreadRadius: 1,
+                                          offset: Offset(2, 2),
+                                        ),
+                                      ],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 10,),
+      ],
+    );
+  }
+
 }

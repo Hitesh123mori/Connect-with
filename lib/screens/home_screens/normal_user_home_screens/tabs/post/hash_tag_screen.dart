@@ -117,18 +117,18 @@ class _HashTagScreenState extends State<HashTagScreen> {
                 ],
               ),
               Divider(),
-              Flexible(
-                child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 5),
-                      child: PostCard(onHashOpen: false,),
-                    );
-                  },
-                ),
-              ),
+              // Flexible(
+              //   child: ListView.builder(
+              //     physics: BouncingScrollPhysics(),
+              //     itemCount: 10,
+              //     itemBuilder: (context, index) {
+              //       return Padding(
+              //         padding: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 5),
+              //         child: PostCard(onHashOpen: false,),
+              //       );
+              //     },
+              //   ),
+              // ),
             ],
           ),
         ),

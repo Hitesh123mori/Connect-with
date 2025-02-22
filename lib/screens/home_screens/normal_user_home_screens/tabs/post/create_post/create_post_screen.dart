@@ -376,8 +376,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
                         await PostApis.addPost(postmodel, context, postProvider, postProvider.images);
 
-                        postProvider.notify();
-                        appUserProvider.notify();
+                        await postProvider.fetchPosts();
 
                         setState(() {
                           isLoading = false;
@@ -709,8 +708,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               ),
             ),
           ],
-        )
+        ),
+        SizedBox(height: 40),
       ],
     );
   }
+
 }
