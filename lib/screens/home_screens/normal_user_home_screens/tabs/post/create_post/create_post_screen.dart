@@ -347,7 +347,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         // Simulate a delay
                         await Future.delayed(Duration(seconds: 2));
 
-                        print("#before formatting :" + description);
+                        print("#before formatting :" + HelperFunctions.stringToBase64(description));
 
                         postProvider.notify();
 
@@ -454,8 +454,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         ),
         child: FlutterMentions(
           key: mentions_key,
-          suggestionPosition: SuggestionPosition.Bottom,
+          // suggestionPosition: SuggestionPosition.,
           maxLength: null,
+          maxLines: 1000000000000000000,
           minLines: 1,
           decoration: InputDecoration(
             hintText: 'Start writing your description here',

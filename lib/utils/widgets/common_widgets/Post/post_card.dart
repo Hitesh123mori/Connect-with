@@ -117,7 +117,7 @@ class _PostCardState extends State<PostCard> {
                   topRight: Radius.circular(5),
                   topLeft: Radius.circular(5),
                 )),
-                child: buildDescription("#[__rwxBrVmLaJH5ZH6fvS1w__](__flutter__) #Flutter",context,widget.onHashOpen) ,
+                child: buildDescription(HelperFunctions.base64ToString("SGVsbG8gQ29ubmVjdGlvbnMg8J+RiyAKCkkgYW0gYmVjb21lIGtuaWdodAoKCkBbX19Ra1FaeFNqQkdpVVEyWmFSZ3hxUzlpUll0MGwxX19dKF9fSGl0ZXNoIE1vcmlfXykgQFtfX2FzYjN2Q0d6eEFmTUJMcXBOWGZoanRYVEhMOTJfX10oX19Kb3MgSmFpbl9fKSBAW19fYlNzNGNsRWsyS08ycU5uY0V4SHpqWFM4aHdCM19fXShfX0hpdHJhal9fKSAKCgojbGVldGNvZGUgI2RzYSA="),context,widget.onHashOpen) ,
               ),
             ),
           ),
