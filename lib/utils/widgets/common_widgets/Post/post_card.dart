@@ -118,7 +118,7 @@ class _PostCardState extends State<PostCard> {
                     topRight: Radius.circular(5),
                     topLeft: Radius.circular(5),
                   )),
-                  child: buildDescription("@[__asb3vCGzxAfMBLqpNXfhjtXTHL92__](__Jos Jain__)",context) ,
+                  child: buildDescription("@[__asb3vCGzxAfMBLqpNXfhjtXTHL92__](__Jos Jain__) #[__VTntkhlKzObSqlhGXE11__](__Machine Learning__) ",context) ,
                 ),
               ),
             ),
