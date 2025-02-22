@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:connect_with/apis/common/post/post_api.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
+import 'package:connect_with/models/common/post_models/hashtag_model.dart';
 import 'package:connect_with/providers/post_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post/attach_article.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post/attach_certificate.dart';
@@ -47,8 +49,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   //fetch all users
   List<Map<String, dynamic>> refinedUsers = [];
-  Future<List<Map<String, dynamic>>> fetchUsers() async {
+  List<Map<String,dynamic>> refinedHashTags = [] ;
+  Future<List<Map<String, dynamic>>> fetchUsersAndHashTags() async {
+
     List<Map<String, dynamic>> users = await UserProfile.getAllAppUsersList();
+    List<Map<String, dynamic>> hasTags = await PostApis.getAllHashTags();
 
     refinedUsers = users.map((user) {
       return {
@@ -60,13 +65,23 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       };
     }).toList();
 
-    return refinedUsers;
+    refinedHashTags = hasTags.map((ht){
+      return{
+        'id' : ht['id'],
+        'display' : ht['name'],
+        'followers' : ht['followers'],
+      } ;
+    }).toList() ;
+
+    print(refinedHashTags) ;
+
+    return refinedHashTags;
   }
 
   @override
   void initState() {
     super.initState();
-    fetchUsers();
+    fetchUsersAndHashTags();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       mentions_key.currentState?.controller?.addListener(updateButtonState);
       updateButtonState();
@@ -478,10 +493,19 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             Mention(
               trigger: '#',
               style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),
-              data: [
-                {'id': 'reactjs_id', 'display': 'reactjs'},
-                {'id': 'javascript_id', 'display': 'javascript'},
-              ],
+              data:refinedHashTags,
+              suggestionBuilder: (data){
+                return ListTile(
+                  title: Text(
+                    data['display'],
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  subtitle: Text(
+                    "${data['followers']}  Followers",
+                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                  ),
+                );
+              },
             ),
           ],
         ),

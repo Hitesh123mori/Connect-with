@@ -154,7 +154,7 @@ class HelperFunctions{
             text: "#${match[2]}",
             style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
             recognizer: TapGestureRecognizer()
-              ..onTap = () => print("Hashtag ID: ${match[2]}"),
+              ..onTap = () => print("Hashtag ID: ${match[1]}"),
           ),
         );
       } else if (match.pattern == urlRegex) {
