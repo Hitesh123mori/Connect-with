@@ -1,6 +1,14 @@
+import 'dart:developer';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connect_with/apis/init/config.dart';
 import 'package:connect_with/models/common/post_models/hashtag_model.dart';
+import 'package:connect_with/models/common/post_models/post_model.dart';
+import 'package:connect_with/providers/post_provider.dart';
+import 'package:connect_with/utils/helper_functions/toasts.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:path/path.dart';
 
 class PostApis{
 
@@ -74,6 +82,76 @@ class PostApis{
   }
 
 
+
+  //add post
+  static Future<String?> addPost(PostModel postmodel,BuildContext context,PostProvider postProvider,List<File> files) async {
+
+    try {
+
+      DocumentReference docRef = _collectionRefPost.doc();
+      postmodel.postId = docRef.id;
+
+      if(postmodel.hasImage ?? false){
+        // print("#Enter in if condition") ;
+       List<String> imageUrls =  await uploadMedia(postProvider.images,"images",postmodel.postId ?? "");
+       postmodel.imageUrls = imageUrls;
+
+      }
+
+      await docRef.set(postmodel.toJson());
+
+      postProvider.washPost() ;
+
+      AppToasts.InfoToast(context, "Post Successfully Created") ;
+      print("Post added with ID: ${docRef.id}");
+      return docRef.id;
+    } catch (e) {
+
+      AppToasts.ErrorToast(context, "Error while adding post") ;
+
+      print("Error adding post: $e");
+      return null;
+    }
+  }
+
+
+
+  //uploading images
+  static Future<List<String>> uploadMedia(List<File> files, String path, String postId) async {
+
+    List<String> downloadUrls = [];
+
+    // print("#Enter in function") ;
+
+    // print("#size of files : ${files.length}") ;
+
+    for (var file in files) {
+
+      // print("#Enter in loop") ;
+
+      final fileName = basename(file.path);
+      final ext = fileName.split('.').last;
+
+      log('Uploading media file: $fileName, extension: $ext');
+
+      final ref = Config.storage.ref().child('connect_with_images/$postId/$path/$fileName');
+
+      try {
+        final uploadTask = await ref.putFile(file, SettableMetadata(contentType: 'image/$ext'));
+        log('Data Transferred: ${uploadTask.bytesTransferred / 1000} kb');
+
+        final downloadUrl = await ref.getDownloadURL();
+        log('Media uploaded successfully: $downloadUrl');
+
+        downloadUrls.add(downloadUrl);
+
+      } catch (e) {
+        log('Error uploading media: $e');
+      }
+    }
+
+    return downloadUrls;
+  }
 
 
 
