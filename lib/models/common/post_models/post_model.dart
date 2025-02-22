@@ -5,7 +5,6 @@ class PostModel {
   String? postId;
   String? userId;
   String? description;
-  List<String>? hashtags;
   bool? hasImage;
   bool? hasPdf;
   bool? hasPoll;
@@ -27,7 +26,6 @@ class PostModel {
     this.postId,
     this.userId,
     this.description,
-    this.hashtags,
     this.hasImage,
     this.hasPdf,
     this.hasPoll,
@@ -50,14 +48,11 @@ class PostModel {
     postId: json['postId'],
     userId: json['userId'],
     description: json['description'],
-    hashtags: json['hashtags'] != null
-        ? List<String>.from(json['hashtags'])
-        : null,
     hasImage: json['hasImage'],
     hasPdf: json['hasPdf'],
     hasPoll: json['hasPoll'],
     imageUrls: json['imageUrls'] != null
-        ? List<String>.from(json['imageUrls']) // Updated field
+        ? List<String>.from(json['imageUrls'])
         : null,
     pdfUrl: json['pdfUrl'],
     pollData: json['pollData'],
@@ -83,7 +78,6 @@ class PostModel {
     'postId': postId,
     'userId': userId,
     'description': description,
-    'hashtags': hashtags,
     'hasImage': hasImage,
     'hasPdf': hasPdf,
     'hasPoll': hasPoll,

@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' ;
 import 'package:flutter/services.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:provider/provider.dart';
 import 'firebase/project_1.dart';
 
@@ -42,6 +43,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Consumer2<AppUserProvider,OrganizationProvider>(builder: (context,appUserProvider,organizationProvider,child){
       return MaterialApp(
+        builder: (_, child) => Portal(child: child!),
         debugShowCheckedModeBanner: false,
         home: SplashScreen(appUser: appUserProvider, orgizationProvider: organizationProvider,) ,
       ) ;

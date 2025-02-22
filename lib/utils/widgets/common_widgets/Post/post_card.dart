@@ -118,8 +118,7 @@ class _PostCardState extends State<PostCard> {
                     topRight: Radius.circular(5),
                     topLeft: Radius.circular(5),
                   )),
-                  child: buildDescription(
-                      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s https://github.com/login, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."),
+                  child: buildDescription("@[__asb3vCGzxAfMBLqpNXfhjtXTHL92__](__Jos Jain__)",context) ,
                 ),
               ),
             ),
@@ -253,7 +252,6 @@ class _PostCardState extends State<PostCard> {
                           onTap: (){},
                           onLongPress: (){
                             print("hell");
-
                           },
                         ),
                         Text(
@@ -331,28 +329,8 @@ class _PostCardState extends State<PostCard> {
   }
 
   // detecintg hyperlinks and show more/show less
-  Widget buildDescription(String text) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        showMore
-            ? HelperFunctions.buildContent(text)
-            : HelperFunctions.buildContent(
-                HelperFunctions.truncateDescription(text, 300)),
-        if (text.length > 300)
-          TextButton(
-            onPressed: () {
-              setState(() {
-                showMore = !showMore;
-              });
-            },
-            child: Text(
-              showMore ? 'Show Less' : 'Show More',
-              style: TextStyle(color: AppColors.theme['tertiaryColor']),
-            ),
-          ),
-      ],
-    );
+  Widget buildDescription(String text,BuildContext context) {
+    return HelperFunctions.parseText(text,context);
   }
 
   //icon buidler
