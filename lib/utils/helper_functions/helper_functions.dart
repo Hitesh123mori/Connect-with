@@ -161,7 +161,7 @@ class HelperFunctions{
         spans.add(
           TextSpan(
             text: "${match[2]}",
-            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold,fontSize: 15),
             recognizer: TapGestureRecognizer()
               ..onTap = ()async{
                 print("Mention ID: ${match[1]}") ;
@@ -176,13 +176,13 @@ class HelperFunctions{
           spans.add(
             TextSpan(
               text: "#",
-              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold), // Color only #
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold,fontSize: 15), // Color only #
             ),
           );
           spans.add(
             TextSpan(
               text: match[3],
-              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold,fontSize: 15),
               recognizer: TapGestureRecognizer()
                 ..onTap = onHashOpen
                     ? () async {
@@ -197,13 +197,13 @@ class HelperFunctions{
           spans.add(
             TextSpan(
               text: "#",
-              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold), // Color only #
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold,fontSize: 15), // Color only #
             ),
           );
           spans.add(
             TextSpan(
               text: match[2],
-              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold,fontSize: 15),
               recognizer: TapGestureRecognizer()
                 ..onTap = onHashOpen
                     ? () async {
@@ -226,7 +226,7 @@ class HelperFunctions{
         spans.add(
           TextSpan(
             text: match[0],
-            style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline,fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.blue,fontSize: 15,decoration: TextDecoration.underline,fontWeight: FontWeight.bold),
             recognizer: TapGestureRecognizer()
               ..onTap = () async {
                 await launchUrl(Uri.parse(url));
@@ -243,7 +243,7 @@ class HelperFunctions{
 
     return RichText(
       text: TextSpan(
-        style: TextStyle(color: Colors.black, fontSize: 16),
+        style: TextStyle(color: Colors.black, fontSize: 15),
         children: spans,
       ),
     );
