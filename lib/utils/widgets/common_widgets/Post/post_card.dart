@@ -63,11 +63,11 @@ class _PostCardState extends State<PostCard> {
         boxShadow: [
           widget.isElevation
               ? BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 1,
-                  spreadRadius: 1,
-                  offset: Offset(0, 1),
-                )
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 1,
+            spreadRadius: 1,
+            offset: Offset(0, 1),
+          )
               : BoxShadow(),
         ],
         borderRadius: BorderRadius.circular(10),
@@ -81,12 +81,12 @@ class _PostCardState extends State<PostCard> {
             height: 70,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-              topRight: Radius.circular(5),
-              topLeft: Radius.circular(5),
-            )),
+                  topRight: Radius.circular(5),
+                  topLeft: Radius.circular(5),
+                )),
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+              const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -101,7 +101,7 @@ class _PostCardState extends State<PostCard> {
                           radius: 30,
                           backgroundImage: AssetImage("assets/other_images/photo.png"),
                           backgroundColor:
-                              AppColors.theme['primaryColor'].withOpacity(0.1),
+                          AppColors.theme['primaryColor'].withOpacity(0.1),
                         ) : CircleAvatar(
                           radius: 30,
                           backgroundImage: NetworkImage(user?.profilePath ?? ""),
@@ -127,13 +127,13 @@ class _PostCardState extends State<PostCard> {
                                 ),
                               ),
                             ),
-                    
+
                           ],
                         )
                       ],
                     ),
                   ),
-                  
+
                   TextButton(
                     onPressed: () {},
                     child: Text(
@@ -155,23 +155,23 @@ class _PostCardState extends State<PostCard> {
             onTap: widget.onTapDisable
                 ? () {}
                 : () {
-                    Navigator.push(context, LeftToRight(FullViewPost(post: widget.post,)));
-                  },
+              Navigator.push(context, LeftToRight(FullViewPost(post: widget.post,)));
+            },
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 1),
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(5),
-                  topLeft: Radius.circular(5),
-                )),
+                      topRight: Radius.circular(5),
+                      topLeft: Radius.circular(5),
+                    )),
                 child: buildDescription(HelperFunctions.base64ToString(widget.post.description ?? ""),context,widget.onHashOpen) ,
               ),
             ),
           ),
 
           if(widget.post.hasImage ?? false)
-           buildImageSection(widget.post.imageUrls?? [],widget.post.attachmentName ?? ""),
+            buildImageSection(widget.post.imageUrls?? [],widget.post.attachmentName ?? ""),
 
           Divider(
             color: Colors.grey.shade200,
@@ -231,9 +231,9 @@ class _PostCardState extends State<PostCard> {
                   onTap: widget.onTapDisable
                       ? () {}
                       : () {
-                          Navigator.push(
-                              context, LeftToRight(FullViewPost(post: widget.post,)));
-                        },
+                    Navigator.push(
+                        context, LeftToRight(FullViewPost(post: widget.post,)));
+                  },
                   child: Row(
                     children: [
                       Text(
@@ -279,14 +279,14 @@ class _PostCardState extends State<PostCard> {
           // like,share,comment
           Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
+            const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
             child: Container(
               // height: 40,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(5),
-                bottomLeft: Radius.circular(5),
-              )),
+                    bottomRight: Radius.circular(5),
+                    bottomLeft: Radius.circular(5),
+                  )),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -294,12 +294,12 @@ class _PostCardState extends State<PostCard> {
                     children: [
                       GestureDetector(
                         key : key,
-                          child: FaIcon(
-                        FontAwesomeIcons.thumbsUp,
-                        color:
-                            AppColors.theme['tertiaryColor'].withOpacity(0.5),
-                        size: 18,
-                      ),
+                        child: FaIcon(
+                          FontAwesomeIcons.thumbsUp,
+                          color:
+                          AppColors.theme['tertiaryColor'].withOpacity(0.5),
+                          size: 18,
+                        ),
                         onTap: (){},
                         onLongPress: (){
                           print("hell");
@@ -320,7 +320,7 @@ class _PostCardState extends State<PostCard> {
                       FaIcon(
                         FontAwesomeIcons.comment,
                         color:
-                            AppColors.theme['tertiaryColor'].withOpacity(0.5),
+                        AppColors.theme['tertiaryColor'].withOpacity(0.5),
                         size: 18,
                       ),
                       Text(
@@ -338,7 +338,7 @@ class _PostCardState extends State<PostCard> {
                       FaIcon(
                         FontAwesomeIcons.retweet,
                         color:
-                            AppColors.theme['tertiaryColor'].withOpacity(0.5),
+                        AppColors.theme['tertiaryColor'].withOpacity(0.5),
                         size: 18,
                       ),
                       Text(
@@ -356,7 +356,7 @@ class _PostCardState extends State<PostCard> {
                       FaIcon(
                         FontAwesomeIcons.share,
                         color:
-                            AppColors.theme['tertiaryColor'].withOpacity(0.5),
+                        AppColors.theme['tertiaryColor'].withOpacity(0.5),
                         size: 18,
                       ),
                       Text(
@@ -471,9 +471,9 @@ class _PostCardState extends State<PostCard> {
                                         context,
                                         LeftToRight(
                                             ImageViewScreen(
-                                          path: images[index],
-                                          isFile: false,
-                                        )));
+                                              path: images[index],
+                                              isFile: false,
+                                            )));
                                   },
                                   child: Container(
                                     child: Padding(

@@ -39,7 +39,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   bool isLoading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   GlobalKey<FlutterMentionsState> mentions_key =
-      GlobalKey<FlutterMentionsState>();
+  GlobalKey<FlutterMentionsState>();
   bool isFirst = true;
 
   // image controller
@@ -138,7 +138,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   children: [
                     Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: AppColors.theme['secondaryColor'],
                         borderRadius: BorderRadius.circular(8),
@@ -174,7 +174,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   children: [
                     Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: AppColors.theme['secondaryColor'],
                         borderRadius: BorderRadius.circular(8),
@@ -211,7 +211,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   children: [
                     Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: AppColors.theme['secondaryColor'],
                         borderRadius: BorderRadius.circular(8),
@@ -248,7 +248,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   children: [
                     Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: AppColors.theme['secondaryColor'],
                         borderRadius: BorderRadius.circular(8),
@@ -285,7 +285,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   children: [
                     Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: AppColors.theme['secondaryColor'],
                         borderRadius: BorderRadius.circular(8),
@@ -349,6 +349,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
                         String descode = HelperFunctions.stringToBase64(description) ;
 
+                        print("#before formatting :" + description);
+
                         PostModel postmodel = PostModel(
                           postId:  "",
                           userId: appUserProvider.user?.userID,
@@ -372,9 +374,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         );
 
 
-                        print("#before formatting :" + descode);
+                        print("#after formatting :" + descode);
 
-                        await PostApis.addPost(postmodel, context, postProvider, postProvider.images);
+                        List<String> hashtages = detectHashtags(description);
+
+                        await PostApis.addPost(postmodel, context, postProvider, postProvider.images,hashtages);
 
                         await postProvider.fetchPosts();
 
@@ -396,24 +400,24 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       width: isLoading ? 50 : 100,
                       child: !isLoading
                           ? Center(
-                              child: Text(
-                                "Create",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: isButtonEnabled
-                                      ? AppColors.theme['secondaryColor']
-                                      : AppColors.theme['tertiaryColor']
-                                          .withOpacity(0.5),
-                                ),
-                              ),
-                            )
+                        child: Text(
+                          "Create",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: isButtonEnabled
+                                ? AppColors.theme['secondaryColor']
+                                : AppColors.theme['tertiaryColor']
+                                .withOpacity(0.5),
+                          ),
+                        ),
+                      )
                           : Center(
-                              child: Container(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ))),
+                          child: Container(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ))),
                       decoration: BoxDecoration(
                         color: isButtonEnabled
                             ? AppColors.theme['primaryColor']
@@ -442,7 +446,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               key: _formKey,
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                 child: SingleChildScrollView(
                   physics: BouncingScrollPhysics(),
                   child: Column(
@@ -495,13 +499,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 return ListTile(
                   leading: data['photo']=="" ? CircleAvatar(
                       radius: 24,
-                     backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.1),
+                      backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.1),
                       backgroundImage: AssetImage("assets/other_images/photo.png")
                   ) :CircleAvatar(
                       radius: 24,
                       backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.1),
                       backgroundImage: NetworkImage(data['photo'])
-                   ),
+                  ),
                   title: Text(
                     data['full_name'],
                     style: TextStyle(fontWeight: FontWeight.bold),
@@ -567,7 +571,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           ),
                           Text14(
                             text:
-                                "${postProvider.post.imageUrls?.length.toString()} Images",
+                            "${postProvider.post.imageUrls?.length.toString()} Images",
                             isBold: true,
                           ),
                         ],
@@ -637,7 +641,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                       context,
                                       LeftToRight(ImageViewScreen(
                                         path: postProvider
-                                                .post.imageUrls?[index] ??
+                                            .post.imageUrls?[index] ??
                                             "",
                                         isFile: true,
                                       )));
@@ -714,4 +718,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     );
   }
 
+  List<String> detectHashtags(String text) {
+    RegExp hashtagRegex = RegExp(r'#\[__.*?__]\(__(.*?)__\)|#(\w+)');
+
+    return hashtagRegex.allMatches(text).map((match) {
+      return match.group(1) ?? match.group(2)!;
+    }).toList();
+  }
 }
