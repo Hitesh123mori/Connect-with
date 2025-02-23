@@ -725,4 +725,5 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       return match.group(1) ?? match.group(2)!;
     }).toList();
   }
+
 }
