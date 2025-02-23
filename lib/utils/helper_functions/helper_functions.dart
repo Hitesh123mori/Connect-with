@@ -197,7 +197,7 @@ class HelperFunctions{
           spans.add(
             TextSpan(
               text: "#",
-              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold,fontSize: 15), // Color only #
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold,fontSize: 15),
             ),
           );
           spans.add(
@@ -250,6 +250,7 @@ class HelperFunctions{
   }
 
 
+
   // temp functions
   static Future<AppUser?> fetchUser(String userId) async {
     final userData = await UserProfile.getUser(userId);
@@ -258,6 +259,7 @@ class HelperFunctions{
     }
     return null;
   }
+
 
   static Future<HashTagsModel?> fetchHashTag(String hid,String name) async {
     final hasTag = await PostApis.getHashTag(hid,name);

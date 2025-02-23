@@ -78,8 +78,8 @@ class _PostScreenState extends State<PostScreen> {
                   ),
                 )
                     : ListView.builder(
-                  shrinkWrap: true,
-                  physics: const BouncingScrollPhysics(),
+                  shrinkWrap: false,
+                  physics: BouncingScrollPhysics(),
                   itemCount: postProvider.posts.length,
                   itemBuilder: (context, index) {
                     return Padding(

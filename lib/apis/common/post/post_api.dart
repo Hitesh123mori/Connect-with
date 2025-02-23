@@ -32,6 +32,22 @@ class PostApis{
     }
   }
 
+  //add post to hashtages
+  static Future<void> addPostToHash(String hashId, String postId) async {
+    try {
+      DocumentReference hashTagRef = _collectionRefHashTags.doc(hashId);
+
+      await hashTagRef.update({
+        "posts": FieldValue.arrayUnion([postId])
+      });
+
+      print("Post ID $postId added to Hashtag $hashId");
+    } catch (e) {
+      print("Error adding post to hashtag: $e");
+    }
+  }
+
+
   // list of all hashtags
   static Future<List<Map<String, dynamic>>> getAllHashTags() async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await _collectionRefHashTags.get();
@@ -83,12 +99,30 @@ class PostApis{
 
 
   //add post
-  static Future<String?> addPost(PostModel postmodel,BuildContext context,PostProvider postProvider,List<File> files) async {
+  static Future<String?> addPost(PostModel postmodel,BuildContext context,PostProvider postProvider,List<File> files,List<String> hashtages) async {
 
     try {
 
       DocumentReference docRef = _collectionRefPost.doc();
       postmodel.postId = docRef.id;
+
+      print("#hashtags : ") ;
+      print(hashtages);
+
+
+      for (var tag in hashtages) {
+        var hashtagData = await getHashTag(tag, tag);
+
+        HashTagsModel? hashTagsModel;
+        if (hashtagData is Map<String, dynamic>) {
+          hashTagsModel = HashTagsModel.fromJson(hashtagData);
+        } else if (hashtagData is HashTagsModel) {
+          hashTagsModel = hashtagData;
+        }
+
+        await addPostToHash(hashTagsModel?.id ?? "", postmodel.postId ?? "");
+      }
+
 
       if(postmodel.hasImage ?? false){
         // print("#Enter in if condition") ;
