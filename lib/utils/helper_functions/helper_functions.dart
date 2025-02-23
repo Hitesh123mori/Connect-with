@@ -187,7 +187,7 @@ class HelperFunctions{
                 ..onTap = onHashOpen
                     ? () async {
                   HashTagsModel? hashTagsModel = await fetchHashTag(match[3] ?? "", match[3] ?? "");
-                  Navigator.push(context, LeftToRight(HashTagScreen(htm: hashTagsModel ?? HashTagsModel())));
+                  Navigator.push(context, LeftToRight(HashTagScreen(id: hashTagsModel?.id ?? "")));
                 }
                     : () {},
             ),
@@ -208,7 +208,7 @@ class HelperFunctions{
                 ..onTap = onHashOpen
                     ? () async {
                   HashTagsModel? hashTagsModel = await fetchHashTag(match[1] ?? "", match[2] ?? "");
-                  Navigator.push(context, LeftToRight(HashTagScreen(htm: hashTagsModel ?? HashTagsModel())));
+                  Navigator.push(context, LeftToRight(HashTagScreen(id: hashTagsModel?.id ?? "")));
                 }
                     : () {},
             ),

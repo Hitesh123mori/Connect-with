@@ -47,6 +47,24 @@ class PostApis{
     }
   }
 
+  //fetch posts by id
+  static Future<dynamic> getPost(String postId) async {
+    try {
+      final docSnapshot = await _collectionRefPost.doc(postId).get();
+      if (docSnapshot.exists) {
+        return docSnapshot.data();
+      } else {
+        return false;
+      }
+    } catch (error, stackTrace) {
+      return {
+        "error": error.toString(),
+        "stackTrace": stackTrace.toString(),
+      };
+    }
+  }
+
+
 
   // list of all hashtags
   static Future<List<Map<String, dynamic>>> getAllHashTags() async {
