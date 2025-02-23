@@ -60,7 +60,7 @@ dependencies:
   photo_view: ^0.15.0
   carousel_slider: ^5.0.0
   flutter_mentions: ^2.0.1
-
+  pull_to_refresh_flutter3: ^2.0.2
 
 
   # The following adds the Cupertino Icons font to your application.
