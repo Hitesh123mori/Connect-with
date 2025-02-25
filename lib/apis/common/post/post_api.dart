@@ -16,6 +16,7 @@ class PostApis{
   static final _collectionRefHashTags = Config.firestore.collection("hashtags");
 
 
+  /// HASHTAGE SECTIONS ///
 
   //add hashtages
   static Future<String?> addHashTag(HashTagsModel hashTag) async {
@@ -46,24 +47,6 @@ class PostApis{
       print("Error adding post to hashtag: $e");
     }
   }
-
-  //fetch posts by id
-  static Future<dynamic> getPost(String postId) async {
-    try {
-      final docSnapshot = await _collectionRefPost.doc(postId).get();
-      if (docSnapshot.exists) {
-        return docSnapshot.data();
-      } else {
-        return false;
-      }
-    } catch (error, stackTrace) {
-      return {
-        "error": error.toString(),
-        "stackTrace": stackTrace.toString(),
-      };
-    }
-  }
-
 
 
   // list of all hashtags
@@ -98,7 +81,7 @@ class PostApis{
       HashTagsModel newHashTag = HashTagsModel(
         id: docRef.id,
         name: name.trim().toLowerCase(),
-        followers: "0",
+        followers: [],
         posts: [],
       );
 
@@ -115,6 +98,57 @@ class PostApis{
     }
   }
 
+  // Add a follower to a hashtag
+  static Future<void> addFollowerToHashTag(String hashId, String userId) async {
+    try {
+      DocumentReference hashTagRef = _collectionRefHashTags.doc(hashId);
+
+      await hashTagRef.update({
+        "followers": FieldValue.arrayUnion([userId])
+      });
+
+      print("User ID $userId added as a follower to Hashtag $hashId");
+    } catch (e) {
+      print("Error adding follower to hashtag: $e");
+    }
+  }
+
+   // Remove a follower from a hashtag
+  static Future<void> removeFollowerFromHashTag(String hashId, String userId) async {
+    try {
+      DocumentReference hashTagRef = _collectionRefHashTags.doc(hashId);
+
+      await hashTagRef.update({
+        "followers": FieldValue.arrayRemove([userId])
+      });
+
+      print("User ID $userId removed from Hashtag $hashId");
+    } catch (e) {
+      print("Error removing follower from hashtag: $e");
+    }
+  }
+
+
+
+
+  /// POST SECTIONS ///
+
+  //fetch posts by id
+  static Future<dynamic> getPost(String postId) async {
+    try {
+      final docSnapshot = await _collectionRefPost.doc(postId).get();
+      if (docSnapshot.exists) {
+        return docSnapshot.data();
+      } else {
+        return false;
+      }
+    } catch (error, stackTrace) {
+      return {
+        "error": error.toString(),
+        "stackTrace": stackTrace.toString(),
+      };
+    }
+  }
 
   //add post
   static Future<String?> addPost(PostModel postmodel,BuildContext context,PostProvider postProvider,List<File> files,List<String> hashtages) async {
