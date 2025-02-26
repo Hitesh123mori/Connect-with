@@ -1,7 +1,5 @@
-import 'dart:convert';
 
 class PostModel {
-
   String? postId;
   String? userId;
   String? description;
@@ -11,12 +9,7 @@ class PostModel {
   List<String>? imageUrls;
   String? pdfUrl;
   String? pollData;
-  String? funnyCount;
-  String? likeCount;
-  String? clapCount;
-  String? insightfulCount;
-  String? heartCount;
-  List<Reaction>? reactions;
+  List<String>? likes;
   String? repostCount;
   String? attachmentName;
   String? time;
@@ -32,12 +25,7 @@ class PostModel {
     this.imageUrls,
     this.pdfUrl,
     this.pollData,
-    this.funnyCount,
-    this.likeCount,
-    this.clapCount,
-    this.insightfulCount,
-    this.heartCount,
-    this.reactions,
+    this.likes,
     this.repostCount,
     this.attachmentName,
     this.time,
@@ -56,15 +44,7 @@ class PostModel {
         : null,
     pdfUrl: json['pdfUrl'],
     pollData: json['pollData'],
-    funnyCount: json['funnyCount'],
-    likeCount: json['likeCount'],
-    clapCount: json['clapCount'],
-    insightfulCount: json['insightfulCount'],
-    heartCount: json['heartCount'],
-    reactions: json['reactions'] != null
-        ? List<Reaction>.from(
-        json['reactions'].map((x) => Reaction.fromJson(x)))
-        : null,
+    likes: json['likes'] != null ? List<String>.from(json['likes']) : null,
     repostCount: json['repostCount'],
     attachmentName: json['attachmentName'],
     time: json['time'],
@@ -84,12 +64,7 @@ class PostModel {
     'imageUrls': imageUrls,
     'pdfUrl': pdfUrl,
     'pollData': pollData,
-    'funnyCount': funnyCount,
-    'likeCount': likeCount,
-    'clapCount': clapCount,
-    'insightfulCount': insightfulCount,
-    'heartCount': heartCount,
-    'reactions': reactions?.map((x) => x.toJson()).toList(),
+    'likes': likes,
     'repostCount': repostCount,
     'attachmentName': attachmentName,
     'time': time,
@@ -97,33 +72,12 @@ class PostModel {
   };
 }
 
-class Reaction {
-  String? userId;
-  int? reactionIndex;
-
-  Reaction({this.userId, this.reactionIndex});
-
-  factory Reaction.fromJson(Map<String, dynamic> json) => Reaction(
-    userId: json['userId'],
-    reactionIndex: json['reactionIndex'],
-  );
-
-  Map<String, dynamic> toJson() => {
-    'userId': userId,
-    'reactionIndex': reactionIndex,
-  };
-}
-
 class Comment {
   String? commentId;
   String? userId;
   String? postId;
+  List<String>? likes;
   String? description;
-  String? funnyCount;
-  String? likeCount;
-  String? clapCount;
-  String? insightfulCount;
-  String? heartCount;
   String? time;
   List<Comment>? comments;
 
@@ -132,12 +86,8 @@ class Comment {
     this.userId,
     this.postId,
     this.description,
-    this.funnyCount,
-    this.likeCount,
-    this.clapCount,
-    this.insightfulCount,
-    this.heartCount,
     this.time,
+    this.likes,
     this.comments,
   });
 
@@ -146,12 +96,8 @@ class Comment {
     userId: json['userId'],
     postId: json['postId'],
     description: json['description'],
-    funnyCount: json['funnyCount'],
-    likeCount: json['likeCount'],
-    clapCount: json['clapCount'],
-    insightfulCount: json['insightfulCount'],
-    heartCount: json['heartCount'],
     time: json['time'],
+    likes: json['likes'] != null ? List<String>.from(json['likes']) : null,
     comments: json['comments'] != null
         ? List<Comment>.from(
         json['comments'].map((x) => Comment.fromJson(x)))
@@ -163,12 +109,8 @@ class Comment {
     'userId': userId,
     'postId': postId,
     'description': description,
-    'funnyCount': funnyCount,
-    'likeCount': likeCount,
-    'clapCount': clapCount,
-    'insightfulCount': insightfulCount,
-    'heartCount': heartCount,
     'time': time,
+    'likes': likes,
     'comments': comments?.map((x) => x.toJson()).toList(),
   };
 }

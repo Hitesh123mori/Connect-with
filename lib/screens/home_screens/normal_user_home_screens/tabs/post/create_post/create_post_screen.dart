@@ -361,18 +361,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           imageUrls: [],
                           pdfUrl: postProvider.post.pdfUrl,
                           pollData: postProvider.post.pollData,
-                          funnyCount: "0",
-                          likeCount: "0",
-                          insightfulCount:"0",
-                          heartCount: "0",
                           repostCount: "0",
                           attachmentName: postProvider.post.attachmentName,
                           time: DateTime.now().microsecondsSinceEpoch.toString(),
-                          clapCount: "0",
                           comments: [],
-                          reactions: [],
+                          likes: [],
                         );
-
 
                         print("#after formatting :" + descode);
 

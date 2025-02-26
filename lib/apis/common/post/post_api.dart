@@ -256,4 +256,35 @@ class PostApis{
   }
 
 
+  // Add like to a post
+  static Future<void> addLikeToPost(String postId, String userId) async {
+    try {
+      DocumentReference postRef = _collectionRefPost.doc(postId);
+
+      await postRef.update({
+        "likes": FieldValue.arrayUnion([userId])
+      });
+
+      print("User ID $userId liked Post $postId");
+    } catch (e) {
+      print("Error liking post: $e");
+    }
+  }
+
+  // Remove like from a post
+  static Future<void> removeLikeFromPost(String postId, String userId) async {
+    try {
+      DocumentReference postRef = _collectionRefPost.doc(postId);
+
+      await postRef.update({
+        "likes": FieldValue.arrayRemove([userId])
+      });
+
+      print("User ID $userId unliked Post $postId");
+    } catch (e) {
+      print("Error unliking post: $e");
+    }
+  }
+
+
 }
