@@ -22,6 +22,7 @@ class HashTagScreen extends StatefulWidget {
 }
 
 class _HashTagScreenState extends State<HashTagScreen> {
+
   List<PostModel> posts = [];
   bool isLoading = true;
   bool isFollowing = false;
