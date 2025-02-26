@@ -1,6 +1,7 @@
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/common/post_models/post_model.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/providers/post_provider.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/Post/comment_card.dart';
 import 'package:connect_with/utils/widgets/common_widgets/Post/post_card.dart';
@@ -17,15 +18,17 @@ class FullViewPost extends StatefulWidget {
 }
 
 class _FullViewPostState extends State<FullViewPost> {
+
+
   @override
   Widget build(BuildContext context) {
+
     mq = MediaQuery.of(context).size;
-    bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom >
-        0; // Check if the keyboard is open
+    bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Consumer<AppUserProvider>(builder: (context, appUserProvider, child) {
+      child: Consumer2<AppUserProvider,PostProvider>(builder: (context, appUserProvider,postProvider,child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           home: Scaffold(
@@ -41,8 +44,8 @@ class _FullViewPostState extends State<FullViewPost> {
                 SizedBox(width: 5),
               ],
               leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
+                onPressed: (){
+                   Navigator.pop(context);
                 },
                 icon: Icon(
                   Icons.keyboard_arrow_left_rounded,

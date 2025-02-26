@@ -7,6 +7,7 @@ import 'package:connect_with/main.dart';
 import 'package:connect_with/models/common/post_models/post_model.dart';
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/providers/post_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/other_user_profile_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/full_view_post.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
@@ -35,8 +36,6 @@ class _PostCardState extends State<PostCard> {
   bool showMore = false;
   GlobalKey key = GlobalKey();
 
-  bool isLiked = false;
-
   AppUser? user  ;
 
   Future<void> fetchUser() async {
@@ -50,50 +49,46 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
-  void checkIfLiked() {
-    final userId = Provider.of<AppUserProvider>(context, listen: false).user?.userID;
-    if (userId == null) return;
-
-    setState(() {
-      isLiked = widget.post.likes?.contains(userId) ?? false;
-    });
-  }
-
   @override
   void initState(){
     super.initState() ;
     fetchUser() ;
-    checkIfLiked();
+    final postProvider = Provider.of<PostProvider>(context, listen: false);
+    postProvider.checkIfLiked(widget.post,context);
   }
 
   void toggleLike() async {
+    final postprovider = Provider.of<PostProvider>(context, listen: false);
 
     final userId = Provider.of<AppUserProvider>(context, listen: false).user?.userID;
     if (userId == null) return;
 
     setState(() {
-      isLiked = !isLiked;
-      if (isLiked) {
+      postprovider.isLiked = !postprovider.isLiked;
+      if (postprovider.isLiked) {
         widget.post.likes?.add(userId);
       } else {
         widget.post.likes?.remove(userId);
       }
     });
 
-    if (isLiked) {
-      await PostApis.addLikeToPost(widget.post.postId ?? "", userId);
-    } else {
-      await PostApis.removeLikeFromPost(widget.post.postId ?? "", userId);
+    try {
+      if (postprovider.isLiked) {
+        await PostApis.addLikeToPost(widget.post.postId ?? "", userId);
+      } else {
+        await PostApis.removeLikeFromPost(widget.post.postId ?? "", userId);
+      }
+    } catch (e) {
+      log("Error updating like status: $e");
+
+      setState(() {});
     }
-
-    setState(() {});
   }
-
 
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
-    return Consumer<AppUserProvider>(builder: (context,appUserProvider,child){
+    return Consumer2<AppUserProvider,PostProvider>(builder: (context,appUserProvider,postProvider,child){
       return Container(
         width: mq.width * 1,
         decoration: BoxDecoration(
@@ -189,11 +184,14 @@ class _PostCardState extends State<PostCard> {
             ),
 
             // main description
-            GestureDetector(
+            InkWell(
               onTap: widget.onTapDisable
                   ? () {}
                   : () {
-                Navigator.push(context, LeftToRight(FullViewPost(post: widget.post,)));
+                 Navigator.push(context, LeftToRight(FullViewPost(post: widget.post,))).then((_) {
+                   postProvider.checkIfLiked(widget.post, context) ;
+                   setState(() {});
+                 });
               },
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 1),
@@ -258,7 +256,8 @@ class _PostCardState extends State<PostCard> {
                                         fontSize: 15,
                                         color: AppColors.theme['tertiaryColor']
                                             .withOpacity(0.5)),
-                                  )),
+                                  )
+                              ),
                             ],
                           ),
                         ),
@@ -270,7 +269,12 @@ class _PostCardState extends State<PostCard> {
                         ? () {}
                         : () {
                       Navigator.push(
-                          context, LeftToRight(FullViewPost(post: widget.post,)));
+                          context, LeftToRight(FullViewPost(post: widget.post ,))).then((_){
+                        Navigator.push(context, LeftToRight(FullViewPost(post: widget.post,))).then((_) {
+                          postProvider.checkIfLiked(widget.post, context) ;
+                          setState(() {});
+                        });
+                      });
                     },
                     child: Row(
                       children: [
@@ -340,16 +344,16 @@ class _PostCardState extends State<PostCard> {
                             transitionBuilder: (Widget child, Animation<double> animation) {
                               return ScaleTransition(scale: animation, child: child);
                             },
-                            child: isLiked
+                            child: postProvider.isLiked
                                 ? FaIcon(
                               FontAwesomeIcons.solidThumbsUp,
-                              key: ValueKey<bool>(isLiked),
+                              key: ValueKey<bool>(postProvider.isLiked),
                               color: Colors.blueAccent,
                               size: 18,
                             )
                                 : FaIcon(
                               FontAwesomeIcons.thumbsUp,
-                              key: ValueKey<bool>(isLiked),
+                              key: ValueKey<bool>(postProvider.isLiked),
                               color: AppColors.theme['tertiaryColor']!.withOpacity(0.5),
                               size: 18,
                             ),
