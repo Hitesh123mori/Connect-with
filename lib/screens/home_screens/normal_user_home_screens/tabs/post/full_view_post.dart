@@ -56,300 +56,302 @@ class _FullViewPostState extends State<FullViewPost> {
               backgroundColor: AppColors.theme['secondaryColor'],
               centerTitle: true,
             ),
-            body: Stack(
-              children: [
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                            child: PostCard(
-                              isElevation: false,
-                              onTapDisable: true,
-                              post: widget.post,
+            body: SafeArea(
+              child: Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: PostCard(
+                                isElevation: false,
+                                onTapDisable: true,
+                                post: widget.post,
+                              ),
                             ),
-                          ),
-                          Divider(color: Colors.grey.shade200),
-                          // reactions
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Reactions",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: AppColors.theme['tertiaryColor']
-                                        .withOpacity(0.5),
+                            Divider(color: Colors.grey.shade200),
+                            // reactions
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Reactions",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: AppColors.theme['tertiaryColor']
+                                          .withOpacity(0.5),
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: 5),
-                                Container(
-                                  height: 70,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    shrinkWrap: true,
-                                    primary: false,
-                                    itemCount: (mq.width / 55).floor(),
-                                    itemBuilder: (context, index) {
-                                      return Stack(
-                                        clipBehavior: Clip.none,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 2.0),
-                                            child: CircleAvatar(
-                                              radius: 25,
-                                              backgroundColor: AppColors
-                                                  .theme['primaryColor']
-                                                  .withOpacity(0.1),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            bottom: 20,
-                                            right: 0,
-                                            child: Container(
-                                              height: 20,
-                                              width: 20,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                color: Colors.blueAccent
-                                                    .withOpacity(0.4),
+                                  SizedBox(height: 5),
+                                  Container(
+                                    height: 70,
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      shrinkWrap: true,
+                                      primary: false,
+                                      itemCount: (mq.width / 55).floor(),
+                                      itemBuilder: (context, index) {
+                                        return Stack(
+                                          clipBehavior: Clip.none,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 2.0),
+                                              child: CircleAvatar(
+                                                radius: 25,
+                                                backgroundColor: AppColors
+                                                    .theme['primaryColor']
+                                                    .withOpacity(0.1),
                                               ),
-                                              child: Center(
-                                                child: FaIcon(
-                                                  FontAwesomeIcons.thumbsUp,
-                                                  size: 12,
-                                                  color: Colors.blueAccent,
+                                            ),
+                                            Positioned(
+                                              bottom: 20,
+                                              right: 0,
+                                              child: Container(
+                                                height: 20,
+                                                width: 20,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  color: Colors.blueAccent
+                                                      .withOpacity(0.4),
+                                                ),
+                                                child: Center(
+                                                  child: FaIcon(
+                                                    FontAwesomeIcons.thumbsUp,
+                                                    size: 12,
+                                                    color: Colors.blueAccent,
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Divider(color: Colors.grey.shade200),
-                          // comments
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Comments",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: AppColors.theme['tertiaryColor']
-                                        .withOpacity(0.5),
-                                  ),
-                                ),
-                                SizedBox(height: 5),
-                                CommentCard(isAuther: false),
-                                CommentCard(isAuther: true),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 90),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                // this is text field for comments
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    height: isKeyboardOpen ? 120 : 80,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey.shade300,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 15,
-                            spreadRadius: 1,
-                            offset: Offset(0, 1),
-                          ),
-                        ],
-                        color: AppColors.theme['secondaryColor'],
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10),
-                        )),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 5),
-                      child: Column(
-                        children: [
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: AppColors.theme['primaryColor']
-                                        .withOpacity(0.2),
-                                    backgroundImage: appUserProvider
-                                        .user?.profilePath! !=
-                                        ""
-                                        ? NetworkImage(
-                                        appUserProvider.user?.profilePath ?? "")
-                                        : AssetImage(
-                                        "assets/other_images/photo.png"),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Container(
-                                    height: 40,
-                                    width: mq.width * 0.6,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: AppColors.theme['secondaryColor'],
-                                        border: Border.all(
-                                          color: Colors.grey.shade300,
-                                        )),
-                                    child: Theme(
-                                      data: ThemeData(
-                                        textSelectionTheme: TextSelectionThemeData(
-                                          selectionHandleColor: AppColors
-                                              .theme['primaryColor']
-                                              .withOpacity(0.3),
-                                          cursorColor: AppColors
-                                              .theme['primaryColor']
-                                              .withOpacity(0.3),
-                                          selectionColor: AppColors
-                                              .theme['primaryColor']
-                                              .withOpacity(0.2),
-                                        ),
-                                      ),
-                                      child: TextFormField(
-                                        decoration: InputDecoration(
-                                          filled: true,
-                                          fillColor:
-                                          AppColors.theme['secondaryColor'],
-                                          contentPadding:
-                                          EdgeInsets.symmetric(horizontal: 20),
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          hintText: 'Write comment here...',
-                                          hintStyle: TextStyle(
-                                            fontSize: 15,
-                                            color: AppColors.theme['tertiaryColor']!
-                                                .withOpacity(0.5),
-                                          ),
-                                        ),
-                                      ),
+                                          ],
+                                        );
+                                      },
                                     ),
                                   ),
                                 ],
                               ),
-                              if(!isKeyboardOpen)
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                  child: Container(
-                                    height: 30,
-                                    width: 30,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      // color: Colors.blueAccent.withOpacity(0.2),
-                                    ),
-                                    child: Center(
-                                        child: Text("@",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.blueAccent),)
+                            ),
+                            Divider(color: Colors.grey.shade200),
+                            // comments
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Comments",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: AppColors.theme['tertiaryColor']
+                                          .withOpacity(0.5),
                                     ),
                                   ),
-                                ),
-                            ],
+                                  SizedBox(height: 5),
+                                  CommentCard(isAuther: false),
+                                  CommentCard(isAuther: true),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 90),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+              
+                  // this is text field for comments
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      height: isKeyboardOpen ? 120 : 80,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey.shade300,
                           ),
-
-                          // Display the red container only if the keyboard is open
-                          if (isKeyboardOpen)
-                            Column(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 15,
+                              spreadRadius: 1,
+                              offset: Offset(0, 1),
+                            ),
+                          ],
+                          color: AppColors.theme['secondaryColor'],
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10),
+                          )),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 5),
+                        child: Column(
+                          children: [
+              
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                SizedBox(height: 10,),
+              
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-
-                                    Row(
-                                      children: [
-                                        Container(
-                                          height: 30,
-                                          width: 30,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(15),
-                                            color: Colors.blueAccent.withOpacity(0.2),
-                                          ),
-                                          child: Center(
-                                            child: FaIcon(Icons.image_outlined,
-                                                size: 20, color: Colors.blueAccent),
-                                          ),
-                                        ),
-                                        SizedBox(width: 10,),
-                                        Container(
-                                          height: 30,
-                                          width: 30,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(15),
-                                            // color: Colors.blueAccent.withOpacity(0.2),
-                                          ),
-                                          child: Center(
-                                            child: Text("@",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.blueAccent),)
-                                          ),
-                                        ),
-                                      ],
+                                    CircleAvatar(
+                                      backgroundColor: AppColors.theme['primaryColor']
+                                          .withOpacity(0.2),
+                                      backgroundImage: appUserProvider
+                                          .user?.profilePath! !=
+                                          ""
+                                          ? NetworkImage(
+                                          appUserProvider.user?.profilePath ?? "")
+                                          : AssetImage(
+                                          "assets/other_images/photo.png"),
                                     ),
-
-                                    //comment button
-                                    GestureDetector(
-                                      onTap: (){},
-                                      child: Container(
-                                        height: 40,
-                                        width: 100,
-                                        decoration: BoxDecoration(
+                                    SizedBox(width: 10),
+                                    Container(
+                                      height: 40,
+                                      width: mq.width * 0.6,
+                                      decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(10),
-                                          color: AppColors.theme['primaryColor'],
+                                          color: AppColors.theme['secondaryColor'],
+                                          border: Border.all(
+                                            color: Colors.grey.shade300,
+                                          )),
+                                      child: Theme(
+                                        data: ThemeData(
+                                          textSelectionTheme: TextSelectionThemeData(
+                                            selectionHandleColor: AppColors
+                                                .theme['primaryColor']
+                                                .withOpacity(0.3),
+                                            cursorColor: AppColors
+                                                .theme['primaryColor']
+                                                .withOpacity(0.3),
+                                            selectionColor: AppColors
+                                                .theme['primaryColor']
+                                                .withOpacity(0.2),
+                                          ),
                                         ),
-                                        child: Center(child: Text("Comment",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
+                                        child: TextFormField(
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor:
+                                            AppColors.theme['secondaryColor'],
+                                            contentPadding:
+                                            EdgeInsets.symmetric(horizontal: 20),
+                                            border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                              borderSide: BorderSide.none,
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                              borderSide: BorderSide.none,
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                              borderSide: BorderSide.none,
+                                            ),
+                                            hintText: 'Write comment here...',
+                                            hintStyle: TextStyle(
+                                              fontSize: 15,
+                                              color: AppColors.theme['tertiaryColor']!
+                                                  .withOpacity(0.5),
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
-
                                   ],
                                 ),
+                                if(!isKeyboardOpen)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                    child: Container(
+                                      height: 30,
+                                      width: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        // color: Colors.blueAccent.withOpacity(0.2),
+                                      ),
+                                      child: Center(
+                                          child: Text("@",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.blueAccent),)
+                                      ),
+                                    ),
+                                  ),
                               ],
-                            )
-                        ],
+                            ),
+              
+                            // Display the red container only if the keyboard is open
+                            if (isKeyboardOpen)
+                              Column(
+                                children: [
+                                  SizedBox(height: 10,),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+              
+                                      Row(
+                                        children: [
+                                          Container(
+                                            height: 30,
+                                            width: 30,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(15),
+                                              color: Colors.blueAccent.withOpacity(0.2),
+                                            ),
+                                            child: Center(
+                                              child: FaIcon(Icons.image_outlined,
+                                                  size: 20, color: Colors.blueAccent),
+                                            ),
+                                          ),
+                                          SizedBox(width: 10,),
+                                          Container(
+                                            height: 30,
+                                            width: 30,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(15),
+                                              // color: Colors.blueAccent.withOpacity(0.2),
+                                            ),
+                                            child: Center(
+                                              child: Text("@",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.blueAccent),)
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+              
+                                      //comment button
+                                      GestureDetector(
+                                        onTap: (){},
+                                        child: Container(
+                                          height: 40,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            color: AppColors.theme['primaryColor'],
+                                          ),
+                                          child: Center(child: Text("Comment",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
+                                        ),
+                                      ),
+              
+                                    ],
+                                  ),
+                                ],
+                              )
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

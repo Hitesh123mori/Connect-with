@@ -251,56 +251,58 @@ class _HomeScreenState extends State<HomeScreen> {
 
           ),
           body: _buildBody(),
-          bottomNavigationBar: Container(
-            padding: EdgeInsets.only(bottom: 30, left: 5,right: 5,top: 20),
-            decoration: BoxDecoration(
-              color: AppColors.theme['secondaryColor'],
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 10,
-                  color: Colors.black.withOpacity(0.1),
-                )
-              ],
-            ),
-            child: GNav(
-              padding: EdgeInsets.all(12),
-              gap: 8,
-              color: AppColors.theme['secondaryColor'],
-              activeColor: AppColors.theme['primaryColor'],
-              backgroundColor: AppColors.theme['secondaryColor'],
-              tabBackgroundColor: AppColors.theme['primaryColor'],
-              selectedIndex: _currentIndex,
-              onTabChange: onTabTapped,
-              tabs: [
-                GButton(
-                  icon: Icons.home_outlined,
-                  text: 'Home',
-                  iconActiveColor: AppColors.theme['secondaryColor'],
-                  iconColor: AppColors.theme['primaryColor'],
-                  textColor: AppColors.theme['secondaryColor'],
-                ),
-                GButton(
-                  icon: Icons.people_outline_sharp,
-                  text: 'Network',
-                  iconActiveColor: AppColors.theme['secondaryColor'],
-                  iconColor: AppColors.theme['primaryColor'],
-                  textColor: AppColors.theme['secondaryColor'],
-                ),
-                GButton(
-                  iconActiveColor: AppColors.theme['secondaryColor'],
-                  icon: Icons.notifications_active_outlined,
-                  text: 'Notifications',
-                  iconColor: AppColors.theme['primaryColor'],
-                  textColor: AppColors.theme['secondaryColor'],
-                ),
-                GButton(
-                  iconActiveColor: AppColors.theme['secondaryColor'],
-                  icon: Icons.all_inbox_outlined,
-                  text: 'Jobs',
-                  iconColor: AppColors.theme['primaryColor'],
-                  textColor: AppColors.theme['secondaryColor'],
-                ),
-              ],
+          bottomNavigationBar: SafeArea(
+            child: Container(
+              padding: EdgeInsets.only(bottom: 30, left: 5,right: 5,top: 20),
+              decoration: BoxDecoration(
+                color: AppColors.theme['secondaryColor'],
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 10,
+                    color: Colors.black.withOpacity(0.1),
+                  )
+                ],
+              ),
+              child: GNav(
+                padding: EdgeInsets.all(12),
+                gap: 8,
+                color: AppColors.theme['secondaryColor'],
+                activeColor: AppColors.theme['primaryColor'],
+                backgroundColor: AppColors.theme['secondaryColor'],
+                tabBackgroundColor: AppColors.theme['primaryColor'],
+                selectedIndex: _currentIndex,
+                onTabChange: onTabTapped,
+                tabs: [
+                  GButton(
+                    icon: Icons.home_outlined,
+                    text: 'Home',
+                    iconActiveColor: AppColors.theme['secondaryColor'],
+                    iconColor: AppColors.theme['primaryColor'],
+                    textColor: AppColors.theme['secondaryColor'],
+                  ),
+                  GButton(
+                    icon: Icons.people_outline_sharp,
+                    text: 'Network',
+                    iconActiveColor: AppColors.theme['secondaryColor'],
+                    iconColor: AppColors.theme['primaryColor'],
+                    textColor: AppColors.theme['secondaryColor'],
+                  ),
+                  GButton(
+                    iconActiveColor: AppColors.theme['secondaryColor'],
+                    icon: Icons.notifications_active_outlined,
+                    text: 'Notifications',
+                    iconColor: AppColors.theme['primaryColor'],
+                    textColor: AppColors.theme['secondaryColor'],
+                  ),
+                  GButton(
+                    iconActiveColor: AppColors.theme['secondaryColor'],
+                    icon: Icons.all_inbox_outlined,
+                    text: 'Jobs',
+                    iconColor: AppColors.theme['primaryColor'],
+                    textColor: AppColors.theme['secondaryColor'],
+                  ),
+                ],
+              ),
             ),
           ),
         );

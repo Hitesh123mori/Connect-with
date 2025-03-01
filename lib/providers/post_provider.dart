@@ -16,11 +16,9 @@ class PostProvider extends ChangeNotifier {
 
   bool isLoading = true;
 
-  bool isLiked = false;
-
   Future<void> fetchPosts() async {
     try {
-      await Future.delayed(Duration(seconds: 1)) ;
+      Future.delayed(Duration(seconds: 1)) ;
       posts = await PostApis.getAllPosts();
     } catch (e) {
       debugPrint("Error fetching posts: $e");
@@ -34,12 +32,7 @@ class PostProvider extends ChangeNotifier {
     post = PostModel() ;
   }
 
-  void checkIfLiked(PostModel post,BuildContext context) {
-    final userId = Provider.of<AppUserProvider>(context, listen: false).user?.userID;
-    if (userId == null) return;
 
-    isLiked = post.likes?.contains(userId) ?? false;
-  }
 
   void notify() {
     notifyListeners();
