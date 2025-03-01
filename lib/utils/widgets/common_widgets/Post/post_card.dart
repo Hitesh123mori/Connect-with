@@ -36,7 +36,31 @@ class _PostCardState extends State<PostCard> {
   bool showMore = false;
   GlobalKey key = GlobalKey();
 
-  AppUser? user  ;
+  AppUser? user;
+  PostModel? postModel;
+  bool isLiked = false;
+  int likeCount = 0 ;
+
+  Future<void> checkIfLiked(PostModel post) async {
+    print("called") ;
+    try {
+      dynamic response = await PostApis.getPost(post.postId ?? "");
+
+      if (response is Map<String, dynamic>) {
+        setState(() {
+          postModel = PostModel.fromJson(response);
+          final userId = user?.userID;
+          if (userId == null) return;
+          isLiked = postModel?.likes?.contains(userId) ?? false;
+          likeCount = postModel?.likes?.length ?? 0;
+        });
+      } else {
+        print("Post not found");
+      }
+    } catch (e) {
+      print("Error in checkIfLiked: $e");
+    }
+  }
 
   Future<void> fetchUser() async {
     try {
@@ -50,38 +74,29 @@ class _PostCardState extends State<PostCard> {
   }
 
   @override
-  void initState(){
-    super.initState() ;
-    fetchUser() ;
-    final postProvider = Provider.of<PostProvider>(context, listen: false);
-    postProvider.checkIfLiked(widget.post,context);
+  void initState() {
+    super.initState();
+    fetchUser();
+    checkIfLiked(widget.post);
   }
 
   void toggleLike() async {
-    final postprovider = Provider.of<PostProvider>(context, listen: false);
-
-    final userId = Provider.of<AppUserProvider>(context, listen: false).user?.userID;
-    if (userId == null) return;
+    if (user == null) return;
 
     setState(() {
-      postprovider.isLiked = !postprovider.isLiked;
-      if (postprovider.isLiked) {
-        widget.post.likes?.add(userId);
-      } else {
-        widget.post.likes?.remove(userId);
-      }
+      isLiked = !isLiked;
     });
 
     try {
-      if (postprovider.isLiked) {
-        await PostApis.addLikeToPost(widget.post.postId ?? "", userId);
+      if (isLiked) {
+        await PostApis.addLikeToPost(widget.post.postId ?? "", user!.userID!);
       } else {
-        await PostApis.removeLikeFromPost(widget.post.postId ?? "", userId);
+        await PostApis.removeLikeFromPost(widget.post.postId ?? "", user!.userID!);
       }
+      checkIfLiked(widget.post) ;
+      setState(() {});
     } catch (e) {
       log("Error updating like status: $e");
-
-      setState(() {});
     }
   }
 
@@ -189,7 +204,7 @@ class _PostCardState extends State<PostCard> {
                   ? () {}
                   : () {
                  Navigator.push(context, LeftToRight(FullViewPost(post: widget.post,))).then((_) {
-                   postProvider.checkIfLiked(widget.post, context) ;
+                   checkIfLiked(widget.post) ;
                    setState(() {});
                  });
               },
@@ -251,7 +266,7 @@ class _PostCardState extends State<PostCard> {
                               Positioned(
                                   left: 30,
                                   child: Text(
-                                    (widget.post.likes?.length.toString() ?? "0") + " Likes",
+                                    (likeCount.toString() ?? "0") + " Likes",
                                     style: TextStyle(
                                         fontSize: 15,
                                         color: AppColors.theme['tertiaryColor']
@@ -271,7 +286,7 @@ class _PostCardState extends State<PostCard> {
                       Navigator.push(
                           context, LeftToRight(FullViewPost(post: widget.post ,))).then((_){
                         Navigator.push(context, LeftToRight(FullViewPost(post: widget.post,))).then((_) {
-                          postProvider.checkIfLiked(widget.post, context) ;
+                          checkIfLiked(widget.post) ;
                           setState(() {});
                         });
                       });
@@ -344,16 +359,16 @@ class _PostCardState extends State<PostCard> {
                             transitionBuilder: (Widget child, Animation<double> animation) {
                               return ScaleTransition(scale: animation, child: child);
                             },
-                            child: postProvider.isLiked
+                            child: isLiked
                                 ? FaIcon(
                               FontAwesomeIcons.solidThumbsUp,
-                              key: ValueKey<bool>(postProvider.isLiked),
+                              key: ValueKey<bool>(isLiked),
                               color: Colors.blueAccent,
                               size: 18,
                             )
                                 : FaIcon(
                               FontAwesomeIcons.thumbsUp,
-                              key: ValueKey<bool>(postProvider.isLiked),
+                              key: ValueKey<bool>(isLiked),
                               color: AppColors.theme['tertiaryColor']!.withOpacity(0.5),
                               size: 18,
                             ),
