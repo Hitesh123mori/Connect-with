@@ -1,4 +1,3 @@
-
 class PostModel {
   String? postId;
   String? userId;
@@ -6,14 +5,14 @@ class PostModel {
   bool? hasImage;
   bool? hasPdf;
   bool? hasPoll;
-  List<String>? imageUrls;
+  Map<String, bool>? imageUrls;
   String? pdfUrl;
   String? pollData;
-  List<String>? likes;
+  Map<String, bool>? likes;
   String? repostCount;
   String? attachmentName;
   String? time;
-  List<Comment>? comments;
+  Map<String, Comment>? comments;
 
   PostModel({
     this.postId,
@@ -40,17 +39,18 @@ class PostModel {
     hasPdf: json['hasPdf'],
     hasPoll: json['hasPoll'],
     imageUrls: json['imageUrls'] != null
-        ? List<String>.from(json['imageUrls'])
+        ? Map<String, bool>.from(json['imageUrls'])
         : null,
     pdfUrl: json['pdfUrl'],
     pollData: json['pollData'],
-    likes: json['likes'] != null ? List<String>.from(json['likes']) : null,
+    likes: json['likes'] != null ? Map<String, bool>.from(json['likes']) : null,
     repostCount: json['repostCount'],
     attachmentName: json['attachmentName'],
     time: json['time'],
     comments: json['comments'] != null
-        ? List<Comment>.from(
-        json['comments'].map((x) => Comment.fromJson(x)))
+        ? Map<String, Comment>.from(
+        json['comments'].map((key, value) =>
+            MapEntry(key, Comment.fromJson(value))))
         : null,
   );
 
@@ -68,7 +68,7 @@ class PostModel {
     'repostCount': repostCount,
     'attachmentName': attachmentName,
     'time': time,
-    'comments': comments?.map((x) => x.toJson()).toList(),
+    'comments': comments?.map((key, value) => MapEntry(key, value.toJson())),
   };
 }
 
@@ -76,10 +76,10 @@ class Comment {
   String? commentId;
   String? userId;
   String? postId;
-  List<String>? likes;
+  Map<String, bool>? likes;
   String? description;
   String? time;
-  List<Comment>? comments;
+  Map<String, Comment>? comments;
 
   Comment({
     this.commentId,
@@ -97,10 +97,11 @@ class Comment {
     postId: json['postId'],
     description: json['description'],
     time: json['time'],
-    likes: json['likes'] != null ? List<String>.from(json['likes']) : null,
+    likes: json['likes'] != null ? Map<String, bool>.from(json['likes']) : null,
     comments: json['comments'] != null
-        ? List<Comment>.from(
-        json['comments'].map((x) => Comment.fromJson(x)))
+        ? Map<String, Comment>.from(
+        json['comments'].map((key, value) =>
+            MapEntry(key, Comment.fromJson(value))))
         : null,
   );
 
@@ -111,6 +112,6 @@ class Comment {
     'description': description,
     'time': time,
     'likes': likes,
-    'comments': comments?.map((x) => x.toJson()).toList(),
+    'comments': comments?.map((key, value) => MapEntry(key, value.toJson())),
   };
 }

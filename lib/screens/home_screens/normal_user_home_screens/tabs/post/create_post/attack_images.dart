@@ -86,7 +86,9 @@ class _AttackImagesScreenState extends State<AttackImagesScreen> {
                           postProvider.post.pdfUrl = "";
                           postProvider.post.pollData = "";
 
-                          postProvider.post.imageUrls = _images.map((file) => file.path).toList();
+                          postProvider.post.imageUrls = {
+                            for (var file in _images) file.path: true
+                          };
                           postProvider.images = _images;
 
                           AppToasts.InfoToast(context, "Images Attached");

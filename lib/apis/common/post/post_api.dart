@@ -5,68 +5,51 @@ import 'package:connect_with/apis/init/config.dart';
 import 'package:connect_with/models/common/post_models/hashtag_model.dart';
 import 'package:connect_with/models/common/post_models/post_model.dart';
 import 'package:connect_with/providers/post_provider.dart';
+import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/toasts.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 
-class PostApis{
+class PostApis {
 
-  static final _collectionRefPost = Config.firestore.collection("posts");
   static final _collectionRefHashTags = Config.firestore.collection("hashtags");
+  static final _rtdbRefPost = Config.rtdbRef.child("posts");
 
+  /// HASHTAG SECTIONS ///
 
-  /// HASHTAGE SECTIONS ///
-
-  //add hashtages
   static Future<String?> addHashTag(HashTagsModel hashTag) async {
     try {
       DocumentReference docRef = _collectionRefHashTags.doc();
       hashTag.id = docRef.id;
-
       await docRef.set(hashTag.toJson());
-      print("Hashtag added with ID: ${docRef.id}");
       return docRef.id;
     } catch (e) {
-      print("Error adding hashtag: $e");
       return null;
     }
   }
 
-  //add post to hashtages
   static Future<void> addPostToHash(String hashId, String postId) async {
     try {
       DocumentReference hashTagRef = _collectionRefHashTags.doc(hashId);
-
-      await hashTagRef.update({
-        "posts": FieldValue.arrayUnion([postId])
-      });
-
-      print("Post ID $postId added to Hashtag $hashId");
-    } catch (e) {
-      print("Error adding post to hashtag: $e");
-    }
+      await hashTagRef.update({"posts": FieldValue.arrayUnion([postId])});
+    } catch (e) {}
   }
 
-
-  // list of all hashtags
   static Future<List<Map<String, dynamic>>> getAllHashTags() async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await _collectionRefHashTags.get();
     return snapshot.docs.map((doc) => doc.data()).toList();
   }
 
-
-  //get hashtag by id and name
   static Future<dynamic> getHashTag(String hid, String name) async {
     try {
-
       if (hid.isNotEmpty) {
         final docSnapshot = await _collectionRefHashTags.doc(hid).get();
         if (docSnapshot.exists) {
           return docSnapshot.data();
         }
       }
-
 
       final querySnapshot = await _collectionRefHashTags
           .where('name', isEqualTo: name.trim().toLowerCase())
@@ -86,15 +69,9 @@ class PostApis{
       );
 
       await docRef.set(newHashTag.toJson());
-
-      print("New Hashtag created with ID: ${docRef.id}");
       return newHashTag.toJson();
-
-    } catch (error, stackTrace) {
-      return {
-        "error": error.toString(),
-        "stackTrace": stackTrace.toString(),
-      };
+    } catch (error) {
+      return {"error": error.toString()};
     }
   }
 
@@ -113,7 +90,7 @@ class PostApis{
     }
   }
 
-   // Remove a follower from a hashtag
+  // Remove a follower from a hashtag
   static Future<void> removeFollowerFromHashTag(String hashId, String userId) async {
     try {
       DocumentReference hashTagRef = _collectionRefHashTags.doc(hashId);
@@ -129,40 +106,29 @@ class PostApis{
   }
 
 
-
-
   /// POST SECTIONS ///
 
-  //fetch posts by id
-  static Future<dynamic> getPost(String postId) async {
+  static Future<Map<String, dynamic>?> getPost(String postId) async {
     try {
-      final docSnapshot = await _collectionRefPost.doc(postId).get();
-      if (docSnapshot.exists) {
-        return docSnapshot.data();
-      } else {
-        return false;
+      DatabaseReference postRef = _rtdbRefPost.child(postId);
+      DatabaseEvent event = await postRef.once();
+
+      if (event.snapshot.value != null) {
+        print("Post received: $postId");
+        return Map<String, dynamic>.from(event.snapshot.value as Map);
       }
-    } catch (error, stackTrace) {
-      return {
-        "error": error.toString(),
-        "stackTrace": stackTrace.toString(),
-      };
+    } catch (e) {
+      print("Error fetching post $postId: $e");
     }
+    return null;
   }
 
-  //add post
-  static Future<String?> addPost(PostModel postmodel,BuildContext context,PostProvider postProvider,List<File> files,List<String> hashtages) async {
-
+  static Future<String?> addPost(PostModel postModel, BuildContext context, PostProvider postProvider, List<File> files, List<String> hashtags) async {
     try {
+      DatabaseReference newPostRef = _rtdbRefPost.push();
+      postModel.postId = newPostRef.key;
 
-      DocumentReference docRef = _collectionRefPost.doc();
-      postmodel.postId = docRef.id;
-
-      print("#hashtags : ") ;
-      print(hashtages);
-
-
-      for (var tag in hashtages) {
+      for (var tag in hashtags) {
         var hashtagData = await getHashTag(tag, tag);
 
         HashTagsModel? hashTagsModel;
@@ -172,119 +138,94 @@ class PostApis{
           hashTagsModel = hashtagData;
         }
 
-        await addPostToHash(hashTagsModel?.id ?? "", postmodel.postId ?? "");
+        await addPostToHash(hashTagsModel?.id ?? "", postModel.postId ?? "");
       }
 
-
-      if(postmodel.hasImage ?? false){
-        // print("#Enter in if condition") ;
-       List<String> imageUrls =  await uploadMedia(postProvider.images,"images",postmodel.postId ?? "");
-       postmodel.imageUrls = imageUrls;
+      if (postModel.hasImage ?? false) {
+        Map<String, bool> imageUrls = await uploadMedia(postProvider.images, "images", postModel.postId ?? "");
+        postModel.imageUrls = imageUrls;
 
       }
 
-      await docRef.set(postmodel.toJson());
+      try {
+        await newPostRef.update(postModel.toJson());
+      } catch (e) {
+        print("#Error: $e");
+      }
 
-      postProvider.washPost() ;
-
-      AppToasts.InfoToast(context, "Post Successfully Created") ;
-      print("Post added with ID: ${docRef.id}");
-      return docRef.id;
+      postProvider.washPost();
+      AppToasts.InfoToast(context, "Post Successfully Created");
+      return newPostRef.key;
     } catch (e) {
-
-      AppToasts.ErrorToast(context, "Error while adding post") ;
-
-      print("Error adding post: $e");
+      AppToasts.ErrorToast(context, "Error while adding post");
       return null;
     }
   }
 
-  //upload images
-  static Future<List<String>> uploadMedia(List<File> files, String path, String postId) async {
-
-    List<String> downloadUrls = [];
-
-    // print("#Enter in function") ;
-
-    // print("#size of files : ${files.length}") ;
-
+  static Future<Map<String, bool>> uploadMedia(List<File> files, String path, String postId) async {
+    Map<String, bool> downloadUrls = {};
     for (var file in files) {
-
-      // print("#Enter in loop") ;
-
       final fileName = basename(file.path);
-      final ext = fileName.split('.').last;
-
-      log('Uploading media file: $fileName, extension: $ext');
-
       final ref = Config.storage.ref().child('connect_with_images/$postId/$path/$fileName');
-
       try {
-        final uploadTask = await ref.putFile(file, SettableMetadata(contentType: 'image/$ext'));
-        log('Data Transferred: ${uploadTask.bytesTransferred / 1000} kb');
-
+        await ref.putFile(file);
         final downloadUrl = await ref.getDownloadURL();
-        log('Media uploaded successfully: $downloadUrl');
-
-        downloadUrls.add(downloadUrl);
-
+        String safeUrl = HelperFunctions.stringToBase64(downloadUrl) ;
+        downloadUrls[safeUrl] = true;
       } catch (e) {
-        log('Error uploading media: $e');
+        print("Error uploading file: $e");
       }
     }
-
     return downloadUrls;
   }
 
-  //fetch all posts
   static Future<List<PostModel>> getAllPosts() async {
-    List<PostModel> posts = [];
-
     try {
-      final querySnapshot = await _collectionRefPost.get();
+      final event = await _rtdbRefPost.once();
+      List<PostModel> posts = [];
 
-      for (var doc in querySnapshot.docs) {
-        posts.add(PostModel.fromJson(doc.data()));
+      if (event.snapshot.exists && event.snapshot.value is Map) {
+        final data = Map<String, dynamic>.from(event.snapshot.value as Map);
+        data.forEach((key, value) {
+          if (value is Map) {
+            posts.add(PostModel.fromJson(Map<String, dynamic>.from(value)));
+          }
+        });
       }
 
-      log('Fetched ${posts.length} posts successfully');
+      return posts;
     } catch (e) {
-      log('Error fetching posts: $e');
+      print("Error fetching posts: $e");
+      return [];
     }
+  }
 
-    return posts;
+  static Stream<PostModel?> getPostStream(String postId) {
+    DatabaseReference postRef = _rtdbRefPost.child(postId);
+    return postRef.onValue.map((event) {
+      if (event.snapshot.value != null) {
+        print("Post updated: $postId");
+        return PostModel.fromJson(Map<String, dynamic>.from(event.snapshot.value as Map));
+      }
+      return null;
+    });
   }
 
 
-  // Add like to a post
   static Future<void> addLikeToPost(String postId, String userId) async {
     try {
-      DocumentReference postRef = _collectionRefPost.doc(postId);
-
-      await postRef.update({
-        "likes": FieldValue.arrayUnion([userId])
-      });
-
-      print("User ID $userId liked Post $postId");
+      await _rtdbRefPost.child(postId).child("likes").update({userId: true});
     } catch (e) {
-      print("Error liking post: $e");
+      print("#Error while Like : $e") ;
     }
   }
 
-  // Remove like from a post
   static Future<void> removeLikeFromPost(String postId, String userId) async {
     try {
-      DocumentReference postRef = _collectionRefPost.doc(postId);
-
-      await postRef.update({
-        "likes": FieldValue.arrayRemove([userId])
-      });
-
-      print("User ID $userId unliked Post $postId");
+      await _rtdbRefPost.child(postId).child("likes").child(userId).remove();
     } catch (e) {
-      print("Error unliking post: $e");
+      print("#Error while remove like : $e") ;
     }
   }
-
 
 }

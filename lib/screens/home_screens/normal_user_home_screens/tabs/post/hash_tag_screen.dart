@@ -57,11 +57,13 @@ class _HashTagScreenState extends State<HashTagScreen> {
     if (hasmodel?.posts != null) {
       for (String postId in hasmodel!.posts!) {
         var postResponse = await PostApis.getPost(postId);
-        if (postResponse != null && postResponse is Map<String, dynamic>) {
+        if (postResponse != null) {
           fetchedPosts.add(PostModel.fromJson(postResponse));
         }
       }
     }
+    print("size of hashtag posts : ${fetchedPosts.length}") ;
+
 
     setState(() {
       posts = fetchedPosts;

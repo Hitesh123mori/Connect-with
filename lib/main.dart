@@ -56,7 +56,7 @@ _intializeFirebase() async {
   //   options: DefaultFirebaseOptions.currentPlatform,
   // );
 
-  if (defaultTargetPlatform == TargetPlatform.android) {
+  if (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.windows) {
     await Firebase.initializeApp(
         name: 'connect_with_1',
         options: const FirebaseOptions(
@@ -68,7 +68,7 @@ _intializeFirebase() async {
         ));
   }
 
-  if (defaultTargetPlatform == TargetPlatform.android) {
+  if (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.windows) {
     await Firebase.initializeApp(
         name: 'connect_with_2',
         options: const FirebaseOptions(
@@ -77,7 +77,10 @@ _intializeFirebase() async {
           messagingSenderId: '1011888016997',
           projectId: 'mori-hitesh',
           storageBucket: 'mori-hitesh.appspot.com',
-        ));
+        )
+    );
+
+
   }
 
 }

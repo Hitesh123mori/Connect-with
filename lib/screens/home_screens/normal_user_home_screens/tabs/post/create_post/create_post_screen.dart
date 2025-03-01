@@ -45,7 +45,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   // image controller
   void _removeImage(int index, PostProvider postProvider) {
     setState(() {
-      postProvider.post.imageUrls?.removeAt(index);
+      postProvider.post.imageUrls?.remove(postProvider.post.imageUrls?.keys.toList()[index]);
       AppToasts.InfoToast(context, "Image successfully discarded");
     });
   }
@@ -358,23 +358,23 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           hasImage: postProvider.post.hasImage,
                           hasPdf: postProvider.post.hasPdf,
                           hasPoll: postProvider.post.hasPoll,
-                          imageUrls: [],
+                          imageUrls: {},
                           pdfUrl: postProvider.post.pdfUrl,
                           pollData: postProvider.post.pollData,
                           repostCount: "0",
                           attachmentName: postProvider.post.attachmentName,
                           time: DateTime.now().microsecondsSinceEpoch.toString(),
-                          comments: [],
-                          likes: [],
+                          comments: {},
+                          likes: {},
                         );
 
                         print("#after formatting :" + descode);
 
                         List<String> hashtages = detectHashtags(description);
 
-                        await PostApis.addPost(postmodel, context, postProvider, postProvider.images,hashtages);
-
-                        await postProvider.fetchPosts();
+                        print("Before uploading post");
+                        await PostApis.addPost(postmodel, context, postProvider, postProvider.images, hashtages);
+                        print("After uploading post");
 
                         setState(() {
                           isLoading = false;
@@ -524,7 +524,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   subtitle: Text(
-                    "${data['followers']}  Followers",
+                      "${data['followers']?.length ?? 0} Followers",
                     style: TextStyle(color: Colors.grey[600], fontSize: 14),
                   ),
                 );
@@ -591,7 +591,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.file(
-                                File(postProvider.post.imageUrls?[index] ?? ""),
+                                File(postProvider.post.imageUrls?.keys.toList()[index] ?? ""),
                                 width: double.infinity,
                                 fit: BoxFit.cover,
                               ),
@@ -626,24 +626,24 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                 ),
                               ),
                             ),
+
                             Positioned(
                               bottom: 10,
                               left: 10,
                               child: GestureDetector(
                                 onTap: () {
+                                  List<String> imagePaths = postProvider.post.imageUrls?.keys.toList() ?? [];
                                   Navigator.push(
-                                      context,
-                                      LeftToRight(ImageViewScreen(
-                                        path: postProvider
-                                            .post.imageUrls?[index] ??
-                                            "",
+                                    context,
+                                    LeftToRight(
+                                      ImageViewScreen(
+                                        path: imagePaths.isNotEmpty ? imagePaths[index] : "",
                                         isFile: true,
-                                      )));
+                                      ),
+                                    ),
+                                  );
                                 },
                                 child: Container(
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Icon(Icons.open_in_full)),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     boxShadow: [
@@ -655,6 +655,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                       ),
                                     ],
                                     borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(Icons.open_in_full),
                                   ),
                                 ),
                               ),
@@ -675,7 +679,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
                 print("clicked");
 
-                postProvider.post.imageUrls = [];
+                postProvider.post.imageUrls = {};
                 postProvider.post.attachmentName = "";
 
                 postProvider.notify();
