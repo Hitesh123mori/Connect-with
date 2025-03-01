@@ -13,54 +13,63 @@ import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
+import 'package:connect_with/utils/shimmer_effects/common/posts/post_card_shimmer_effect.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class PostCard extends StatefulWidget {
-  final PostModel post;
+  PostModel post;
   final bool isElevation;
   final bool onTapDisable;
-  final bool onHashOpen ;
-  PostCard({super.key, this.isElevation = true, this.onTapDisable = false,this.onHashOpen = true, required this.post});
+  final bool onHashOpen;
+  PostCard(
+      {super.key,
+      this.isElevation = true,
+      this.onTapDisable = false,
+      this.onHashOpen = true,
+      required this.post});
 
   @override
   State<PostCard> createState() => _PostCardState();
 }
 
 class _PostCardState extends State<PostCard> {
-
   bool showMore = false;
   GlobalKey key = GlobalKey();
 
   AppUser? user;
-  PostModel? postModel;
-  bool isLiked = false;
-  int likeCount = 0 ;
 
-  Future<void> checkIfLiked(PostModel post) async {
-    print("called") ;
-    try {
-      dynamic response = await PostApis.getPost(post.postId ?? "");
+  List<AppUser> likeUsers = [];
 
-      if (response is Map<String, dynamic>) {
-        setState(() {
-          postModel = PostModel.fromJson(response);
-          final userId = user?.userID;
-          if (userId == null) return;
-          isLiked = postModel?.likes?.contains(userId) ?? false;
-          likeCount = postModel?.likes?.length ?? 0;
-        });
-      } else {
-        print("Post not found");
+  Future<List<AppUser>> _fetchLikedUsers(Map<String, dynamic>? likes) async {
+    List<AppUser> likeUsers = [];
+    if (likes == null) return likeUsers;
+
+    for (var userId in likes.keys) {
+      try {
+        var userData = await UserProfile.getUser(userId);
+        if (userData != null) {
+          AppUser user = AppUser.fromJson(userData);
+          if (!likeUsers.any((u) => u.userID == user.userID)) {
+            likeUsers.add(user);
+          }
+        }
+      } catch (e) {
+        log("Error while fetching user in post card: $e");
       }
-    } catch (e) {
-      print("Error in checkIfLiked: $e");
     }
+    await Future.delayed(Duration(microseconds:500));
+
+    return likeUsers;
   }
+
+
 
   Future<void> fetchUser() async {
     try {
@@ -77,23 +86,21 @@ class _PostCardState extends State<PostCard> {
   void initState() {
     super.initState();
     fetchUser();
-    checkIfLiked(widget.post);
   }
 
-  void toggleLike() async {
-    if (user == null) return;
-
+  void toggleLike(AppUser likeUser,bool isLiked) async {
     setState(() {
       isLiked = !isLiked;
     });
 
     try {
       if (isLiked) {
-        await PostApis.addLikeToPost(widget.post.postId ?? "", user!.userID!);
+        await PostApis.addLikeToPost(
+            widget.post.postId ?? "", likeUser.userID ?? "");
       } else {
-        await PostApis.removeLikeFromPost(widget.post.postId ?? "", user!.userID!);
+        await PostApis.removeLikeFromPost(
+            widget.post.postId ?? "", likeUser.userID ?? "");
       }
-      checkIfLiked(widget.post) ;
       setState(() {});
     } catch (e) {
       log("Error updating like status: $e");
@@ -103,352 +110,522 @@ class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
-    return Consumer2<AppUserProvider,PostProvider>(builder: (context,appUserProvider,postProvider,child){
-      return Container(
-        width: mq.width * 1,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            widget.isElevation
-                ? BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 1,
-              spreadRadius: 1,
-              offset: Offset(0, 1),
-            )
-                : BoxShadow(),
-          ],
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: ListView(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          children: [
-            // user details
-            Container(
-              height: 70,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
+    return Consumer2<AppUserProvider, PostProvider>(
+        builder: (context, appUserProvider, postProvider, child) {
+      return StreamBuilder(
+        stream: PostApis.getPostStream(widget.post.postId!),
+        builder: (context, snapshot) {
+          // if (snapshot.connectionState == ConnectionState.waiting) {
+          //   return Center(child: PostCardShimmerEffect());
+          // }
+          if (snapshot.hasError) {
+            return const Center(child: Text("Error loading post"));
+          }
+          if (snapshot.hasData) {
+            widget.post = snapshot.data!;
+          }else{
+            // return Center(child: Text("Data Loading...",style: TextStyle(color: AppColors.theme['tertiaryColor'].withOpacity(0.4)),));
+          }
+
+          return Container(
+            width: mq.width * 1,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                widget.isElevation
+                    ? BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 1,
+                        spreadRadius: 1,
+                        offset: Offset(0, 1),
+                      )
+                    : BoxShadow(),
+              ],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: ListView(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              children: [
+                // user details
+                Container(
+                  height: 70,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
                     topRight: Radius.circular(5),
                     topLeft: Radius.circular(5),
                   )),
-              child: Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, LeftToRight(OtherUserProfileScreen(user: user ?? AppUser(),)));
-                      },
-                      child: Row(
-                        children: [
-                          user?.profilePath =="" ? CircleAvatar(
-                            radius: 30,
-                            backgroundImage: AssetImage("assets/other_images/photo.png"),
-                            backgroundColor:
-                            AppColors.theme['primaryColor'].withOpacity(0.1),
-                          ) : CircleAvatar(
-                            radius: 30,
-                            backgroundImage: NetworkImage(user?.profilePath ?? ""),
-                            backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.1),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                LeftToRight(OtherUserProfileScreen(
+                                  user: user ?? AppUser(),
+                                )));
+                          },
+                          child: Row(
                             children: [
-                              Text14(text: user?.userName ?? "Name"),
-                              Container(
-                                width: mq.width*0.4,
-                                child: Text(
-                                  user?.headLine ?? "",
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.theme['tertiaryColor']?.withOpacity(0.5),
-                                  ),
-                                ),
+                              user?.profilePath == ""
+                                  ? CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage: AssetImage(
+                                          "assets/other_images/photo.png"),
+                                      backgroundColor: AppColors
+                                          .theme['primaryColor']
+                                          .withOpacity(0.1),
+                                    )
+                                  : CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage:
+                                          NetworkImage(user?.profilePath ?? ""),
+                                      backgroundColor: AppColors
+                                          .theme['primaryColor']
+                                          .withOpacity(0.1),
+                                    ),
+                              SizedBox(
+                                width: 5,
                               ),
-
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text14(text: user?.userName ?? "Name"),
+                                  Container(
+                                    width: mq.width * 0.4,
+                                    child: Text(
+                                      user?.headLine ?? "",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      softWrap: true,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: AppColors.theme['tertiaryColor']
+                                            ?.withOpacity(0.5),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
                             ],
-                          )
-                        ],
-                      ),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            " + Follow",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ),
+                      ],
                     ),
-
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        " + Follow",
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
 
-            Divider(
-              color: Colors.grey.shade200,
-            ),
+                Divider(
+                  color: Colors.grey.shade200,
+                ),
 
-            // main description
-            InkWell(
-              onTap: widget.onTapDisable
-                  ? () {}
-                  : () {
-                 Navigator.push(context, LeftToRight(FullViewPost(post: widget.post,))).then((_) {
-                   checkIfLiked(widget.post) ;
-                   setState(() {});
-                 });
-              },
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 1),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
+                // main description
+                InkWell(
+                  onTap: widget.onTapDisable
+                      ? () {}
+                      : () {
+                          Navigator.push(
+                              context,
+                              LeftToRight(FullViewPost(
+                                post: widget.post,
+                              )));
+                        },
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 1),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
                         topRight: Radius.circular(5),
                         topLeft: Radius.circular(5),
                       )),
-                  child: buildDescription(HelperFunctions.base64ToString(widget.post.description ?? ""),context,widget.onHashOpen) ,
+                      child: buildDescription(
+                          HelperFunctions.base64ToString(
+                              widget.post.description ?? ""),
+                          context,
+                          widget.onHashOpen),
+                    ),
+                  ),
                 ),
-              ),
-            ),
 
-            if(widget.post.hasImage ?? false)
-              buildImageSection(widget.post.imageUrls?? [],widget.post.attachmentName ?? ""),
+                if (widget.post.hasImage ?? false)
+                  buildImageSection(
+                    widget.post.imageUrls?.keys.toList() ?? [],
+                    widget.post.attachmentName ?? "",
+                  ),
 
-            Divider(
-              color: Colors.grey.shade200,
-            ),
+                Divider(
+                  color: Colors.grey.shade200,
+                ),
 
-            //reaction
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 1),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    height: 20,
+                //reaction
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 1),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        height: 20,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 90,
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Positioned(
+                                      left: 0,
+                                      child: _reactionIcon(
+                                          FontAwesomeIcons.thumbsUp,
+                                          Colors.blueAccent)),
+                                  // Positioned(
+                                  //     left: 15,
+                                  //     child: _reactionIcon(
+                                  //         FontAwesomeIcons.lightbulb,
+                                  //         Colors.orangeAccent)),
+                                  // Positioned(
+                                  //     left: 30,
+                                  //     child: _reactionIcon(FontAwesomeIcons.heart,
+                                  //         Colors.redAccent)),
+                                  // Positioned(
+                                  //     left: 45,
+                                  //     child: _reactionIcon(
+                                  //         FontAwesomeIcons.handsClapping,
+                                  //         Colors.green)),
+                                  Positioned(
+                                      left: 30,
+                                      child: Text(
+                                        (widget.post.likes?.length.toString() ??
+                                                "0") +
+                                            " Likes",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: AppColors
+                                                .theme['tertiaryColor']
+                                                .withOpacity(0.5)),
+                                      )),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: widget.onTapDisable
+                            ? () {}
+                            : () {
+                                Navigator.push(
+                                    context,
+                                    LeftToRight(FullViewPost(
+                                      post: widget.post,
+                                    ))) ;
+                              },
+                        child: Row(
+                          children: [
+                            Text(
+                              "200",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: AppColors.theme['tertiaryColor']
+                                      .withOpacity(0.5)),
+                            ),
+                            Text(
+                              " comments ",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: AppColors.theme['tertiaryColor']
+                                      .withOpacity(0.5)),
+                            ),
+                            Text(
+                              "• 4 ",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: AppColors.theme['tertiaryColor']
+                                      .withOpacity(0.5)),
+                            ),
+                            Text(
+                              "reposts",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: AppColors.theme['tertiaryColor']
+                                      .withOpacity(0.5)),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+
+                Divider(
+                  color: Colors.grey.shade200,
+                ),
+
+                // like,share,comment
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(5),
+                        bottomLeft: Radius.circular(5),
+                      ),
+                    ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        SizedBox(
-                          width: 90,
-                          child: Stack(
-                            clipBehavior: Clip.none,
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              toggleLike(appUserProvider.user ?? AppUser(),widget.post.likes?[appUserProvider.user?.userID] ?? false);
+                            });
+                          },
+                          child: Column(
                             children: [
-                              Positioned(
-                                  left: 0,
-                                  child: _reactionIcon(
-                                      FontAwesomeIcons.thumbsUp,
-                                      Colors.blueAccent)),
-                              // Positioned(
-                              //     left: 15,
-                              //     child: _reactionIcon(
-                              //         FontAwesomeIcons.lightbulb,
-                              //         Colors.orangeAccent)),
-                              // Positioned(
-                              //     left: 30,
-                              //     child: _reactionIcon(FontAwesomeIcons.heart,
-                              //         Colors.redAccent)),
-                              // Positioned(
-                              //     left: 45,
-                              //     child: _reactionIcon(
-                              //         FontAwesomeIcons.handsClapping,
-                              //         Colors.green)),
-                              Positioned(
-                                  left: 30,
-                                  child: Text(
-                                    (likeCount.toString() ?? "0") + " Likes",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: AppColors.theme['tertiaryColor']
-                                            .withOpacity(0.5)),
-                                  )
+                              AnimatedSwitcher(
+                                duration: Duration(milliseconds: 300),
+                                transitionBuilder: (Widget child,
+                                    Animation<double> animation) {
+                                  return ScaleTransition(
+                                      scale: animation, child: child);
+                                },
+                                child: widget.post.likes?[appUserProvider.user?.userID] ?? false
+                                    ? FaIcon(
+                                        FontAwesomeIcons.solidThumbsUp,
+                                        key: ValueKey<bool>(widget.post.likes?[appUserProvider.user?.userID] ?? false),
+                                        color: Colors.blueAccent,
+                                        size: 18,
+                                      )
+                                    : FaIcon(
+                                        FontAwesomeIcons.thumbsUp,
+                                        key: ValueKey<bool>(widget.post.likes?[appUserProvider.user?.userID] ?? false),
+                                        color: AppColors.theme['tertiaryColor']!
+                                            .withOpacity(0.5),
+                                        size: 18,
+                                      ),
+                              ),
+                              Text(
+                                "Like",
+                                style: TextStyle(
+                                  color: AppColors.theme['tertiaryColor']!
+                                      .withOpacity(0.5),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ],
                           ),
                         ),
+                        GestureDetector(
+                          onTap: widget.onTapDisable
+                              ? () {}
+                              : () {
+                                  Navigator.push(
+                                      context,
+                                      LeftToRight(FullViewPost(
+                                        post: widget.post,
+                                      )));
+                                },
+                          child: Column(
+                            children: [
+                              FaIcon(
+                                FontAwesomeIcons.comment,
+                                color: AppColors.theme['tertiaryColor']!
+                                    .withOpacity(0.5),
+                                size: 18,
+                              ),
+                              Text(
+                                "Comment",
+                                style: TextStyle(
+                                  color: AppColors.theme['tertiaryColor']!
+                                      .withOpacity(0.5),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            FaIcon(
+                              FontAwesomeIcons.retweet,
+                              color: AppColors.theme['tertiaryColor']!
+                                  .withOpacity(0.5),
+                              size: 18,
+                            ),
+                            Text(
+                              "Repost",
+                              style: TextStyle(
+                                color: AppColors.theme['tertiaryColor']!
+                                    .withOpacity(0.5),
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            FaIcon(
+                              FontAwesomeIcons.share,
+                              color: AppColors.theme['tertiaryColor']!
+                                  .withOpacity(0.5),
+                              size: 18,
+                            ),
+                            Text(
+                              "Share",
+                              style: TextStyle(
+                                color: AppColors.theme['tertiaryColor']!
+                                    .withOpacity(0.5),
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: widget.onTapDisable
-                        ? () {}
-                        : () {
-                      Navigator.push(
-                          context, LeftToRight(FullViewPost(post: widget.post ,))).then((_){
-                        Navigator.push(context, LeftToRight(FullViewPost(post: widget.post,))).then((_) {
-                          checkIfLiked(widget.post) ;
-                          setState(() {});
-                        });
-                      });
-                    },
-                    child: Row(
-                      children: [
-                        Text(
-                          "200",
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: AppColors.theme['tertiaryColor']
-                                  .withOpacity(0.5)),
-                        ),
-                        Text(
-                          " comments ",
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: AppColors.theme['tertiaryColor']
-                                  .withOpacity(0.5)),
-                        ),
-                        Text(
-                          "• 4 ",
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: AppColors.theme['tertiaryColor']
-                                  .withOpacity(0.5)),
-                        ),
-                        Text(
-                          "reposts",
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: AppColors.theme['tertiaryColor']
-                                  .withOpacity(0.5)),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-
-
-            Divider(
-              color: Colors.grey.shade200,
-            ),
-
-            // like,share,comment
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(5),
-                    bottomLeft: Radius.circular(5),
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          toggleLike();
-                        });
-                      },
-                      child: Column(
-                        children: [
-                          AnimatedSwitcher(
-                            duration: Duration(milliseconds: 300),
-                            transitionBuilder: (Widget child, Animation<double> animation) {
-                              return ScaleTransition(scale: animation, child: child);
-                            },
-                            child: isLiked
-                                ? FaIcon(
-                              FontAwesomeIcons.solidThumbsUp,
-                              key: ValueKey<bool>(isLiked),
-                              color: Colors.blueAccent,
-                              size: 18,
-                            )
-                                : FaIcon(
-                              FontAwesomeIcons.thumbsUp,
-                              key: ValueKey<bool>(isLiked),
-                              color: AppColors.theme['tertiaryColor']!.withOpacity(0.5),
-                              size: 18,
+
+                if (widget.onTapDisable)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Divider(color: Colors.grey.shade200),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Reactions",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: AppColors.theme['tertiaryColor']
+                                    .withOpacity(0.5),
+                              ),
                             ),
-                          ),
-                          Text(
-                            "Like",
-                            style: TextStyle(
-                              color: AppColors.theme['tertiaryColor']!.withOpacity(0.5),
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
+                            SizedBox(height: 5),
+                            Container(
+                              height: 70,
+                              child: FutureBuilder<List<AppUser>>(
+                                future: _fetchLikedUsers(widget.post.likes),
+                                builder: (context, snapshot) {
+                                  // if (snapshot.connectionState ==
+                                  //     ConnectionState.waiting) {
+                                  //   return ListView.builder(
+                                  //       scrollDirection: Axis.horizontal,
+                                  //       itemCount: (mq.width / 20).floor(),
+                                  //       itemBuilder: (context, index) {
+                                  //         return Padding(
+                                  //           padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                                  //           child: Shimmer.fromColors(
+                                  //             baseColor: Colors.grey.shade300,
+                                  //             highlightColor: Colors.grey.shade100,
+                                  //             child: CircleAvatar(
+                                  //               radius: 25,
+                                  //             ),
+                                  //           ),
+                                  //         );
+                                  //       });
+                                  // }
+
+
+                                  if (!snapshot.hasData) {
+                                    return Center(
+                                        child: Text("Error loading likes"));
+                                  }
+
+                                  final likeUsers = snapshot.data ?? [];
+
+                                  return likeUsers.length != 0
+                                      ? ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    shrinkWrap: true,
+                                    itemCount: likeUsers.length,
+                                    itemBuilder: (context, index) {
+                                      return Stack(
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 2.0),
+                                            child: CircleAvatar(
+                                              backgroundImage: likeUsers[index]
+                                                          .profilePath !=
+                                                      null
+                                                  ? NetworkImage(
+                                                      likeUsers[index]
+                                                          .profilePath!)
+                                                  : AssetImage(
+                                                          "assets/other_images/photo.png")
+                                                      as ImageProvider,
+                                              radius: 25,
+                                              backgroundColor: AppColors
+                                                  .theme['primaryColor']!
+                                                  .withOpacity(0.1),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            bottom: 20,
+                                            right: 0,
+                                            child: Container(
+                                              height: 20,
+                                              width: 20,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                color: Colors.blueAccent
+                                                    .withOpacity(0.6),
+                                              ),
+                                              child: const Center(
+                                                child: FaIcon(
+                                                  FontAwesomeIcons.thumbsUp,
+                                                  size: 12,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  )
+                                      : Center(child: Text("No Reactions",style: GoogleFonts.poppins(color: AppColors.theme['tertiaryColor'].withOpacity(0.5)),)) ;
+                                },
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Column(
-                      children: [
-                        FaIcon(
-                          FontAwesomeIcons.comment,
-                          color: AppColors.theme['tertiaryColor']!.withOpacity(0.5),
-                          size: 18,
-                        ),
-                        Text(
-                          "Comment",
-                          style: TextStyle(
-                            color: AppColors.theme['tertiaryColor']!.withOpacity(0.5),
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        FaIcon(
-                          FontAwesomeIcons.retweet,
-                          color: AppColors.theme['tertiaryColor']!.withOpacity(0.5),
-                          size: 18,
-                        ),
-                        Text(
-                          "Repost",
-                          style: TextStyle(
-                            color: AppColors.theme['tertiaryColor']!.withOpacity(0.5),
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        FaIcon(
-                          FontAwesomeIcons.share,
-                          color: AppColors.theme['tertiaryColor']!.withOpacity(0.5),
-                          size: 18,
-                        ),
-                        Text(
-                          "Share",
-                          style: TextStyle(
-                            color: AppColors.theme['tertiaryColor']!.withOpacity(0.5),
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+                    ],
+                  )
+              ],
             ),
-
-          ],
-        ),
+          );
+        },
       );
-    }) ;
+    });
   }
 
   // detecintg hyperlinks and show more/show less
-  Widget buildDescription(String text,BuildContext context,bool onHashOpen) {
-    return HelperFunctions.parseText(text,context,onHashOpen);
+  Widget buildDescription(String text, BuildContext context, bool onHashOpen) {
+    return HelperFunctions.parseText(text, context, onHashOpen);
   }
 
   //icon buidler
@@ -466,13 +643,13 @@ class _PostCardState extends State<PostCard> {
     );
   }
 
-
   // image displayer
-
-  Widget buildImageSection(List<String> images,String attachmentName) {
+  Widget buildImageSection(List<String> images, String attachmentName) {
     return Column(
       children: [
-        SizedBox(height: 10,),
+        SizedBox(
+          height: 10,
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5.0),
           child: Column(
@@ -494,12 +671,11 @@ class _PostCardState extends State<PostCard> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text16(
-                              text:attachmentName ,
+                              text: attachmentName,
                               isBold: true,
                             ),
                             Text14(
-                              text:
-                              "${images.length.toString()} Images",
+                              text: "${images.length.toString()} Images",
                               isBold: true,
                             ),
                           ],
@@ -525,7 +701,7 @@ class _PostCardState extends State<PostCard> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
-                                  images[index],
+                                  HelperFunctions.base64ToString(images[index]),
                                   width: double.infinity,
                                   fit: BoxFit.cover,
                                 ),
@@ -537,11 +713,10 @@ class _PostCardState extends State<PostCard> {
                                   onTap: () {
                                     Navigator.push(
                                         context,
-                                        LeftToRight(
-                                            ImageViewScreen(
-                                              path: images[index],
-                                              isFile: false,
-                                            )));
+                                        LeftToRight(ImageViewScreen(
+                                          path: images[index],
+                                          isFile: false,
+                                        )));
                                   },
                                   child: Container(
                                     child: Padding(
@@ -573,9 +748,10 @@ class _PostCardState extends State<PostCard> {
             ],
           ),
         ),
-        SizedBox(height: 10,),
+        SizedBox(
+          height: 10,
+        ),
       ],
     );
   }
-
 }
