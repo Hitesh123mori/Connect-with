@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:connect_with/apis/common/post/post_api.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/common/post_models/post_model.dart';
@@ -409,19 +410,28 @@ class _FullViewPostState extends State<FullViewPost> {
                                               });
 
                                               String comcode = HelperFunctions.stringToBase64(description) ;
+                                              //
+                                              // print("#before formatting :" + description);
+                                              // print("#after formatting :" + comcode);
 
-                                              print("#before formatting :" + description);
+                                              Comment cm  = Comment(
+                                                commentId: "",
+                                                postId: widget.post.postId,
+                                                comments: {},
+                                                userId: appUserProvider.user?.userID,
+                                                description: comcode,
+                                                time: DateTime.now().microsecondsSinceEpoch.toString(),
+                                                likes: {},
+                                              ) ;
 
-                                              await Future.delayed(Duration(seconds: 2));
+                                              await PostApis.createComment(cm) ;
 
-
-                                              print("#after formatting :" + comcode);
-
+                                              FocusScope.of(context).unfocus();
+                                              mentions_key.currentState?.controller?.text = "";
 
                                               setState(() {
                                                 isLoading = false;
                                               });
-
 
                                             } else {
                                               AppToasts.WarningToast(

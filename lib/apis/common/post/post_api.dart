@@ -19,6 +19,8 @@ class PostApis {
 
   /// HASHTAG SECTIONS ///
 
+
+  // create/add hastag in normal database
   static Future<String?> addHashTag(HashTagsModel hashTag) async {
     try {
       DocumentReference docRef = _collectionRefHashTags.doc();
@@ -30,6 +32,7 @@ class PostApis {
     }
   }
 
+  // add post in hash tag
   static Future<void> addPostToHash(String hashId, String postId) async {
     try {
       DocumentReference hashTagRef = _collectionRefHashTags.doc(hashId);
@@ -37,11 +40,14 @@ class PostApis {
     } catch (e) {}
   }
 
+
+  // get all hashtages
   static Future<List<Map<String, dynamic>>> getAllHashTags() async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await _collectionRefHashTags.get();
     return snapshot.docs.map((doc) => doc.data()).toList();
   }
 
+  // get hashtage
   static Future<dynamic> getHashTag(String hid, String name) async {
     try {
       if (hid.isNotEmpty) {
@@ -75,6 +81,7 @@ class PostApis {
     }
   }
 
+  // get single hashtag stream
   static Stream<HashTagsModel?> getHashTagStream(String hid, String name) async* {
     try {
       if (hid.isNotEmpty) {
@@ -145,6 +152,7 @@ class PostApis {
 
   /// POST SECTIONS ///
 
+  // get single post by id
   static Future<Map<String, dynamic>?> getPost(String postId) async {
     try {
       DatabaseReference postRef = _rtdbRefPost.child(postId);
@@ -160,6 +168,8 @@ class PostApis {
     return null;
   }
 
+
+  // add post to realtime database
   static Future<String?> addPost(PostModel postModel, BuildContext context, PostProvider postProvider, List<File> files, List<String> hashtags) async {
     try {
       DatabaseReference newPostRef = _rtdbRefPost.push();
@@ -199,6 +209,7 @@ class PostApis {
     }
   }
 
+  // upload media
   static Future<Map<String, bool>> uploadMedia(List<File> files, String path, String postId) async {
     Map<String, bool> downloadUrls = {};
     for (var file in files) {
@@ -216,6 +227,8 @@ class PostApis {
     return downloadUrls;
   }
 
+
+  // get list of posts
   static Future<List<PostModel>> getAllPosts() async {
     try {
       final event = await _rtdbRefPost.once();
@@ -237,6 +250,8 @@ class PostApis {
     }
   }
 
+
+  // get single stream post
   static Stream<PostModel?> getPostStream(String postId) {
     DatabaseReference postRef = _rtdbRefPost.child(postId);
     return postRef.onValue.map((event) {
@@ -248,6 +263,8 @@ class PostApis {
     });
   }
 
+
+   // add like in post
   static Future<void> addLikeToPost(String postId, String userId) async {
     try {
       await _rtdbRefPost.child(postId).child("likes").update({userId: true});
@@ -256,11 +273,32 @@ class PostApis {
     }
   }
 
+
+  // remove like in post
   static Future<void> removeLikeFromPost(String postId, String userId) async {
     try {
       await _rtdbRefPost.child(postId).child("likes").child(userId).remove();
     } catch (e) {
       print("#Error while remove like : $e") ;
+    }
+  }
+
+
+
+  /// Comments
+
+  // Create a comment and add it to the post
+  static Future<void> createComment(Comment comment) async {
+    try {
+      DatabaseReference postCommentsRef = _rtdbRefPost.child(comment.postId ?? "").child("comments");
+      DatabaseReference newCommentRef = postCommentsRef.push();
+
+      comment.commentId = newCommentRef.key;
+
+      await newCommentRef.set(comment.toJson());
+      print("Comment added to post: ${comment.postId}");
+    } catch (e) {
+      print("Error adding comment: $e");
     }
   }
 
