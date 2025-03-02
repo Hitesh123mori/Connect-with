@@ -691,7 +691,7 @@ class _PostCardState extends State<PostCard> {
                         itemCount: images.length,
                         options: CarouselOptions(
                           height: 300,
-                          enableInfiniteScroll: true,
+                          enableInfiniteScroll: false,
                           autoPlay: true,
                           enlargeCenterPage: true,
                         ),

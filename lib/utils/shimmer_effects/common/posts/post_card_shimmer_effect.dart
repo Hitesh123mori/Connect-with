@@ -51,10 +51,10 @@ class PostCardShimmerEffect extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildShimmerBox(width: 80, height: 35, borderRadius: 5),
-                      _buildShimmerBox(width: 80, height: 35, borderRadius: 5),
-                      _buildShimmerBox(width: 80, height: 35, borderRadius: 5),
-                      _buildShimmerBox(width: 80, height: 35, borderRadius: 5),
+                      _buildShimmerBox(width: 78, height: 35, borderRadius: 5),
+                      _buildShimmerBox(width: 78, height: 35, borderRadius: 5),
+                      _buildShimmerBox(width: 78, height: 35, borderRadius: 5),
+                      _buildShimmerBox(width: 78, height: 35, borderRadius: 5),
                     ],
                   ),
                 ],

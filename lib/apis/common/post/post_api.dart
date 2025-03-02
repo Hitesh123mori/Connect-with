@@ -75,6 +75,43 @@ class PostApis {
     }
   }
 
+  static Stream<HashTagsModel?> getHashTagStream(String hid, String name) async* {
+    try {
+      if (hid.isNotEmpty) {
+        yield* _collectionRefHashTags.doc(hid).snapshots().map((docSnapshot) {
+          if (docSnapshot.exists && docSnapshot.data() != null) {
+            return HashTagsModel.fromJson(docSnapshot.data()!);
+          }
+          return null;
+        });
+      } else {
+        final querySnapshot = await _collectionRefHashTags
+            .where('name', isEqualTo: name.trim().toLowerCase())
+            .limit(1)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          yield HashTagsModel.fromJson(querySnapshot.docs.first.data());
+          return;
+        }
+
+        DocumentReference docRef = _collectionRefHashTags.doc();
+        HashTagsModel newHashTag = HashTagsModel(
+          id: docRef.id,
+          name: name.trim().toLowerCase(),
+          followers: [],
+          posts: [],
+        );
+
+        await docRef.set(newHashTag.toJson());
+        yield newHashTag;
+      }
+    } catch (error) {
+      print("Error fetching hashtag: $error");
+      yield null;
+    }
+  }
+
   // Add a follower to a hashtag
   static Future<void> addFollowerToHashTag(String hashId, String userId) async {
     try {
@@ -210,7 +247,6 @@ class PostApis {
       return null;
     });
   }
-
 
   static Future<void> addLikeToPost(String postId, String userId) async {
     try {
