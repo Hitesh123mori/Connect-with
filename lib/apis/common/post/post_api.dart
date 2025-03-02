@@ -241,7 +241,7 @@ class PostApis {
     DatabaseReference postRef = _rtdbRefPost.child(postId);
     return postRef.onValue.map((event) {
       if (event.snapshot.value != null) {
-        print("Post updated: $postId");
+        // print("Post updated: $postId");
         return PostModel.fromJson(Map<String, dynamic>.from(event.snapshot.value as Map));
       }
       return null;

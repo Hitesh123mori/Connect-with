@@ -1,4 +1,7 @@
+
+
 class PostModel {
+
   String? postId;
   String? userId;
   String? description;
