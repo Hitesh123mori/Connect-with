@@ -23,23 +23,12 @@ class HashTagScreen extends StatefulWidget {
 
 class _HashTagScreenState extends State<HashTagScreen> {
 
-  List<PostModel> posts = [];
   bool isLoading = true;
-  bool isFollowing = false;
   HashTagsModel? hasmodel;
+  List<PostModel> posts = [] ;
+
 
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
-
-  void _onRefresh() async {
-    await fetchPosts();
-    _refreshController.refreshCompleted();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchPosts();
-  }
 
   Future<void> fetchPosts() async {
     setState(() => isLoading = true);
@@ -49,7 +38,6 @@ class _HashTagScreenState extends State<HashTagScreen> {
     if (response != null && response is Map<String, dynamic>) {
       hasmodel = HashTagsModel.fromJson(response);
       final userId = Provider.of<AppUserProvider>(context, listen: false).user?.userID;
-      isFollowing = hasmodel?.followers?.contains(userId) ?? false;
     }
 
     List<PostModel> fetchedPosts = [];
@@ -71,24 +59,27 @@ class _HashTagScreenState extends State<HashTagScreen> {
     });
   }
 
-  void toggleFollow() async {
+  void _onRefresh() async {
+    fetchPosts();
+    _refreshController.refreshCompleted();
+  }
 
-    final userId = Provider.of<AppUserProvider>(context, listen: false).user?.userID;
-    if (userId == null) return;
+  @override
+  void initState() {
+    super.initState();
+    fetchPosts();
+  }
+
+  void toggleFollow(String uid,bool isFollow) async {
 
     setState(() {
-      isFollowing = !isFollowing;
-      if (isFollowing) {
-        hasmodel?.followers?.add(userId);
-      } else {
-        hasmodel?.followers?.remove(userId);
-      }
+      isFollow  = !isFollow ;
     });
 
-    if (isFollowing) {
-      await PostApis.addFollowerToHashTag(widget.id, userId);
+    if (isFollow) {
+      await PostApis.addFollowerToHashTag(widget.id, uid);
     } else {
-      await PostApis.removeFollowerFromHashTag(widget.id, userId);
+      await PostApis.removeFollowerFromHashTag(widget.id, uid);
     }
 
     setState(() {});
@@ -117,100 +108,120 @@ class _HashTagScreenState extends State<HashTagScreen> {
           backgroundColor: AppColors.theme['secondaryColor'],
           centerTitle: true,
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 45,
-                    backgroundColor: AppColors.theme['primaryColor']!.withOpacity(0.1),
-                    child: CircleAvatar(
-                      radius: 30,
-                      backgroundColor: AppColors.theme['primaryColor']!.withOpacity(0.1),
-                      child: Center(
-                        child: Text(
-                          "#",
-                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 40),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Column(
+        body: StreamBuilder(
+            stream: PostApis.getHashTagStream(widget.id, widget.id),
+            builder: (context,snapshot){
+
+              if (snapshot.hasError) {
+                return const Center(child: Text("Error loading post"));
+              }
+
+              bool isFollowing = false;
+              if(snapshot.hasData){
+                hasmodel = snapshot.data ;
+                 isFollowing = hasmodel?.followers?.contains(appUserProvider.user?.userID) ?? false;
+              }else{
+                // return Center(child: Text("Data Loading...",style: TextStyle(color: AppColors.theme['tertiaryColor'].withOpacity(0.4)),));
+              }
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text18(text: hasmodel?.name ?? ""),
-                        Text16(
-                          isBold: false,
-                          text: hasmodel?.followers?.length.toString() == "0"
-                              ? "Be the first follower"
-                              : "${HelperFunctions.formatNumber(hasmodel?.followers?.length.toString())} Followers",
-                        ),
-                        SizedBox(height: 10),
-                        GestureDetector(
-                          onTap: toggleFollow,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Colors.grey.shade400),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-                              child: Text16(text: isFollowing ? "Unfollow" : "Follow"),
+                        CircleAvatar(
+                          radius: 45,
+                          backgroundColor: AppColors.theme['primaryColor']!.withOpacity(0.1),
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundColor: AppColors.theme['primaryColor']!.withOpacity(0.1),
+                            child: Center(
+                              child: Text(
+                                "#",
+                                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 40),
+                              ),
                             ),
                           ),
-                        )
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text18(text: hasmodel?.name ?? ""),
+                              Text16(
+                                isBold: false,
+                                text: hasmodel?.followers?.length.toString() == "0"
+                                    ? "Be the first follower"
+                                    : "${HelperFunctions.formatNumber(hasmodel?.followers?.length.toString())} Followers",
+                              ),
+                              SizedBox(height: 10),
+                              GestureDetector(
+                                onTap: (){
+                                  toggleFollow(appUserProvider.user?.userID ?? "",isFollowing);
+                                  setState(() {});
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: Colors.grey.shade400),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                                    child: Text16(text: isFollowing ? "Unfollow" : "Follow"),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-              Divider(),
-              Expanded(
-                child: isLoading
-                    ? Center(child: PostCardShimmerEffect())
-                    : posts.isEmpty
-                    ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset("assets/ils/no_posts.png", height: 250, width: 250),
-                      SizedBox(height: 20),
-                      Text(
-                        "Create first post!",
-                        style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.grey),
+                    Divider(),
+                    Expanded(
+                      child: isLoading
+                          ? Center(child: PostCardShimmerEffect())
+                          : hasmodel?.posts?.isEmpty ?? true
+                          ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset("assets/ils/no_posts.png", height: 250, width: 250),
+                            SizedBox(height: 20),
+                            Text(
+                              "Create first post!",
+                              style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      )
+                          : SmartRefresher(
+                        header: WaterDropMaterialHeader(
+                          backgroundColor: AppColors.theme['primaryColor']!.withOpacity(0.9),
+                          color: Colors.white,
+                        ),
+                        controller: _refreshController,
+                        enablePullDown: true,
+                        onRefresh: _onRefresh,
+                        child:  ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          itemCount: posts.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5),
+                              child: PostCard(post: posts[index], onHashOpen: false),
+                            );
+                          },
+                        ),
                       ),
-                    ],
-                  ),
-                )
-                    : SmartRefresher(
-                  header: WaterDropMaterialHeader(
-                    backgroundColor: AppColors.theme['primaryColor']!.withOpacity(0.9),
-                    color: Colors.white,
-                  ),
-                  controller: _refreshController,
-                  enablePullDown: true,
-                  onRefresh: _onRefresh,
-                  child: ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    itemCount: posts.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5),
-                        child: PostCard(post: posts[index], onHashOpen: false),
-                      );
-                    },
-                  ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ),
+              );
+         })
       );
     });
   }
