@@ -711,12 +711,15 @@ class _PostCardState extends State<PostCard> {
                                 left: 10,
                                 child: GestureDetector(
                                   onTap: () {
+                                    String path = HelperFunctions.base64ToString(images[index]);
                                     Navigator.push(
                                         context,
                                         LeftToRight(ImageViewScreen(
-                                          path: images[index],
+                                          path: path,
                                           isFile: false,
-                                        )));
+                                        )
+                                        )
+                                    );
                                   },
                                   child: Container(
                                     child: Padding(

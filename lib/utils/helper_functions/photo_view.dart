@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:connect_with/main.dart';
+import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
