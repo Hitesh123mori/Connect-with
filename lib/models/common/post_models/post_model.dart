@@ -76,6 +76,7 @@ class PostModel {
 }
 
 class Comment {
+
   String? commentId;
   String? userId;
   String? postId;
