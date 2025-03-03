@@ -30,8 +30,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-/lib/firebase/project2.dart
-/lib/firebase/project_1.dart
+/lib/firebase/
 
 # Symbolication related
 app.*.symbols
