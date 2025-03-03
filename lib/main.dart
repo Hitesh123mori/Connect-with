@@ -52,6 +52,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 _intializeFirebase() async {
+
   // await Firebase.initializeApp(
   //   options: DefaultFirebaseOptions.currentPlatform,
   // );
