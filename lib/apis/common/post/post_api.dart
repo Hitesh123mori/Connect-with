@@ -19,7 +19,6 @@ class PostApis {
 
   /// HASHTAG SECTIONS ///
 
-
   // create/add hastag in normal database
   static Future<String?> addHashTag(HashTagsModel hashTag) async {
     try {
@@ -234,12 +233,18 @@ class PostApis {
       final event = await _rtdbRefPost.once();
       List<PostModel> posts = [];
 
-      if (event.snapshot.exists && event.snapshot.value is Map) {
-        final data = Map<String, dynamic>.from(event.snapshot.value as Map);
+      if (event.snapshot.exists && event.snapshot.value is Map<Object?, Object?>) {
+        final rawData = event.snapshot.value as Map<Object?, Object?>;
+
+        final data = rawData.map((key, value) => MapEntry(
+          key.toString(),
+          value is Map<Object?, Object?>
+              ? value.map((k, v) => MapEntry(k.toString(), v))
+              : {},
+        ));
+
         data.forEach((key, value) {
-          if (value is Map) {
-            posts.add(PostModel.fromJson(Map<String, dynamic>.from(value)));
-          }
+          posts.add(PostModel.fromJson(value as Map<String, dynamic>));
         });
       }
 
@@ -301,5 +306,27 @@ class PostApis {
       print("Error adding comment: $e");
     }
   }
+
+  //retrieve commnets
+  static Stream<List<Comment>> getCommentsStream(String postId) {
+
+    DatabaseReference postCommentsRef = _rtdbRefPost.child(postId).child("comments");
+
+    return postCommentsRef.onValue.map((event) {
+      DataSnapshot snapshot = event.snapshot;
+      List<Comment> comments = [];
+
+      if (snapshot.value != null && snapshot.value is Map) {
+        Map<dynamic, dynamic> commentsMap = snapshot.value as Map<dynamic, dynamic>;
+
+        commentsMap.forEach((key, value) {
+          comments.add(Comment.fromJson(Map<String, dynamic>.from(value)));
+        });
+      }
+
+      return comments;
+    });
+  }
+
 
 }

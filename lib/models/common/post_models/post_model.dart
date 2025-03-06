@@ -95,7 +95,7 @@ class Comment {
     this.comments,
   });
 
-  factory Comment.fromJson(Map<String, dynamic> json) => Comment(
+  factory Comment.fromJson(Map<dynamic, dynamic> json) => Comment(
     commentId: json['commentId'],
     userId: json['userId'],
     postId: json['postId'],
