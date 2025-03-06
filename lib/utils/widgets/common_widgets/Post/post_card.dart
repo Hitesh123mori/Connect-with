@@ -566,15 +566,9 @@ class _PostCardState extends State<PostCard> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 2.0),
                                             child: CircleAvatar(
-                                              backgroundImage: likeUsers[index]
-                                                          .profilePath !=
-                                                      null
-                                                  ? NetworkImage(
-                                                      likeUsers[index]
-                                                          .profilePath!)
-                                                  : AssetImage(
-                                                          "assets/other_images/photo.png")
-                                                      as ImageProvider,
+                                              backgroundImage: likeUsers[index].profilePath != ""
+                                                  ? NetworkImage(likeUsers[index].profilePath!)
+                                                  : AssetImage("assets/other_images/photo.png"),
                                               radius: 25,
                                               backgroundColor: AppColors
                                                   .theme['primaryColor']!

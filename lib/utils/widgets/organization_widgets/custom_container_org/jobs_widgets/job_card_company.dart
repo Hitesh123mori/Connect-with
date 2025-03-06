@@ -1,5 +1,6 @@
 import 'package:connect_with/models/organization/job_model.dart';
 import 'package:connect_with/providers/organization_provider.dart';
+import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';
 import 'package:flutter/material.dart';
@@ -15,32 +16,13 @@ class JobCardCompany extends StatefulWidget {
 }
 
 class _JobCardCompanyState extends State<JobCardCompany> {
-  String timeAgo(DateTime postDate) {
-    final now = DateTime.now();
-    final difference = now.difference(postDate);
 
-    if (difference.inMinutes < 1) {
-      return "Just now";
-    } else if (difference.inMinutes < 60) {
-      return "${difference.inMinutes} min ago";
-    } else if (difference.inHours < 24) {
-      return "${difference.inHours} hour${difference.inHours > 1 ? 's' : ''} ago";
-    } else if (difference.inDays < 7) {
-      return "${difference.inDays} day${difference.inDays > 1 ? 's' : ''} ago";
-    } else if (difference.inDays < 30) {
-      return "${(difference.inDays / 7).floor()} week${(difference.inDays / 7).floor() > 1 ? 's' : ''} ago";
-    } else if (difference.inDays < 365) {
-      return "${(difference.inDays / 30).floor()} month${(difference.inDays / 30).floor() > 1 ? 's' : ''} ago";
-    } else {
-      return "${(difference.inDays / 365).floor()} year${(difference.inDays / 365).floor() > 1 ? 's' : ''} ago";
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
 
-    String postedTimeAgo = timeAgo(
+    String postedTimeAgo = HelperFunctions.timeAgo(
       widget.cjob.postDate != null
           ? DateTime.parse(widget.cjob.postDate!)
           : DateTime.now(),
