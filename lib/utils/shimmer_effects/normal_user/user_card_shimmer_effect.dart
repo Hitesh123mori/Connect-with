@@ -8,46 +8,60 @@ class UserCardShimmerEffect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 10,
+      itemCount: 8, // Keeping it minimal for smooth UX
       physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       itemBuilder: (context, index) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           child: Row(
             children: [
-              // Shimmer Circle for Profile Picture
+              // **Profile Picture Shimmer**
               Shimmer.fromColors(
-                baseColor: AppColors.theme['primaryColor']!.withOpacity(0.3),
-                highlightColor: AppColors.theme['backgroundColor']!.withOpacity(0.1),
-                child: CircleAvatar(
-                  radius: 25,
-                  backgroundColor: AppColors.theme['primaryColor']!.withOpacity(0.4),
+                baseColor: AppColors.theme['primaryColor']!.withOpacity(0.2),
+                highlightColor: AppColors.theme['primaryColor']!.withOpacity(0.5),
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.theme['primaryColor']!.withOpacity(0.4),
+                  ),
                 ),
               ),
               const SizedBox(width: 15),
-              // Shimmer Text for User Info
+
+              // **User Info Shimmer**
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // **Username Placeholder**
                     Shimmer.fromColors(
-                      baseColor: AppColors.theme['primaryColor']!.withOpacity(0.3),
-                      highlightColor: AppColors.theme['backgroundColor']!.withOpacity(0.1),
+                      baseColor: AppColors.theme['primaryColor']!.withOpacity(0.2),
+                      highlightColor: AppColors.theme['primaryColor']!.withOpacity(0.5),
                       child: Container(
-                        height: 15,
-                        width: double.infinity,
-                        color: AppColors.theme['primaryColor']!.withOpacity(0.4),
+                        height: 16,
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        decoration: BoxDecoration(
+                          color: AppColors.theme['primaryColor']!.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 6),
+
+                    // **User Headline Placeholder**
                     Shimmer.fromColors(
-                      baseColor: AppColors.theme['primaryColor']!.withOpacity(0.3),
-                      highlightColor: AppColors.theme['backgroundColor']!.withOpacity(0.1),
+                      baseColor: AppColors.theme['primaryColor']!.withOpacity(0.2),
+                      highlightColor: AppColors.theme['primaryColor']!.withOpacity(0.5),
                       child: Container(
                         height: 12,
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        color: AppColors.theme['primaryColor']!.withOpacity(0.4),
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        decoration: BoxDecoration(
+                          color: AppColors.theme['primaryColor']!.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
                       ),
                     ),
                   ],

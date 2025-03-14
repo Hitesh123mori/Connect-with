@@ -9,6 +9,7 @@ import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/providers/post_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/other_user_profile_screen.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/display_reactions_user.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/full_view_post.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
@@ -513,14 +514,35 @@ class _PostCardState extends State<PostCard> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Reactions",
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: AppColors.theme['tertiaryColor']
-                                    .withOpacity(0.5),
-                              ),
-                            ),
+                           Row(
+                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                             children: [
+                               Text(
+                                 "Reactions",
+                                 style: TextStyle(
+                                   fontSize: 15,
+                                   color: AppColors.theme['tertiaryColor']
+                                       .withOpacity(0.5),
+                                 ),
+                               ),
+                               GestureDetector(
+                                 onTap: (){
+
+                                   Navigator.push(context, LeftToRight(DisplayReactionsUser(likes : widget.post.likes ?? {}))) ;
+
+                                 },
+                                 child: Text(
+                                   "View all",
+                                   style: TextStyle(
+                                     fontSize: 15,
+                                     color: AppColors.theme['tertiaryColor']
+                                         .withOpacity(0.5),
+                                   ),
+                                 ),
+                               ),
+
+                             ],
+                           ),
                             SizedBox(height: 5),
                             Container(
                               height: 70,
