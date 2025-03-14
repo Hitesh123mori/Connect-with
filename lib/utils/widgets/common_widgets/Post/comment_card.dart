@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:connect_with/apis/common/post/post_api.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/common/post_models/post_model.dart';
@@ -11,12 +12,14 @@ import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class CommentCard extends StatefulWidget {
   final Comment cm ;
+  final String postId;
   final String postCreater ;
-  const CommentCard({super.key, required this.cm, required this.postCreater});
+  const CommentCard({super.key, required this.cm, required this.postCreater, required this.postId});
 
   @override
   State<CommentCard> createState() => _CommentCardState();
@@ -44,6 +47,26 @@ class _CommentCardState extends State<CommentCard> {
     super.initState() ;
     fetchUser() ;
   }
+
+  void toggleLike(AppUser likeUser,bool isLiked) async {
+    setState(() {
+      isLiked = !isLiked;
+    });
+
+    try {
+      if (isLiked) {
+        await PostApis.addLikeComment(
+            widget.postId ?? "",widget.cm.commentId ?? "" ,likeUser.userID ?? "");
+      } else {
+        await PostApis.removeLikeComment(
+            widget.postId ?? "", widget.cm.commentId ?? "",likeUser.userID ?? "");
+      }
+      setState(() {});
+    } catch (e) {
+      log("Error updating like  in comment: $e");
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -196,12 +219,55 @@ class _CommentCardState extends State<CommentCard> {
 
                             Row(
                               children: [
-                                Text("Reactions ",
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: AppColors.theme['tertiaryColor']
-                                            .withOpacity(0.5))),
-                                Text("0",
+                                // GestureDetector(
+                                //   onTap: () {
+                                //     setState(() {
+                                //       toggleLike(appUserProvider.user ?? AppUser(),widget.cm.likes?[appUserProvider.user?.userID] ?? false);
+                                //     });
+                                //   },
+                                //   child: Text("Likes ",
+                                //       style: TextStyle(
+                                //           fontSize: 12,
+                                //           color: AppColors.theme['tertiaryColor']
+                                //               .withOpacity(0.5))
+                                //   ),
+                                // ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      toggleLike(appUserProvider.user ?? AppUser(),widget.cm.likes?[appUserProvider.user?.userID] ?? false);
+                                    });
+                                  },
+                                  child: Column(
+                                    children: [
+                                      AnimatedSwitcher(
+                                        duration: Duration(milliseconds: 300),
+                                        transitionBuilder: (Widget child,
+                                            Animation<double> animation) {
+                                          return ScaleTransition(
+                                              scale: animation, child: child);
+                                        },
+                                        child: widget.cm.likes?[appUserProvider.user?.userID] ?? false
+                                            ? FaIcon(
+                                          FontAwesomeIcons.solidThumbsUp,
+                                          key: ValueKey<bool>(widget.cm.likes?[appUserProvider.user?.userID] ?? false),
+                                          color: Colors.blueAccent,
+                                          size: 18,
+                                        )
+                                            : FaIcon(
+                                          FontAwesomeIcons.thumbsUp,
+                                          key: ValueKey<bool>(widget.cm.likes?[appUserProvider.user?.userID] ?? false),
+                                          color: AppColors.theme['tertiaryColor']!
+                                              .withOpacity(0.5),
+                                          size: 18,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 5,),
+                                Text(
+                                    widget.cm.likes==null ? "0" : widget.cm.likes!.length.toString(),
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: AppColors.theme['tertiaryColor']
@@ -211,12 +277,12 @@ class _CommentCardState extends State<CommentCard> {
                                         fontSize: 12,
                                         color: AppColors.theme['tertiaryColor']
                                             .withOpacity(0.5))),
-                                Text("Comment ",
+                                Text("Comments ",
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: AppColors.theme['tertiaryColor']
                                             .withOpacity(0.5))),
-                                Text("1",
+                                Text("0",
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: AppColors.theme['tertiaryColor']

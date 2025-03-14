@@ -328,5 +328,44 @@ class PostApis {
     });
   }
 
+  // Add a like to a comment
+  static Future<void> addLikeComment(String postId, String commentId, String userId) async {
+    try {
+      DatabaseReference commentLikesRef = _rtdbRefPost.child(postId).child("comments").child(commentId).child("likes");
+
+      await commentLikesRef.child(userId).set(true);
+      print("Like added by user $userId to comment $commentId on post $postId");
+    } catch (e) {
+      print("Error adding like: $e");
+    }
+  }
+
+  // Remove a like from a comment
+  static Future<void> removeLikeComment(String postId, String commentId, String userId) async {
+    try {
+      DatabaseReference commentLikesRef = _rtdbRefPost.child(postId).child("comments").child(commentId).child("likes");
+
+      await commentLikesRef.child(userId).remove();
+      print("Like removed by user $userId from comment $commentId on post $postId");
+    } catch (e) {
+      print("Error removing like: $e");
+    }
+  }
+
+  // Reply to a comment --> OPTIONAL
+  static Future<void> replyToComment(String postId, String commentId, Comment reply) async {
+    try {
+      DatabaseReference commentRepliesRef = _rtdbRefPost.child(postId).child("comments").child(commentId).child("comments");
+      DatabaseReference newReplyRef = commentRepliesRef.push();
+
+      reply.commentId = newReplyRef.key;
+
+      await newReplyRef.set(reply.toJson());
+      print("Reply added to comment $commentId on post $postId");
+    } catch (e) {
+      print("Error replying to comment: $e");
+    }
+  }
+
 
 }
