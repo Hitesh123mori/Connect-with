@@ -315,7 +315,8 @@ class _PostCardState extends State<PostCard> {
                                             color: AppColors
                                                 .theme['tertiaryColor']
                                                 .withOpacity(0.5)),
-                                      )),
+                                      )
+                                  ),
                                 ],
                               ),
                             ),

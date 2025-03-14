@@ -153,18 +153,18 @@ class _FullViewPostState extends State<FullViewPost> {
                                   child: StreamBuilder(
                                     stream: PostApis.getCommentsStream(widget.post.postId ?? ""),
                                     builder: (context, snapshot) {
-                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                        return SizedBox(
-                                          height: 200,
-                                          child: ListView.builder(
-                                            scrollDirection: Axis.vertical,
-                                            itemCount: 10,
-                                            itemBuilder: (context, index) {
-                                              return CommentCardShimmerEffect();
-                                            },
-                                          ),
-                                        );
-                                      }
+                                      // if (snapshot.connectionState == ConnectionState.waiting) {
+                                      //   return SizedBox(
+                                      //     height: 200,
+                                      //     child: ListView.builder(
+                                      //       scrollDirection: Axis.vertical,
+                                      //       itemCount: 10,
+                                      //       itemBuilder: (context, index) {
+                                      //         return CommentCardShimmerEffect();
+                                      //       },
+                                      //     ),
+                                      //   );
+                                      // }
 
                                       List<Comment>? cms ;
 
@@ -179,7 +179,7 @@ class _FullViewPostState extends State<FullViewPost> {
                                         physics: NeverScrollableScrollPhysics(),
                                         itemCount: cms?.length,
                                         itemBuilder: (context, index) {
-                                          return CommentCard(cm: cms?[index] ?? Comment(), postCreater: widget.post.userId ?? "",);
+                                          return CommentCard(cm: cms?[index] ?? Comment(), postCreater: widget.post.userId ?? "", postId: widget.post.postId ?? "",);
                                         },
                                       );
                                     },
