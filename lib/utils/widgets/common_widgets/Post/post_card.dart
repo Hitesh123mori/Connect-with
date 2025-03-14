@@ -19,6 +19,7 @@ import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_popup/flutter_popup.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -65,12 +66,10 @@ class _PostCardState extends State<PostCard> {
         log("Error while fetching user in post card: $e");
       }
     }
-    await Future.delayed(Duration(microseconds:500));
+    await Future.delayed(Duration(microseconds: 500));
 
     return likeUsers;
   }
-
-
 
   Future<void> fetchUser() async {
     try {
@@ -89,7 +88,7 @@ class _PostCardState extends State<PostCard> {
     fetchUser();
   }
 
-  void toggleLike(AppUser likeUser,bool isLiked) async {
+  void toggleLike(AppUser likeUser, bool isLiked) async {
     setState(() {
       isLiked = !isLiked;
     });
@@ -124,7 +123,7 @@ class _PostCardState extends State<PostCard> {
           }
           if (snapshot.hasData) {
             widget.post = snapshot.data!;
-          }else{
+          } else {
             // return Center(child: Text("Data Loading...",style: TextStyle(color: AppColors.theme['tertiaryColor'].withOpacity(0.4)),));
           }
 
@@ -215,12 +214,39 @@ class _PostCardState extends State<PostCard> {
                             ],
                           ),
                         ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            " + Follow",
-                            style: TextStyle(color: Colors.blue),
+                        CustomPopup(
+                          barrierColor: Colors.transparent,
+                          backgroundColor: Colors.white,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 2),
+                          content: Container(
+                            height: 100,
+                            width: 100,
+                            child: Column(
+                              children: [
+                                TextButton(
+                                    onPressed: ()async{
+
+                                    },
+                                    child: Text(
+                                      "Edit",
+                                      style: TextStyle(color: Colors.black),
+                                    )),
+                                TextButton(
+                                    onPressed: ()async{
+                                      Navigator.pop(context);
+                                      await PostApis.deletePost(widget.post.postId ?? "",context,postProvider);
+                                      setState(() {
+                                        postProvider.postsFuture = postProvider.getPosts();
+                                      });
+                                    },
+                                    child: Text(
+                                      "Delete",
+                                      style: TextStyle(color: Colors.black),
+                                    )),
+                              ],
+                            ),
                           ),
+                          child: Icon(Icons.more_vert_rounded),
                         ),
                       ],
                     ),
@@ -232,31 +258,19 @@ class _PostCardState extends State<PostCard> {
                 ),
 
                 // main description
-                InkWell(
-                  onTap: widget.onTapDisable
-                      ? () {}
-                      : () {
-                          Navigator.push(
-                              context,
-                              LeftToRight(FullViewPost(
-                                post: widget.post,
-                              )));
-                        },
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 1),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(5),
-                        topLeft: Radius.circular(5),
-                      )),
-                      child: buildDescription(
-                          HelperFunctions.base64ToString(
-                              widget.post.description ?? ""),
-                          context,
-                          widget.onHashOpen),
-                    ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 1),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(5),
+                      topLeft: Radius.circular(5),
+                    )),
+                    child: buildDescription(
+                        HelperFunctions.base64ToString(
+                            widget.post.description ?? ""),
+                        context,
+                        widget.onHashOpen),
                   ),
                 ),
 
@@ -316,8 +330,7 @@ class _PostCardState extends State<PostCard> {
                                             color: AppColors
                                                 .theme['tertiaryColor']
                                                 .withOpacity(0.5)),
-                                      )
-                                  ),
+                                      )),
                                 ],
                               ),
                             ),
@@ -332,7 +345,7 @@ class _PostCardState extends State<PostCard> {
                                     context,
                                     LeftToRight(FullViewPost(
                                       post: widget.post,
-                                    ))) ;
+                                    )));
                               },
                         child: Row(
                           children: [
@@ -392,7 +405,11 @@ class _PostCardState extends State<PostCard> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              toggleLike(appUserProvider.user ?? AppUser(),widget.post.likes?[appUserProvider.user?.userID] ?? false);
+                              toggleLike(
+                                  appUserProvider.user ?? AppUser(),
+                                  widget.post.likes?[
+                                          appUserProvider.user?.userID] ??
+                                      false);
                             });
                           },
                           child: Column(
@@ -404,16 +421,22 @@ class _PostCardState extends State<PostCard> {
                                   return ScaleTransition(
                                       scale: animation, child: child);
                                 },
-                                child: widget.post.likes?[appUserProvider.user?.userID] ?? false
+                                child: widget.post.likes?[
+                                            appUserProvider.user?.userID] ??
+                                        false
                                     ? FaIcon(
                                         FontAwesomeIcons.solidThumbsUp,
-                                        key: ValueKey<bool>(widget.post.likes?[appUserProvider.user?.userID] ?? false),
+                                        key: ValueKey<bool>(widget.post.likes?[
+                                                appUserProvider.user?.userID] ??
+                                            false),
                                         color: Colors.blueAccent,
                                         size: 18,
                                       )
                                     : FaIcon(
                                         FontAwesomeIcons.thumbsUp,
-                                        key: ValueKey<bool>(widget.post.likes?[appUserProvider.user?.userID] ?? false),
+                                        key: ValueKey<bool>(widget.post.likes?[
+                                                appUserProvider.user?.userID] ??
+                                            false),
                                         color: AppColors.theme['tertiaryColor']!
                                             .withOpacity(0.5),
                                         size: 18,
@@ -514,35 +537,35 @@ class _PostCardState extends State<PostCard> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                           Row(
-                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                             children: [
-                               Text(
-                                 "Reactions",
-                                 style: TextStyle(
-                                   fontSize: 15,
-                                   color: AppColors.theme['tertiaryColor']
-                                       .withOpacity(0.5),
-                                 ),
-                               ),
-                               GestureDetector(
-                                 onTap: (){
-
-                                   Navigator.push(context, LeftToRight(DisplayReactionsUser(likes : widget.post.likes ?? {}))) ;
-
-                                 },
-                                 child: Text(
-                                   "View all",
-                                   style: TextStyle(
-                                     fontSize: 15,
-                                     color: AppColors.theme['tertiaryColor']
-                                         .withOpacity(0.5),
-                                   ),
-                                 ),
-                               ),
-
-                             ],
-                           ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Reactions",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: AppColors.theme['tertiaryColor']
+                                        .withOpacity(0.5),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        LeftToRight(DisplayReactionsUser(
+                                            likes: widget.post.likes ?? {})));
+                                  },
+                                  child: Text(
+                                    "View all",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: AppColors.theme['tertiaryColor']
+                                          .withOpacity(0.5),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                             SizedBox(height: 5),
                             Container(
                               height: 70,
@@ -568,7 +591,6 @@ class _PostCardState extends State<PostCard> {
                                   //       });
                                   // }
 
-
                                   if (!snapshot.hasData) {
                                     return Center(
                                         child: Text("Error loading likes"));
@@ -578,52 +600,68 @@ class _PostCardState extends State<PostCard> {
 
                                   return likeUsers.length != 0
                                       ? ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    shrinkWrap: true,
-                                    itemCount: likeUsers.length,
-                                    itemBuilder: (context, index) {
-                                      return Stack(
-                                        clipBehavior: Clip.none,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 2.0),
-                                            child: CircleAvatar(
-                                              backgroundImage: likeUsers[index].profilePath != ""
-                                                  ? NetworkImage(likeUsers[index].profilePath!)
-                                                  : AssetImage("assets/other_images/photo.png"),
-                                              radius: 25,
-                                              backgroundColor: AppColors
-                                                  .theme['primaryColor']!
-                                                  .withOpacity(0.1),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            bottom: 20,
-                                            right: 0,
-                                            child: Container(
-                                              height: 20,
-                                              width: 20,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                color: Colors.blueAccent
-                                                    .withOpacity(0.6),
-                                              ),
-                                              child: const Center(
-                                                child: FaIcon(
-                                                  FontAwesomeIcons.thumbsUp,
-                                                  size: 12,
-                                                  color: Colors.white,
+                                          scrollDirection: Axis.horizontal,
+                                          shrinkWrap: true,
+                                          itemCount: likeUsers.length,
+                                          itemBuilder: (context, index) {
+                                            return Stack(
+                                              clipBehavior: Clip.none,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 2.0),
+                                                  child: CircleAvatar(
+                                                    backgroundImage: likeUsers[
+                                                                    index]
+                                                                .profilePath !=
+                                                            ""
+                                                        ? NetworkImage(
+                                                            likeUsers[index]
+                                                                .profilePath!)
+                                                        : AssetImage(
+                                                            "assets/other_images/photo.png"),
+                                                    radius: 25,
+                                                    backgroundColor: AppColors
+                                                        .theme['primaryColor']!
+                                                        .withOpacity(0.1),
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  )
-                                      : Center(child: Text("No Reactions",style: GoogleFonts.poppins(color: AppColors.theme['tertiaryColor'].withOpacity(0.5)),)) ;
+                                                Positioned(
+                                                  bottom: 20,
+                                                  right: 0,
+                                                  child: Container(
+                                                    height: 20,
+                                                    width: 20,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                      color: Colors.blueAccent
+                                                          .withOpacity(0.6),
+                                                    ),
+                                                    child: const Center(
+                                                      child: FaIcon(
+                                                        FontAwesomeIcons
+                                                            .thumbsUp,
+                                                        size: 12,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        )
+                                      : Center(
+                                          child: Text(
+                                          "No Reactions",
+                                          style: GoogleFonts.poppins(
+                                              color: AppColors
+                                                  .theme['tertiaryColor']
+                                                  .withOpacity(0.5)),
+                                        ));
                                 },
                               ),
                             ),
@@ -728,15 +766,15 @@ class _PostCardState extends State<PostCard> {
                                 left: 10,
                                 child: GestureDetector(
                                   onTap: () {
-                                    String path = HelperFunctions.base64ToString(images[index]);
+                                    String path =
+                                        HelperFunctions.base64ToString(
+                                            images[index]);
                                     Navigator.push(
                                         context,
                                         LeftToRight(ImageViewScreen(
                                           path: path,
                                           isFile: false,
-                                        )
-                                        )
-                                    );
+                                        )));
                                   },
                                   child: Container(
                                     child: Padding(

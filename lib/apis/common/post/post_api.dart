@@ -208,6 +208,24 @@ class PostApis {
     }
   }
 
+  // delete post from realtime database
+  static Future<bool> deletePost(String postId, BuildContext context, PostProvider postProvider) async {
+    try {
+      DatabaseReference postRef = _rtdbRefPost.child(postId);
+
+      // Delete the post itself
+      await postRef.remove();
+
+      AppToasts.InfoToast(context, "Post successfully deleted");
+
+      return true;
+    } catch (e) {
+      AppToasts.ErrorToast(context, "Error while deleting post");
+      return false;
+    }
+  }
+
+
   // upload media
   static Future<Map<String, bool>> uploadMedia(List<File> files, String path, String postId) async {
     Map<String, bool> downloadUrls = {};
