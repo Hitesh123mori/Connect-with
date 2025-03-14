@@ -380,7 +380,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           isLoading = false;
                         });
 
-                        await postProvider.getPosts();
+                        setState(() {
+                          postProvider.postsFuture = postProvider.getPosts();
+                        });
 
                         Navigator.pop(context);
 

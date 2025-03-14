@@ -62,6 +62,7 @@ dependencies:
   flutter_mentions: ^2.0.1
   pull_to_refresh_flutter3: ^2.0.2
   firebase_database:
+  flutter_popup: ^3.3.4
 
 
   # The following adds the Cupertino Icons font to your application.

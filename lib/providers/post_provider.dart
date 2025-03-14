@@ -11,6 +11,7 @@ class PostProvider extends ChangeNotifier {
   List<File> images = [];
   List<PostModel> posts = [];
   bool isLoading = true;
+  late Future<List<PostModel>> postsFuture;
 
   Future<List<PostModel>> getPosts() async {
     try {
