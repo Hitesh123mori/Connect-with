@@ -9,8 +9,10 @@ import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/providers/post_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/other_user_profile_screen.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post/create_post_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/display_reactions_user.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/full_view_post.dart';
+import 'package:connect_with/side_transitions/bottom_top.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/photo_view.dart';
@@ -224,7 +226,11 @@ class _PostCardState extends State<PostCard> {
                             child: Column(
                               children: [
                                 TextButton(
-                                    onPressed: ()async{
+                                    onPressed: (){
+
+                                      postProvider.post = widget.post;
+                                      postProvider.isPostEdit = true ;
+                                      Navigator.push(context, BottomToTop(CreatePostScreen()));
 
                                     },
                                     child: Text(
@@ -233,8 +239,11 @@ class _PostCardState extends State<PostCard> {
                                     )),
                                 TextButton(
                                     onPressed: ()async{
+
+                                      List<String> HashTags = detectHashtags(HelperFunctions.base64ToString(widget.post.description ?? ""));
+
                                       Navigator.pop(context);
-                                      await PostApis.deletePost(widget.post.postId ?? "",context,postProvider);
+                                      await PostApis.deletePost(widget.post.postId ?? "",context,postProvider,HashTags);
                                       setState(() {
                                         postProvider.postsFuture = postProvider.getPosts();
                                       });
@@ -350,7 +359,7 @@ class _PostCardState extends State<PostCard> {
                         child: Row(
                           children: [
                             Text(
-                              "200",
+                              widget.post.comments != null ?  widget.post.comments!.length.toString() : "0" ,
                               style: TextStyle(
                                   fontSize: 14,
                                   color: AppColors.theme['tertiaryColor']
@@ -811,5 +820,13 @@ class _PostCardState extends State<PostCard> {
         ),
       ],
     );
+  }
+
+  List<String> detectHashtags(String text) {
+    RegExp hashtagRegex = RegExp(r'#\[__.*?__]\(__(.*?)__\)|#(\w+)');
+
+    return hashtagRegex.allMatches(text).map((match) {
+      return match.group(1) ?? match.group(2)!;
+    }).toList();
   }
 }
