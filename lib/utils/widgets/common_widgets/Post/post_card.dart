@@ -1,17 +1,23 @@
 import 'dart:developer';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:connect_with/apis/common/auth_apis.dart';
 import 'package:connect_with/apis/common/post/post_api.dart';
+import 'package:connect_with/apis/init/config.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
+import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/common/post_models/post_model.dart';
+import 'package:connect_with/models/organization/organization.dart';
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/providers/post_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/other_user_profile_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post/create_post_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/display_reactions_user.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/full_view_post.dart';
+import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/other_company_profile.dart';
 import 'package:connect_with/side_transitions/bottom_top.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
@@ -47,38 +53,70 @@ class _PostCardState extends State<PostCard> {
   bool showMore = false;
   GlobalKey key = GlobalKey();
 
+  bool isOrganization  = false;
+
   AppUser? user;
+  Organization? org;
 
-  List<AppUser> likeUsers = [];
+  bool isPostIsOrg = false;
 
-  Future<List<AppUser>> _fetchLikedUsers(Map<String, dynamic>? likes) async {
-    List<AppUser> likeUsers = [];
+  Future<List<Map<String, dynamic>>> _fetchLikedUsers(Map<String, dynamic>? likes) async {
+
+    List<Map<String, dynamic>> likeUsers = [];
+
     if (likes == null) return likeUsers;
 
-    for (var userId in likes.keys) {
+    await Future.wait(likes.keys.map((userId) async {
       try {
-        var userData = await UserProfile.getUser(userId);
+        bool isOrg = await AuthApi.userExistsById(userId, true);
+        Map<String, dynamic>? userData;
+
+        if (isOrg) {
+          userData = await OrganizationProfile.getOrganizationById(userId);
+        } else {
+          userData = await UserProfile.getUser(userId);
+        }
+
         if (userData != null) {
-          AppUser user = AppUser.fromJson(userData);
-          if (!likeUsers.any((u) => u.userID == user.userID)) {
-            likeUsers.add(user);
+          String id = userData[isOrg ? 'organizationId' : 'userID'];
+          if (!likeUsers.any((u) => u['id'] == id)) {
+            likeUsers.add({
+              'id': id,
+              'name': userData[isOrg ? 'name' : 'userName'],
+              'logo': userData[isOrg ? 'logo' : 'profilePath'] ?? "",
+              'headline': userData[isOrg ? 'domain' : 'headLine'] ?? "",
+              'isOrg': isOrg,
+            });
           }
         }
       } catch (e) {
         log("Error while fetching user in post card: $e");
       }
-    }
-    await Future.delayed(Duration(microseconds: 500));
+    }));
 
     return likeUsers;
   }
 
   Future<void> fetchUser() async {
     try {
-      var userData = await UserProfile.getUser(widget.post.userId ?? "");
-      setState(() {
-        user = AppUser.fromJson(userData);
-      });
+
+       isOrganization = await AuthApi.userExistsById(Config.auth.currentUser!.uid, true);
+
+      isPostIsOrg = await AuthApi.userExistsById(widget.post.userId ?? "", true);
+
+      if(isPostIsOrg){
+        var userData = await OrganizationProfile.getOrganizationById(widget.post.userId ?? "");
+        setState(() {
+          org = Organization.fromJson(userData);
+        });
+      }else{
+        var userData = await UserProfile.getUser(widget.post.userId ?? "");
+        setState(() {
+          user = AppUser.fromJson(userData);
+        });
+      }
+
+
     } catch (e) {
       log("Error while fetching user in post card: $e");
     }
@@ -90,18 +128,19 @@ class _PostCardState extends State<PostCard> {
     fetchUser();
   }
 
-  void toggleLike(AppUser likeUser, bool isLiked) async {
+
+
+  void toggleLike(String likeUserID, bool isLiked) async {
+
     setState(() {
       isLiked = !isLiked;
     });
 
     try {
       if (isLiked) {
-        await PostApis.addLikeToPost(
-            widget.post.postId ?? "", likeUser.userID ?? "");
+        await PostApis.addLikeToPost(widget.post.postId ?? "", likeUserID ?? "");
       } else {
-        await PostApis.removeLikeFromPost(
-            widget.post.postId ?? "", likeUser.userID ?? "");
+        await PostApis.removeLikeFromPost(widget.post.postId ?? "", likeUserID ?? "");
       }
       setState(() {});
     } catch (e) {
@@ -112,8 +151,8 @@ class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
-    return Consumer2<AppUserProvider, PostProvider>(
-        builder: (context, appUserProvider, postProvider, child) {
+    return Consumer3<AppUserProvider, PostProvider,OrganizationProvider>(
+        builder: (context, appUserProvider, postProvider,organizationProvider,child) {
       return StreamBuilder(
         stream: PostApis.getPostStream(widget.post.postId!),
         builder: (context, snapshot) {
@@ -149,6 +188,7 @@ class _PostCardState extends State<PostCard> {
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               children: [
+
                 // user details
                 Container(
                   height: 80,
@@ -164,7 +204,15 @@ class _PostCardState extends State<PostCard> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
-                          onTap: () {
+                          onTap:(isPostIsOrg )
+                              ? (){
+                            Navigator.push(
+                                context,
+                                LeftToRight(OtherCompanyProfile(
+                                  org: org ?? Organization(),
+                                )));
+                               }
+                              : () {
                             Navigator.push(
                                 context,
                                 LeftToRight(OtherUserProfileScreen(
@@ -173,34 +221,44 @@ class _PostCardState extends State<PostCard> {
                           },
                           child: Row(
                             children: [
-                              user?.profilePath == ""
+
+                              (isPostIsOrg)
+                                  ? (org?.logo=="")
                                   ? CircleAvatar(
-                                      radius: 30,
-                                      backgroundImage: AssetImage(
-                                          "assets/other_images/photo.png"),
-                                      backgroundColor: AppColors
-                                          .theme['primaryColor']
-                                          .withOpacity(0.1),
-                                    )
+                                radius: 30,
+                                backgroundImage: AssetImage("assets/other_images/org_logo.png"),
+                                backgroundColor: AppColors.theme['primaryColor']!.withOpacity(0.1),
+                              )
                                   : CircleAvatar(
-                                      radius: 30,
-                                      backgroundImage:
-                                          NetworkImage(user?.profilePath ?? ""),
-                                      backgroundColor: AppColors
-                                          .theme['primaryColor']
-                                          .withOpacity(0.1),
-                                    ),
+                                radius: 30,
+                                backgroundImage: NetworkImage(org?.logo??""),
+                                backgroundColor: AppColors.theme['primaryColor']!.withOpacity(0.1),
+                              )
+                                  : (user?.profilePath=="")
+                                  ? CircleAvatar(
+                                radius: 30,
+                                backgroundImage: AssetImage("assets/other_images/photo.png"),
+                                backgroundColor: AppColors.theme['primaryColor']!.withOpacity(0.1),
+                              )
+                                  : CircleAvatar(
+                                radius: 30,
+                                backgroundImage: NetworkImage(user?.profilePath ?? ""),
+                                backgroundColor: AppColors.theme['primaryColor']!.withOpacity(0.1),
+                              ),
+
+
                               SizedBox(
                                 width: 5,
                               ),
+
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text14(text: user?.userName ?? "Name"),
+                                  Text14(text: (isPostIsOrg) ? org?.name ?? "Name"  : user?.userName ?? "Name"),
                                   Container(
                                     width: mq.width * 0.4,
                                     child: Text(
-                                      user?.headLine ?? "",
+                                      isPostIsOrg ? org?.domain ?? ""  : user?.headLine ?? "" ,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                       softWrap: true,
@@ -229,7 +287,9 @@ class _PostCardState extends State<PostCard> {
                             ],
                           ),
                         ),
-                        CustomPopup(
+
+                        if(isPostIsOrg ? (organizationProvider.organization?.organizationId == org?.organizationId) : (appUserProvider.user?.userID == user?.userID) )
+                         CustomPopup(
                           barrierColor: Colors.transparent,
                           backgroundColor: Colors.white,
                           contentPadding: EdgeInsets.symmetric(horizontal: 2),
@@ -245,7 +305,7 @@ class _PostCardState extends State<PostCard> {
 
                                       postProvider.post = widget.post;
                                       postProvider.isPostEdit = true ;
-                                      Navigator.push(context, BottomToTop(CreatePostScreen()));
+                                      Navigator.push(context, BottomToTop(CreatePostScreen(isOrganization: isOrganization??false,)));
 
                                     },
                                     child: Text(
@@ -428,12 +488,12 @@ class _PostCardState extends State<PostCard> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            setState(() {
-                              toggleLike(
-                                  appUserProvider.user ?? AppUser(),
-                                  widget.post.likes?[
-                                          appUserProvider.user?.userID] ??
-                                      false);
+                           isOrganization
+                               ? setState(() {
+                              toggleLike(organizationProvider.organization?.organizationId ?? "", widget.post.likes?[organizationProvider.organization?.organizationId] ?? false);
+                             })
+                               : setState(() {
+                              toggleLike(appUserProvider.user?.userID ?? "", widget.post.likes?[appUserProvider.user?.userID] ?? false);
                             });
                           },
                           child: Column(
@@ -445,22 +505,16 @@ class _PostCardState extends State<PostCard> {
                                   return ScaleTransition(
                                       scale: animation, child: child);
                                 },
-                                child: widget.post.likes?[
-                                            appUserProvider.user?.userID] ??
-                                        false
+                                child: (isOrganization ? (widget.post.likes?[organizationProvider.organization?.organizationId] ?? false ) : widget.post.likes?[appUserProvider.user?.userID] ?? false)
                                     ? FaIcon(
                                         FontAwesomeIcons.solidThumbsUp,
-                                        key: ValueKey<bool>(widget.post.likes?[
-                                                appUserProvider.user?.userID] ??
-                                            false),
+                                        key: ValueKey<bool>(isOrganization ? (widget.post.likes?[organizationProvider.organization?.organizationId] ?? false ) : widget.post.likes?[appUserProvider.user?.userID] ?? false),
                                         color: Colors.blueAccent,
                                         size: 18,
                                       )
                                     : FaIcon(
                                         FontAwesomeIcons.thumbsUp,
-                                        key: ValueKey<bool>(widget.post.likes?[
-                                                appUserProvider.user?.userID] ??
-                                            false),
+                                        key: ValueKey<bool>(isOrganization ? (widget.post.likes?[organizationProvider.organization?.organizationId] ?? false ) : widget.post.likes?[appUserProvider.user?.userID] ?? false),
                                         color: AppColors.theme['tertiaryColor']!
                                             .withOpacity(0.5),
                                         size: 18,
@@ -576,8 +630,7 @@ class _PostCardState extends State<PostCard> {
                                   onTap: () {
                                     Navigator.push(
                                         context,
-                                        LeftToRight(DisplayReactionsUser(
-                                            likes: widget.post.likes ?? {})));
+                                        LeftToRight(DisplayReactionsUser(likes: widget.post.likes ?? {})));
                                   },
                                   child: Text(
                                     "View all",
@@ -593,102 +646,71 @@ class _PostCardState extends State<PostCard> {
                             SizedBox(height: 5),
                             Container(
                               height: 70,
-                              child: FutureBuilder<List<AppUser>>(
+                              child: FutureBuilder<List<Map<String, dynamic>>>(
                                 future: _fetchLikedUsers(widget.post.likes),
                                 builder: (context, snapshot) {
-                                  // if (snapshot.connectionState ==
-                                  //     ConnectionState.waiting) {
-                                  //   return ListView.builder(
-                                  //       scrollDirection: Axis.horizontal,
-                                  //       itemCount: (mq.width / 20).floor(),
-                                  //       itemBuilder: (context, index) {
-                                  //         return Padding(
-                                  //           padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                                  //           child: Shimmer.fromColors(
-                                  //             baseColor: Colors.grey.shade300,
-                                  //             highlightColor: Colors.grey.shade100,
-                                  //             child: CircleAvatar(
-                                  //               radius: 25,
-                                  //             ),
-                                  //           ),
-                                  //         );
-                                  //       });
-                                  // }
-
                                   if (!snapshot.hasData) {
-                                    return Center(
-                                        child: Text("Error loading likes"));
+                                    return Center(child: Text("Error loading likes"));
                                   }
 
                                   final likeUsers = snapshot.data ?? [];
 
-                                  return likeUsers.length != 0
+                                  return likeUsers.isNotEmpty
                                       ? ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          shrinkWrap: true,
-                                          itemCount: likeUsers.length,
-                                          itemBuilder: (context, index) {
-                                            return Stack(
-                                              clipBehavior: Clip.none,
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 2.0),
-                                                  child: CircleAvatar(
-                                                    backgroundImage: likeUsers[
-                                                                    index]
-                                                                .profilePath !=
-                                                            ""
-                                                        ? NetworkImage(
-                                                            likeUsers[index]
-                                                                .profilePath!)
-                                                        : AssetImage(
-                                                            "assets/other_images/photo.png"),
-                                                    radius: 25,
-                                                    backgroundColor: AppColors
-                                                        .theme['primaryColor']!
-                                                        .withOpacity(0.1),
-                                                  ),
+                                    scrollDirection: Axis.horizontal,
+                                    shrinkWrap: true,
+                                    itemCount: likeUsers.length,
+                                    itemBuilder: (context, index) {
+                                      return Stack(
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                                            child: CircleAvatar(
+                                              backgroundImage: likeUsers[index]['logo'] != ""
+                                                  ? NetworkImage(likeUsers[index]['logo']!)
+                                                  : const AssetImage("assets/other_images/photo.png")
+                                              as ImageProvider,
+                                              radius: 25,
+                                              backgroundColor:
+                                              AppColors.theme['primaryColor']!.withOpacity(0.1),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            bottom: 20,
+                                            right: 0,
+                                            child: Container(
+                                              height: 20,
+                                              width: 20,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(15),
+                                                color: Colors.blueAccent.withOpacity(0.6),
+                                              ),
+                                              child: const Center(
+                                                child: FaIcon(
+                                                  FontAwesomeIcons.thumbsUp,
+                                                  size: 12,
+                                                  color: Colors.white,
                                                 ),
-                                                Positioned(
-                                                  bottom: 20,
-                                                  right: 0,
-                                                  child: Container(
-                                                    height: 20,
-                                                    width: 20,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15),
-                                                      color: Colors.blueAccent
-                                                          .withOpacity(0.6),
-                                                    ),
-                                                    child: const Center(
-                                                      child: FaIcon(
-                                                        FontAwesomeIcons
-                                                            .thumbsUp,
-                                                        size: 12,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        )
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  )
                                       : Center(
-                                          child: Text(
-                                          "No Reactions",
-                                          style: GoogleFonts.poppins(
-                                              color: AppColors
-                                                  .theme['tertiaryColor']
-                                                  .withOpacity(0.5)),
-                                        ));
+                                    child: Text(
+                                      "No Reactions",
+                                      style: GoogleFonts.poppins(
+                                        color: AppColors.theme['tertiaryColor']!.withOpacity(0.5),
+                                      ),
+                                    ),
+                                  );
                                 },
                               ),
                             ),
+
                           ],
                         ),
                       ),

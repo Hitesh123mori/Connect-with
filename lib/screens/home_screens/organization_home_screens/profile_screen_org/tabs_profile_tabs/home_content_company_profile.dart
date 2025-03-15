@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomeContentCompanyProfile extends StatefulWidget {
+
   const HomeContentCompanyProfile({super.key});
 
   @override

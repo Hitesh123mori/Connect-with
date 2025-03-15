@@ -1,12 +1,15 @@
+import 'package:connect_with/main.dart';
 import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/screens/auth_screens/login_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/profile_screen.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post/create_post_screen.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/org_tabs/create_post_org/create_post_screen_org.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/org_tabs/jobs_org/jobs_screen_org.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/org_tabs/network_org/network_screen_org.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/org_tabs/notification_org/notification_screen_org.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/org_tabs/post_org/post_screen_org.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/company_profile.dart';
+import 'package:connect_with/side_transitions/bottom_top.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/side_transitions/right_left.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
@@ -15,6 +18,7 @@ import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/drawer_container.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_16.dart';
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 
 class HomeOrganizationMainScreen extends StatefulWidget {
@@ -53,6 +57,7 @@ class _HomeOrganizationMainScreenState
 
   @override
   Widget build(BuildContext context) {
+    mq = MediaQuery.of(context).size;
     return Consumer<OrganizationProvider>(
         builder: (context, organizationProvider, child) {
       if (isFirst) {
@@ -173,69 +178,146 @@ class _HomeOrganizationMainScreenState
           ),
         ),
         appBar: AppBar(
+          surfaceTintColor: AppColors.theme['primaryColor'],
+          elevation: 1,
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(context, BottomToTop(CreatePostScreen(isOrganization: true,)));
+                },
+                icon: Icon(Icons.add_box, color: Colors.black)),
+            IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.chat_outlined,
+                  color: Colors.black,
+                ))
+          ],
           leading: Container(
             child: Builder(
                 builder: (context) => InkWell(
-                      onTap: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 5.0, top: 10, bottom: 10),
-                        child: CircleAvatar(
-                          backgroundColor: AppColors.theme['backgroundColor']
-                              .withOpacity(0.3),
-                          backgroundImage: organizationProvider
-                                      .organization?.logo !=
-                                  ""
-                              ? NetworkImage(
-                                  organizationProvider.organization?.logo ?? "")
-                              : AssetImage("assets/other_images/org_logo.png"),
-                          radius: 20,
-                        ),
-                      ),
-                    )),
+                  onTap: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 5.0, top: 10, bottom: 10),
+                    child: CircleAvatar(
+                      backgroundColor: AppColors.theme['backgroundColor']
+                          .withOpacity(0.3),
+                      backgroundImage:
+                      organizationProvider.organization?.logo != ""
+                          ? NetworkImage(
+                          organizationProvider.organization?.logo ?? "")
+                          : AssetImage("assets/other_images/org_logo.png"),
+                      // backgroundColor: AppColors.theme['secondaryColor'].withOpacity(0.5),
+                      radius: 20,
+                      // child: Center(child: Text(appUserProvider.user?.userName?[0] ?? "U",style: TextStyle(color:
+                      // AppColors.theme['secondaryColor'],fontWeight: FontWeight.bold,fontSize: 20),)),
+                    ),
+                  ),
+                )),
           ),
-          backgroundColor: AppColors.theme['primaryColor'],
+          backgroundColor: AppColors.theme['secondaryColor'],
           centerTitle: true,
-          title: Text(
-            titles[_currentIndex],
-            style: TextStyle(
-              color: AppColors.theme['secondaryColor'],
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
+          title: Container(
+            width: mq.width * 0.5,
+            height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: AppColors.theme['primaryColor'].withOpacity(0.1),
+            ),
+            child: Theme(
+              data: ThemeData(
+                textSelectionTheme: TextSelectionThemeData(
+                  selectionHandleColor: AppColors.theme['primaryColor'].withOpacity(0.3),
+                  cursorColor: AppColors.theme['primaryColor'].withOpacity(0.3),
+                  selectionColor: AppColors.theme['primaryColor'].withOpacity(0.2),
+                ),
+              ),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: AppColors.theme['backgroundColor'],
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  hintText: 'Search Here...',
+                  hintStyle: TextStyle(
+                    fontSize: 15,
+                    color: AppColors.theme['tertiaryColor']!.withOpacity(0.5),
+                  ),
+                  prefixIcon: Icon(Icons.search, color: AppColors.theme['tertiaryColor']!.withOpacity(0.5)),
+                ),
+              ),
             ),
           ),
+
         ),
         body: _buildBody(),
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: onTabTapped,
-          selectedItemColor: AppColors.theme['primaryColor'],
-          unselectedItemColor: Colors.grey,
-          showUnselectedLabels: true,
-          currentIndex: _currentIndex,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              label: 'Home',
+        bottomNavigationBar: SafeArea(
+          child: Container(
+            padding: EdgeInsets.only(bottom: 30, left: 5,right: 5,top: 20),
+            decoration: BoxDecoration(
+              color: AppColors.theme['secondaryColor'],
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 10,
+                  color: Colors.black.withOpacity(0.1),
+                )
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people_outline_sharp),
-              label: 'Network',
+            child: GNav(
+              padding: EdgeInsets.all(12),
+              gap: 8,
+              color: AppColors.theme['secondaryColor'],
+              activeColor: AppColors.theme['primaryColor'],
+              backgroundColor: AppColors.theme['secondaryColor'],
+              tabBackgroundColor: AppColors.theme['primaryColor'],
+              selectedIndex: _currentIndex,
+              onTabChange: onTabTapped,
+              tabs: [
+                GButton(
+                  icon: Icons.home_outlined,
+                  text: 'Home',
+                  iconActiveColor: AppColors.theme['secondaryColor'],
+                  iconColor: AppColors.theme['primaryColor'],
+                  textColor: AppColors.theme['secondaryColor'],
+                ),
+                GButton(
+                  icon: Icons.people_outline_sharp,
+                  text: 'Network',
+                  iconActiveColor: AppColors.theme['secondaryColor'],
+                  iconColor: AppColors.theme['primaryColor'],
+                  textColor: AppColors.theme['secondaryColor'],
+                ),
+                GButton(
+                  iconActiveColor: AppColors.theme['secondaryColor'],
+                  icon: Icons.notifications_active_outlined,
+                  text: 'Notifications',
+                  iconColor: AppColors.theme['primaryColor'],
+                  textColor: AppColors.theme['secondaryColor'],
+                ),
+                GButton(
+                  iconActiveColor: AppColors.theme['secondaryColor'],
+                  icon: Icons.all_inbox_outlined,
+                  text: 'Jobs',
+                  iconColor: AppColors.theme['primaryColor'],
+                  textColor: AppColors.theme['secondaryColor'],
+                ),
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add_box_rounded),
-              label: 'Post',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.notifications_active_outlined),
-              label: 'Notifications',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.all_inbox_outlined),
-              label: 'Jobs',
-            ),
-          ],
+          ),
         ),
       );
     });
@@ -251,3 +333,6 @@ class _HomeOrganizationMainScreenState
     });
   }
 }
+
+
+

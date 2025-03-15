@@ -197,4 +197,5 @@ class AuthApi {
 
     return docSnapshot.exists;
   }
+
 }

@@ -169,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
             actions: [
               IconButton(
                   onPressed: () {
-                    Navigator.push(context, BottomToTop(CreatePostScreen()));
+                    Navigator.push(context, BottomToTop(CreatePostScreen(isOrganization: false,)));
                   },
                   icon: Icon(Icons.add_box, color: Colors.black)),
               IconButton(

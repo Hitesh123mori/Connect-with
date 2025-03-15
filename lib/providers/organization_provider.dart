@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OrganizationProvider extends ChangeNotifier {
+
   Organization? organization;
   List<CompanyJob> cjobs = [];
 
@@ -27,6 +28,7 @@ class OrganizationProvider extends ChangeNotifier {
     notifyListeners();
     log("#initOrganization complete");
   }
+
   Future<void> _populateCompanyJobs() async {
 
     cjobs = [];
@@ -44,6 +46,7 @@ class OrganizationProvider extends ChangeNotifier {
       }
     }
   }
+
   Future logOut() async {
     await Config.auth.signOut();
     organization = null;
