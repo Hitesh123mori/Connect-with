@@ -184,7 +184,7 @@ class _HashTagScreenState extends State<HashTagScreen> {
                     Expanded(
                       child: isLoading
                           ? Center(child: PostCardShimmerEffect())
-                          : hasmodel?.posts?.isEmpty ?? true
+                          : posts?.isEmpty ?? true
                           ? Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

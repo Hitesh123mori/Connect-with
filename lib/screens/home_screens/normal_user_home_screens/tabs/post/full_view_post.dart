@@ -16,6 +16,7 @@ import 'package:connect_with/utils/widgets/common_widgets/Post/post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class FullViewPost extends StatefulWidget {
@@ -174,7 +175,19 @@ class _FullViewPostState extends State<FullViewPost> {
                                         return Center(child: Text("Error loading comments"));
                                       }
 
-                                      return ListView.builder(
+                                      return cms?.length==0  ? Center(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Image.asset("assets/ils/no_posts.png", height: 200, width: 200),
+                                            SizedBox(height: 20),
+                                            Text(
+                                              "Create first comment!",
+                                              style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.grey),
+                                            ),
+                                          ],
+                                        ),
+                                      ) :ListView.builder(
                                         shrinkWrap: true,
                                         physics: NeverScrollableScrollPhysics(),
                                         itemCount: cms?.length,
