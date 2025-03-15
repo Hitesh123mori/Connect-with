@@ -251,6 +251,7 @@ class HelperFunctions{
 
 
   static String timeAgo(DateTime postDate) {
+
     final now = DateTime.now();
     final difference = now.difference(postDate);
 
