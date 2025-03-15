@@ -1,4 +1,5 @@
 import 'package:connect_with/main.dart';
+import 'package:connect_with/models/organization/organization.dart';
 import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_profile_tabs/job_screens_org/create_job_screen.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_profile_tabs/job_screens_org/jobs_show_more_org.dart';
@@ -108,7 +109,7 @@ class _JobContentCompanyProfileState extends State<JobContentCompanyProfile> {
                               : orgProvider.cjobs.length,
                           itemBuilder: (context, index) {
                             return JobCardCompany(
-                              cjob: orgProvider.cjobs[index],
+                              cjob: orgProvider.cjobs[index], org: orgProvider.organization ?? Organization(),
                             );
                           },
                         ),

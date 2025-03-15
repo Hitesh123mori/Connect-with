@@ -1,11 +1,15 @@
 import 'dart:developer';
 
+import 'package:connect_with/apis/common/auth_apis.dart';
 import 'package:connect_with/apis/common/post/post_api.dart';
+import 'package:connect_with/apis/init/config.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
+import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/common/post_models/post_model.dart';
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/providers/post_provider.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/helper_functions/toasts.dart';
@@ -29,12 +33,20 @@ class FullViewPost extends StatefulWidget {
 
 class _FullViewPostState extends State<FullViewPost> {
   bool isLoading = false;
-
+  bool isOrganization = false;
   List<Map<String, dynamic>> refinedUsers = [];
+  List<Map<String, dynamic>> refinedOrg = [];
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Future<List<Map<String, dynamic>>> fetchUsersAndHashTags() async {
+
+    isOrganization = await AuthApi.userExistsById(Config.auth.currentUser!.uid, true);
+
     List<Map<String, dynamic>> users = await UserProfile.getAllAppUsersList();
+
+    List<Map<String, dynamic>> organizations = await OrganizationProfile.getAllOrganizationsList();
+
 
     refinedUsers = users.map((user) {
       return {
@@ -45,6 +57,18 @@ class _FullViewPostState extends State<FullViewPost> {
         'photo': user['profilePath'] ?? "",
       };
     }).toList();
+
+    refinedOrg = organizations.map((org) {
+      return {
+        'id': org['organizationId'],
+        'display': org['name'],
+        'full_name': org['name'],
+        'description': org['domain'],
+        'photo': org['logo'] ?? "",
+      };
+    }).toList(); // Convert to list
+
+    refinedUsers.addAll(refinedOrg) ;
 
     return refinedUsers;
   }
@@ -85,8 +109,8 @@ class _FullViewPostState extends State<FullViewPost> {
 
     return GestureDetector(
       // onTap: () => FocusScope.of(context).unfocus(),
-      child: Consumer2<AppUserProvider, PostProvider>(
-          builder: (context, appUserProvider, postProvider, child) {
+      child: Consumer3<AppUserProvider, PostProvider,OrganizationProvider>(
+          builder: (context, appUserProvider, postProvider, organizationProvider ,child) {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
               home: Scaffold(
@@ -234,7 +258,14 @@ class _FullViewPostState extends State<FullViewPost> {
                                   children: [
                                     Row(
                                       children: [
-                                        CircleAvatar(
+                                        isOrganization
+                                            ? CircleAvatar(
+                                                backgroundColor: AppColors.theme['primaryColor']!.withOpacity(0.2),
+                                                 backgroundImage: organizationProvider.organization?.logo != ""
+                                                ? NetworkImage(organizationProvider.organization?.logo  ?? "")
+                                                : AssetImage("assets/other_images/org_logo.png") as ImageProvider,
+                                           )
+                                            : CircleAvatar(
                                           backgroundColor: AppColors.theme['primaryColor']!.withOpacity(0.2),
                                           backgroundImage: appUserProvider.user?.profilePath != ""
                                               ? NetworkImage(appUserProvider.user?.profilePath ?? "")
@@ -381,7 +412,7 @@ class _FullViewPostState extends State<FullViewPost> {
                                                   commentId: "",
                                                   postId: widget.post.postId,
                                                   comments: {},
-                                                  userId: appUserProvider.user?.userID,
+                                                  userId: isOrganization ? organizationProvider.organization?.organizationId : appUserProvider.user?.userID,
                                                   description: comcode,
                                                   time: DateTime.now().toString(),
                                                   likes: {},

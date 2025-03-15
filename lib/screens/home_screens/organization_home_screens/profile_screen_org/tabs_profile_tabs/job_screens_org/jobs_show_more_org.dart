@@ -1,3 +1,4 @@
+import 'package:connect_with/models/organization/organization.dart';
 import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_profile_tabs/job_screens_org/create_job_screen.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
@@ -617,7 +618,7 @@ class _JobShowMoreScreenCompanyState extends State<JobShowMoreScreenCompany> {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            return JobCardCompany(cjob: _filteredJobs[index]);
+                            return JobCardCompany(cjob: _filteredJobs[index], org: orgProvider.organization??Organization(),);
                           },
                         )
                       else

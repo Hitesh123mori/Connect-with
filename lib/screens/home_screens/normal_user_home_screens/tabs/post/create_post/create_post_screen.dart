@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connect_with/apis/common/post/post_api.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
+import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/models/common/post_models/hashtag_model.dart';
 import 'package:connect_with/models/common/post_models/post_model.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/providers/post_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post/attach_article.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post/attach_certificate.dart';
@@ -26,7 +28,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'attack_images.dart';
 
 class CreatePostScreen extends StatefulWidget {
-  const CreatePostScreen({super.key});
+  final bool isOrganization ;
+  const CreatePostScreen({super.key, required this.isOrganization});
 
   @override
   State<CreatePostScreen> createState() => _CreatePostScreenState();
@@ -52,12 +55,19 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   //fetch all users
   List<Map<String, dynamic>> refinedUsers = [];
+  List<Map<String, dynamic>> refinedOrg = [];
+
   List<Map<String, dynamic>> refinedHashTags = [];
+
   Future<List<Map<String, dynamic>>> fetchUsersAndHashTags() async {
+
     List<Map<String, dynamic>> users = await UserProfile.getAllAppUsersList();
+
+    List<Map<String, dynamic>> organizations = await OrganizationProfile.getAllOrganizationsList();
+
     List<Map<String, dynamic>> hasTags = await PostApis.getAllHashTags();
 
-    refinedUsers = users.map((user) {
+     refinedUsers = users.map((user) {
       return {
         'id': user['userID'],
         'display': user['userName'],
@@ -66,6 +76,19 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         'photo': user['profilePath'] ?? "",
       };
     }).toList();
+
+   refinedOrg = organizations.map((org) {
+      return {
+        'id': org['organizationId'],
+        'display': org['name'],
+        'full_name': org['name'],
+        'description': org['domain'],
+        'photo': org['logo'] ?? "",
+      };
+    }).toList(); // Convert to list
+
+    refinedUsers.addAll(refinedOrg) ;
+
 
     refinedHashTags = hasTags.map((ht) {
       return {
@@ -76,7 +99,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     }).toList();
 
     // print(refinedHashTags) ;
-
     return refinedHashTags;
   }
 
@@ -106,8 +128,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<PostProvider, AppUserProvider>(
-        builder: (context, postProvider, appUserProvider, child) {
+    return Consumer3<PostProvider, AppUserProvider,OrganizationProvider>(
+        builder: (context, postProvider, appUserProvider,organizationProvider ,child) {
       return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: MaterialApp(
@@ -356,7 +378,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
                         Map<String, dynamic> updatedData = PostModel(
                           postId: postProvider.post.postId,
-                          userId: appUserProvider.user?.userID,
+                          userId: widget.isOrganization ?  organizationProvider.organization?.organizationId : appUserProvider.user?.userID,
                           description: descode,
                           hasImage: postProvider.images.isNotEmpty && (postProvider.post.hasImage ?? false),
                           hasPdf: postProvider.post.hasPdf,
@@ -430,7 +452,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
                               PostModel postmodel = PostModel(
                                 postId: "",
-                                userId: appUserProvider.user?.userID,
+                                userId: widget.isOrganization ?  organizationProvider.organization?.organizationId : appUserProvider.user?.userID,
                                 description: descode,
                                 hasImage: postProvider.post.hasImage ?? false,
                                 hasPdf: postProvider.post.hasPdf,

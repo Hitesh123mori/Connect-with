@@ -11,6 +11,7 @@ import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 class OrganizationProfile {
+
   static final _collectionRefOrg = Config.firestore.collection("organizations");
   static final _collectionRefJob = Config.firestore.collection("jobs");
 
@@ -89,6 +90,27 @@ class OrganizationProfile {
       log('Error uploading image: $e');
     }
   }
+
+  // Fetch all organizations
+  static Future<List<Map<String, dynamic>>> getAllOrganizationsList() async {
+
+    List<Map<String, dynamic>> organizations = [];
+
+    try {
+      QuerySnapshot querySnapshot = await _collectionRefOrg.get();
+
+      for (var doc in querySnapshot.docs) {
+        organizations.add(doc.data() as Map<String, dynamic>);
+      }
+
+      log("#Fetched ${organizations.length} organizations.");
+      return organizations;
+    } catch (error, stackTrace) {
+      log("#getAllOrganizations error: $error, $stackTrace");
+      return [];
+    }
+  }
+
 
   // get organization by id
   static Future<dynamic> getOrganizationById(String organizationId) async {
@@ -211,7 +233,6 @@ class OrganizationProfile {
   }
 
   // add add employee
-
   static Future<bool> addEmployee(String oid, String eid) async {
     try {
       DocumentSnapshot orgDoc = await _collectionRefOrg.doc(oid).get();
