@@ -483,5 +483,37 @@ class PostApis {
     }
   }
 
+  // Edit an existing comment
+  static Future<void> editComment(String postId, String commentId, String newText) async {
+    try {
+      DatabaseReference commentRef = _rtdbRefPost
+          .child(postId)
+          .child("comments")
+          .child(commentId);
+
+      await commentRef.update({"description": newText});
+      print("Comment $commentId updated on post $postId");
+    } catch (e) {
+      print("Error editing comment: $e");
+    }
+  }
+
+  // Delete a comment from a post
+  static Future<void> deleteComment(String postId, String commentId) async {
+    try {
+      DatabaseReference commentRef = _rtdbRefPost
+          .child(postId)
+          .child("comments")
+          .child(commentId);
+
+      await commentRef.remove();
+      print("Comment $commentId deleted from post $postId");
+    } catch (e) {
+      print("Error deleting comment: $e");
+    }
+  }
+
+
+
 
 }

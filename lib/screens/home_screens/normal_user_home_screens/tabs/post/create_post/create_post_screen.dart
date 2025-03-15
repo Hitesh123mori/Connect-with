@@ -424,8 +424,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                 isLoading = true;
                               });
 
-                              String descode =
-                                  HelperFunctions.stringToBase64(description);
+                              String descode = HelperFunctions.stringToBase64(description);
 
                               print("#before formatting :" + description);
 
@@ -560,6 +559,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   // description
   Widget buildDescriptionTextField(PostProvider postProvider) {
+
     String defaultText = "" ;
     if (postProvider.isPostEdit) {
       defaultText =  editFormatText(HelperFunctions.base64ToString(postProvider.post.description ?? ""));
@@ -567,6 +567,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       print("check defaultText : ${defaultText}") ;
 
     }
+
     return Container(
       child: Theme(
         data: ThemeData(
@@ -842,4 +843,5 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       return match.group(1) ?? match.group(2)!;
     }).toList();
   }
+
 }

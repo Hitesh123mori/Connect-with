@@ -12,6 +12,8 @@ import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:connect_with/utils/widgets/common_widgets/text_style_formats/text_14.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
+import 'package:flutter_popup/flutter_popup.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +33,28 @@ class _CommentCardState extends State<CommentCard> {
 
   AppUser? user;
 
+  List<Map<String, dynamic>> refinedUsers = [];
+
+  GlobalKey<FlutterMentionsState> mentions_key = GlobalKey<FlutterMentionsState>();
+
+  Future<List<Map<String, dynamic>>> fetchUsers() async {
+
+    List<Map<String, dynamic>> users = await UserProfile.getAllAppUsersList();
+
+    refinedUsers = users.map((user) {
+      return {
+        'id': user['userID'],
+        'display': user['userName'],
+        'full_name': user['userName'],
+        'description': user['headLine'],
+        'photo': user['profilePath'] ?? "",
+      };
+    }).toList();
+
+
+    return refinedUsers;
+  }
+
   Future<void> fetchUser() async {
     try {
       var userData = await UserProfile.getUser(widget.cm.userId ?? "");
@@ -46,6 +70,7 @@ class _CommentCardState extends State<CommentCard> {
   void initState(){
     super.initState() ;
     fetchUser() ;
+    fetchUsers() ;
   }
 
   void toggleLike(AppUser likeUser,bool isLiked) async {
@@ -184,12 +209,55 @@ class _CommentCardState extends State<CommentCard> {
                             Row(
                               children: [
 
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.more_vert_rounded,
-                                      size: 20,
-                                    )),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 15.0,),
+                                  child: CustomPopup(
+                                    barrierColor: Colors.transparent,
+                                    backgroundColor: Colors.white,
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 2),
+                                    content: Container(
+                                      height: 100,
+                                      width: 100,
+                                      child: Column(
+                                        children: [
+                                          TextButton(
+                                              onPressed: (){
+                                                Navigator.pop(context);
+                                                showEditCommentDialog(
+                                                  context,
+                                                  widget.postId,
+                                                  widget.cm.commentId ?? "",
+                                                  HelperFunctions.base64ToString(widget.cm.description?? "") , (updatedComment) {
+                                                    print("Updated Comment: $updatedComment");
+                                                  },
+                                                );
+
+                                              },
+                                              child: Text(
+                                                "Edit",
+                                                style: TextStyle(color: Colors.black),
+                                              )
+                                          ),
+                                             TextButton(
+                                              onPressed: ()async{
+
+                                                Navigator.pop(context);
+
+                                                await PostApis.deleteComment(widget.postId,widget.cm.commentId ?? "") ;
+                                                setState(() {
+                                                });
+
+                                              },
+                                              child: Text(
+                                                "Delete",
+                                                style: TextStyle(color: Colors.black),
+                                              )),
+                                        ],
+                                      ),
+                                    ),
+                                    child: Icon(Icons.more_vert_rounded),
+                                  ),
+                                ),
                               ],
                             ),
                           ],
@@ -303,7 +371,7 @@ class _CommentCardState extends State<CommentCard> {
                           ],
                         ),
                       ),
-                      
+
                     ],
                   ),
                 ),
@@ -493,6 +561,134 @@ class _CommentCardState extends State<CommentCard> {
 
   Widget buildDescription(String text) {
     return HelperFunctions.parseText(text, context, true);
+  }
+
+
+  void showEditCommentDialog(
+      BuildContext context,
+      String postId,
+      String commentId,
+      String initialText,
+
+      Function(String) onCommentEdited) {
+
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Center(
+            child: Text(
+              "Edit Comment",
+              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
+            ),
+          ),
+          content:buildDescriptionTextField(),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("Close", style: TextStyle(color: Colors.red)),
+            ),
+            ElevatedButton(
+              onPressed: ()async{
+                if (mentions_key.currentState?.controller?.markupText!="") {
+                  await PostApis.editComment(postId, commentId, HelperFunctions.stringToBase64(mentions_key.currentState?.controller?.markupText.trim() ?? ""));
+                  Navigator.pop(context);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor:AppColors.theme['primaryColor'],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Text("Edit",style: TextStyle(color: Colors.white),),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  String editFormatText(String input) {
+
+    final regex = RegExp(r'([#@])\[\S+\]\(__(.+?)__\)');
+
+    return input.replaceAllMapped(regex, (match) => '${match.group(1)}${match.group(2)}');
+
+  }
+
+  Widget buildDescriptionTextField() {
+
+    String defaultText = "" ;
+
+    defaultText =  editFormatText(HelperFunctions.base64ToString(widget.cm.description ?? ""));
+
+    return Container(
+      width: 100,
+      child: Theme(
+        data: ThemeData(
+          textSelectionTheme: TextSelectionThemeData(
+            selectionHandleColor: AppColors.theme['primaryColor'],
+            cursorColor: AppColors.theme['primaryColor'],
+            selectionColor: AppColors.theme['primaryColor']!.withOpacity(0.3),
+          ),
+        ),
+        child: FlutterMentions(
+          key: mentions_key,
+          suggestionPosition: SuggestionPosition.Bottom,
+          maxLength: null,
+          defaultText: defaultText,
+          maxLines: 1000000000000000000,
+          minLines: 1,
+          decoration: InputDecoration(
+            hintText: 'Start writing your comment here',
+            border: InputBorder.none,
+          ),
+          mentions: [
+            Mention(
+              trigger: '@',
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              data: refinedUsers,
+              suggestionBuilder: (data) {
+                return Container(
+                  child: ListTile(
+                    leading: data['photo'] == ""
+                        ? CircleAvatar(
+                        radius: 24,
+                        backgroundColor:
+                        AppColors.theme['primaryColor'].withOpacity(0.1),
+                        backgroundImage:
+                        AssetImage("assets/other_images/photo.png"))
+                        : CircleAvatar(
+                        radius: 24,
+                        backgroundColor:
+                        AppColors.theme['primaryColor'].withOpacity(0.1),
+                        backgroundImage: NetworkImage(data['photo'])),
+                    title: Text(
+                      data['full_name'],
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      "${data['description']}",
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
 }

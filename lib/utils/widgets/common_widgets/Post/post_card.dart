@@ -241,6 +241,8 @@ class _PostCardState extends State<PostCard> {
                                 TextButton(
                                     onPressed: (){
 
+                                      Navigator.pop(context);
+
                                       postProvider.post = widget.post;
                                       postProvider.isPostEdit = true ;
                                       Navigator.push(context, BottomToTop(CreatePostScreen()));
