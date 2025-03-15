@@ -12,6 +12,7 @@ class PostProvider extends ChangeNotifier {
   List<PostModel> posts = [];
   bool isLoading = true;
   bool isPostEdit = false;
+  bool isCommentEdit = false;
   late Future<List<PostModel>> postsFuture;
 
   Future<List<PostModel>> getPosts() async {

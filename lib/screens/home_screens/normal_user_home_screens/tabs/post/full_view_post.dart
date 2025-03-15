@@ -318,7 +318,8 @@ class _FullViewPostState extends State<FullViewPost> {
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
-                                                  TextEditingController? controller = mentions_key
+                                                  TextEditingController?
+                                                  controller = mentions_key
                                                       .currentState?.controller;
                                                   if (controller != null) {
                                                     int cursorPos = controller
