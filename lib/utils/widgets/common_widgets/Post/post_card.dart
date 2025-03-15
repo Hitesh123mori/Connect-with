@@ -151,7 +151,7 @@ class _PostCardState extends State<PostCard> {
               children: [
                 // user details
                 Container(
-                  height: 70,
+                  height: 80,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                     topRight: Radius.circular(5),
@@ -209,6 +209,19 @@ class _PostCardState extends State<PostCard> {
                                         color: AppColors.theme['tertiaryColor']
                                             ?.withOpacity(0.5),
                                       ),
+                                    ),
+                                  ),
+                                  Text(
+                                    HelperFunctions.timeAgo(widget.post.time != null
+                                        ? DateTime.parse(widget.post.time!)
+                                        : DateTime.now(),),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    softWrap: true,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: AppColors.theme['tertiaryColor']
+                                          ?.withOpacity(0.5),
                                     ),
                                   ),
                                 ],

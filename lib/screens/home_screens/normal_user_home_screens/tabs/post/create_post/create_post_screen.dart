@@ -366,7 +366,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           pollData: postProvider.post.pollData,
                           repostCount: postProvider.post.repostCount,
                           attachmentName: postProvider.post.attachmentName,
-                          time: DateTime.now().microsecondsSinceEpoch.toString(),
+                          time: DateTime.now().toString(),
                           comments: postProvider.post.comments,
                           likes: postProvider.post.likes,
                         ).toJson();
@@ -442,9 +442,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                 repostCount: "0",
                                 attachmentName:
                                     postProvider.post.attachmentName,
-                                time: DateTime.now()
-                                    .microsecondsSinceEpoch
-                                    .toString(),
+                                time: DateTime.now().toString(),
                                 comments: {},
                                 likes: {},
                               );
