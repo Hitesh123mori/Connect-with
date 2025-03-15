@@ -29,7 +29,6 @@ class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
 
   @override
-
   State<CreatePostScreen> createState() => _CreatePostScreenState();
 }
 
@@ -39,22 +38,22 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   bool isLoading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   GlobalKey<FlutterMentionsState> mentions_key =
-  GlobalKey<FlutterMentionsState>();
+      GlobalKey<FlutterMentionsState>();
   bool isFirst = true;
 
   // image controller
   void _removeImage(int index, PostProvider postProvider) {
     setState(() {
-      postProvider.post.imageUrls?.remove(postProvider.post.imageUrls?.keys.toList()[index]);
+      postProvider.post.imageUrls
+          ?.remove(postProvider.post.imageUrls?.keys.toList()[index]);
       AppToasts.InfoToast(context, "Image successfully discarded");
     });
   }
 
   //fetch all users
   List<Map<String, dynamic>> refinedUsers = [];
-  List<Map<String,dynamic>> refinedHashTags = [] ;
+  List<Map<String, dynamic>> refinedHashTags = [];
   Future<List<Map<String, dynamic>>> fetchUsersAndHashTags() async {
-
     List<Map<String, dynamic>> users = await UserProfile.getAllAppUsersList();
     List<Map<String, dynamic>> hasTags = await PostApis.getAllHashTags();
 
@@ -63,18 +62,18 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         'id': user['userID'],
         'display': user['userName'],
         'full_name': user['userName'],
-        'description' : user['headLine'],
+        'description': user['headLine'],
         'photo': user['profilePath'] ?? "",
       };
     }).toList();
 
-    refinedHashTags = hasTags.map((ht){
-      return{
-        'id' : ht['id'],
-        'display' : ht['name'],
-        'followers' : ht['followers'],
-      } ;
-    }).toList() ;
+    refinedHashTags = hasTags.map((ht) {
+      return {
+        'id': ht['id'],
+        'display': ht['name'],
+        'followers': ht['followers'],
+      };
+    }).toList();
 
     // print(refinedHashTags) ;
 
@@ -107,7 +106,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<PostProvider,AppUserProvider>(builder: (context, postProvider,appUserProvider, child) {
+    return Consumer2<PostProvider, AppUserProvider>(
+        builder: (context, postProvider, appUserProvider, child) {
       return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: MaterialApp(
@@ -138,7 +138,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   children: [
                     Container(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: AppColors.theme['secondaryColor'],
                         borderRadius: BorderRadius.circular(8),
@@ -174,7 +174,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   children: [
                     Container(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: AppColors.theme['secondaryColor'],
                         borderRadius: BorderRadius.circular(8),
@@ -211,7 +211,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   children: [
                     Container(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: AppColors.theme['secondaryColor'],
                         borderRadius: BorderRadius.circular(8),
@@ -248,7 +248,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   children: [
                     Container(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: AppColors.theme['secondaryColor'],
                         borderRadius: BorderRadius.circular(8),
@@ -285,7 +285,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   children: [
                     Container(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: AppColors.theme['secondaryColor'],
                         borderRadius: BorderRadius.circular(8),
@@ -325,7 +325,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               elevation: 1,
               surfaceTintColor: AppColors.theme['primaryColor'],
               title: Text(
-                "Create Post",
+                postProvider.isPostEdit ? "Edit Post" : "Create Post",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 18,
@@ -336,45 +336,67 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: GestureDetector(
-                    onTap: () async {
 
-                      String description = mentions_key.currentState?.controller?.markupText ?? "";
+                    onTap: postProvider.isPostEdit
+                        ? () async {
+
+                      String description = mentions_key
+                          .currentState?.controller?.markupText ??
+                          "";
 
                       if (_formKey.currentState!.validate() &&
                           description.isNotEmpty) {
-
                         setState(() {
                           isLoading = true;
                         });
 
-                        String descode = HelperFunctions.stringToBase64(description) ;
+                        String descode = HelperFunctions.stringToBase64(description);
 
                         print("#before formatting :" + description);
 
-                        PostModel postmodel = PostModel(
-                          postId:  "",
+                        Map<String, dynamic> updatedData = PostModel(
+                          postId: postProvider.post.postId,
                           userId: appUserProvider.user?.userID,
                           description: descode,
-                          hasImage: postProvider.post.hasImage,
+                          hasImage: postProvider.images.isNotEmpty && (postProvider.post.hasImage ?? false),
                           hasPdf: postProvider.post.hasPdf,
                           hasPoll: postProvider.post.hasPoll,
-                          imageUrls: {},
+                          imageUrls: postProvider.post.imageUrls,
                           pdfUrl: postProvider.post.pdfUrl,
                           pollData: postProvider.post.pollData,
-                          repostCount: "0",
+                          repostCount: postProvider.post.repostCount,
                           attachmentName: postProvider.post.attachmentName,
                           time: DateTime.now().microsecondsSinceEpoch.toString(),
-                          comments: {},
-                          likes: {},
-                        );
+                          comments: postProvider.post.comments,
+                          likes: postProvider.post.likes,
+                        ).toJson();
 
                         print("#after formatting :" + descode);
 
-                        List<String> hashtages = detectHashtags(description);
+                        List<String> OldHashtages = detectHashtags(HelperFunctions.base64ToString(postProvider.post.description ?? "")) ;
 
-                        print("Before uploading post");
-                        await PostApis.addPost(postmodel, context, postProvider, postProvider.images, hashtages);
-                        print("After uploading post");
+                        // print("#old  :" ) ;
+                        // for(int i = 0 ; i<OldHashtages.length ; i++){
+                        //   print(OldHashtages) ;
+                        //   print("\n");
+                        // }
+
+                        List<String> NewHashtages = detectHashtags(description);
+                        //
+                        // print("#new  :" ) ;
+                        // for(int i = 0 ; i<NewHashtages.length ; i++){
+                        //   print(NewHashtages) ;
+                        //   print("\n");
+                        // }
+
+                        print("Before updating post");
+
+                        await PostApis.updatePost(postProvider.post.postId ?? "",updatedData, context,
+                            postProvider, postProvider.images, NewHashtages,OldHashtages);
+
+                        print("After updating post");
+
+                        postProvider.washPost();
 
                         setState(() {
                           isLoading = false;
@@ -386,11 +408,74 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
                         Navigator.pop(context);
 
-                      } else {
-                        AppToasts.WarningToast(
-                            context, "Description cannot be empty");
-                      }
-                    },
+                          } else {
+                              AppToasts.WarningToast(
+                                  context, "Description cannot be empty");
+                            }
+                          }
+                        : () async {
+                            String description = mentions_key
+                                    .currentState?.controller?.markupText ??
+                                "";
+
+                            if (_formKey.currentState!.validate() &&
+                                description.isNotEmpty) {
+                              setState(() {
+                                isLoading = true;
+                              });
+
+                              String descode =
+                                  HelperFunctions.stringToBase64(description);
+
+                              print("#before formatting :" + description);
+
+                              PostModel postmodel = PostModel(
+                                postId: "",
+                                userId: appUserProvider.user?.userID,
+                                description: descode,
+                                hasImage: postProvider.post.hasImage ?? false,
+                                hasPdf: postProvider.post.hasPdf,
+                                hasPoll: postProvider.post.hasPoll,
+                                imageUrls: {},
+                                pdfUrl: postProvider.post.pdfUrl,
+                                pollData: postProvider.post.pollData,
+                                repostCount: "0",
+                                attachmentName:
+                                    postProvider.post.attachmentName,
+                                time: DateTime.now()
+                                    .microsecondsSinceEpoch
+                                    .toString(),
+                                comments: {},
+                                likes: {},
+                              );
+
+                              print("#after formatting :" + descode);
+
+                              List<String> hashtages =
+                                  detectHashtags(description);
+
+                              print("Before uploading post");
+                              await PostApis.addPost(postmodel, context,
+                                  postProvider, postProvider.images, hashtages);
+                              print("After uploading post");
+
+                              postProvider.images = [] ;
+
+                              setState(() {
+                                isLoading = false;
+                              });
+
+                              setState(() {
+                                postProvider.postsFuture =
+                                    postProvider.getPosts();
+                              });
+
+                              Navigator.pop(context);
+                            } else {
+                              AppToasts.WarningToast(
+                                  context, "Description cannot be empty");
+                            }
+                          },
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 500),
                       curve: Curves.easeInOut,
@@ -398,24 +483,24 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       width: isLoading ? 50 : 100,
                       child: !isLoading
                           ? Center(
-                        child: Text(
-                          "Create",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: isButtonEnabled
-                                ? AppColors.theme['secondaryColor']
-                                : AppColors.theme['tertiaryColor']
-                                .withOpacity(0.5),
-                          ),
-                        ),
-                      )
+                              child: Text(
+                                postProvider.isPostEdit ? "Edit" : "Create",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: isButtonEnabled
+                                      ? AppColors.theme['secondaryColor']
+                                      : AppColors.theme['tertiaryColor']
+                                          .withOpacity(0.5),
+                                ),
+                              ),
+                            )
                           : Center(
-                          child: Container(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                              ))),
+                              child: Container(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ))),
                       decoration: BoxDecoration(
                         color: isButtonEnabled
                             ? AppColors.theme['primaryColor']
@@ -444,14 +529,14 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               key: _formKey,
               child: Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                 child: SingleChildScrollView(
                   physics: BouncingScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      buildDescriptionTextField(),
+                      buildDescriptionTextField(postProvider),
 
                       // displaying image if not empty
                       if (postProvider.post.imageUrls?.isNotEmpty ?? false)
@@ -467,8 +552,23 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     });
   }
 
+  String editFormatText(String input) {
+
+    final regex = RegExp(r'([#@])\[\S+\]\(__(.+?)__\)');
+
+    return input.replaceAllMapped(regex, (match) => '${match.group(1)}${match.group(2)}');
+
+  }
+
   // description
-  Widget buildDescriptionTextField() {
+  Widget buildDescriptionTextField(PostProvider postProvider) {
+    String defaultText = "" ;
+    if (postProvider.isPostEdit) {
+      defaultText =  editFormatText(HelperFunctions.base64ToString(postProvider.post.description ?? ""));
+
+      print("check defaultText : ${defaultText}") ;
+
+    }
     return Container(
       child: Theme(
         data: ThemeData(
@@ -482,6 +582,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           key: mentions_key,
           // suggestionPosition: SuggestionPosition.,
           maxLength: null,
+          defaultText: defaultText,
           maxLines: 1000000000000000000,
           minLines: 1,
           decoration: InputDecoration(
@@ -491,19 +592,22 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           mentions: [
             Mention(
               trigger: '@',
-              style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
               data: refinedUsers,
               suggestionBuilder: (data) {
                 return ListTile(
-                  leading: data['photo']=="" ? CircleAvatar(
-                      radius: 24,
-                      backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.1),
-                      backgroundImage: AssetImage("assets/other_images/photo.png")
-                  ) :CircleAvatar(
-                      radius: 24,
-                      backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.1),
-                      backgroundImage: NetworkImage(data['photo'])
-                  ),
+                  leading: data['photo'] == ""
+                      ? CircleAvatar(
+                          radius: 24,
+                          backgroundColor:
+                              AppColors.theme['primaryColor'].withOpacity(0.1),
+                          backgroundImage:
+                              AssetImage("assets/other_images/photo.png"))
+                      : CircleAvatar(
+                          radius: 24,
+                          backgroundColor:
+                              AppColors.theme['primaryColor'].withOpacity(0.1),
+                          backgroundImage: NetworkImage(data['photo'])),
                   title: Text(
                     data['full_name'],
                     style: TextStyle(fontWeight: FontWeight.bold),
@@ -519,16 +623,16 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             ),
             Mention(
               trigger: '#',
-              style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),
-              data:refinedHashTags,
-              suggestionBuilder: (data){
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              data: refinedHashTags,
+              suggestionBuilder: (data) {
                 return ListTile(
                   title: Text(
                     data['display'],
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   subtitle: Text(
-                      "${data['followers']?.length ?? 0} Followers",
+                    "${data['followers']?.length ?? 0} Followers",
                     style: TextStyle(color: Colors.grey[600], fontSize: 14),
                   ),
                 );
@@ -569,7 +673,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           ),
                           Text14(
                             text:
-                            "${postProvider.post.imageUrls?.length.toString()} Images",
+                                "${postProvider.post.imageUrls?.length.toString()} Images",
                             isBold: true,
                           ),
                         ],
@@ -585,8 +689,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       itemCount: postProvider.post.imageUrls?.length,
                       options: CarouselOptions(
                         height: 300,
-                        enableInfiniteScroll: true,
-                        autoPlay: true,
+                        enableInfiniteScroll: false,
+                        autoPlay: false,
                         enlargeCenterPage: true,
                       ),
                       itemBuilder: (context, index, realIndex) {
@@ -594,11 +698,21 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: Image.file(
-                                File(postProvider.post.imageUrls?.keys.toList()[index] ?? ""),
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
+                              child: (postProvider.isPostEdit && postProvider.images.length==0)
+                                  ? Image.network(
+                                      HelperFunctions.base64ToString(
+                                          postProvider.post.imageUrls!.keys
+                                              .toList()[index]),
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.file(
+                                      File(postProvider.post.imageUrls?.keys
+                                              .toList()[index] ??
+                                          ""),
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
                             Positioned(
                               top: 10,
@@ -630,18 +744,22 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                 ),
                               ),
                             ),
-
                             Positioned(
                               bottom: 10,
                               left: 10,
                               child: GestureDetector(
                                 onTap: () {
-                                  List<String> imagePaths = postProvider.post.imageUrls?.keys.toList() ?? [];
+                                  List<String> imagePaths = postProvider
+                                          .post.imageUrls?.keys
+                                          .toList() ??
+                                      [];
                                   Navigator.push(
                                     context,
                                     LeftToRight(
                                       ImageViewScreen(
-                                        path: imagePaths.isNotEmpty ? imagePaths[index] : "",
+                                        path: imagePaths.isNotEmpty
+                                            ? imagePaths[index]
+                                            : "",
                                         isFile: true,
                                       ),
                                     ),
@@ -680,7 +798,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             ),
             GestureDetector(
               onTap: () {
-
                 print("clicked");
 
                 postProvider.post.imageUrls = {};
@@ -727,5 +844,4 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       return match.group(1) ?? match.group(2)!;
     }).toList();
   }
-
 }

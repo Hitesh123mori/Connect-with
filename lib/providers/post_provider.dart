@@ -11,6 +11,7 @@ class PostProvider extends ChangeNotifier {
   List<File> images = [];
   List<PostModel> posts = [];
   bool isLoading = true;
+  bool isPostEdit = false;
   late Future<List<PostModel>> postsFuture;
 
   Future<List<PostModel>> getPosts() async {
@@ -36,6 +37,8 @@ class PostProvider extends ChangeNotifier {
 
   void washPost() {
     post = PostModel();
+    images = [] ;
+    isPostEdit = false;
   }
 
   void notify() {
