@@ -117,7 +117,6 @@ class OrganizationProfile {
     try {
       final docSnapshot = await _collectionRefOrg.doc(organizationId).get();
       if (docSnapshot.exists) {
-
         return docSnapshot.data();
       } else {
         return false;
