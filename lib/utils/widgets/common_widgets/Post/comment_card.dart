@@ -1,12 +1,18 @@
 import 'dart:developer';
 
+import 'package:connect_with/apis/common/auth_apis.dart';
 import 'package:connect_with/apis/common/post/post_api.dart';
+import 'package:connect_with/apis/init/config.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
+import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/common/post_models/post_model.dart';
+import 'package:connect_with/models/organization/organization.dart';
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/other_user_profile_screen.dart';
+import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/other_company_profile.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/helper_functions/helper_functions.dart';
 import 'package:connect_with/utils/theme/colors.dart';
@@ -28,10 +34,14 @@ class CommentCard extends StatefulWidget {
 }
 
 class _CommentCardState extends State<CommentCard> {
+
   bool showMore = false;
 
+  bool isCommentOrg = false;
+  bool isAuthIsOrg = false;
 
   AppUser? user;
+  Organization? org ;
 
   List<Map<String, dynamic>> refinedUsers = [];
 
@@ -53,14 +63,36 @@ class _CommentCardState extends State<CommentCard> {
 
 
     return refinedUsers;
+
   }
 
   Future<void> fetchUser() async {
     try {
-      var userData = await UserProfile.getUser(widget.cm.userId ?? "");
-      setState(() {
-        user = AppUser.fromJson(userData);
-      });
+
+      isAuthIsOrg = await AuthApi.userExistsById(Config.auth.currentUser!.uid, true);
+
+      isCommentOrg  =  await AuthApi.userExistsById(widget.cm.userId ?? "", true);
+
+      // print("isCommentOrg : ${isCommentOrg} ") ;
+
+      if(isCommentOrg){
+
+        var userData = await OrganizationProfile.getOrganizationById(widget.cm.userId ?? "");
+
+        setState(() {
+          org = Organization.fromJson(userData);
+          // print("Org Name : ${org?.name} ") ;
+        });
+      }else{
+        var userData = await UserProfile.getUser(widget.cm.userId ?? "");
+
+        setState(() {
+          user = AppUser.fromJson(userData);
+          // print("User Name : ${user?.userName} ") ;
+        });
+      }
+
+
     } catch (e) {
       log("Error while fetching user in comment card: $e");
     }
@@ -73,7 +105,7 @@ class _CommentCardState extends State<CommentCard> {
     fetchUsers() ;
   }
 
-  void toggleLike(AppUser likeUser,bool isLiked) async {
+  void toggleLike(String likeUserID,bool isLiked) async {
     setState(() {
       isLiked = !isLiked;
     });
@@ -81,10 +113,10 @@ class _CommentCardState extends State<CommentCard> {
     try {
       if (isLiked) {
         await PostApis.addLikeComment(
-            widget.postId ?? "",widget.cm.commentId ?? "" ,likeUser.userID ?? "");
+            widget.postId ?? "",widget.cm.commentId ?? "" ,likeUserID ?? "");
       } else {
         await PostApis.removeLikeComment(
-            widget.postId ?? "", widget.cm.commentId ?? "",likeUser.userID ?? "");
+            widget.postId ?? "", widget.cm.commentId ?? "",likeUserID ?? "");
       }
       setState(() {});
     } catch (e) {
@@ -96,7 +128,7 @@ class _CommentCardState extends State<CommentCard> {
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
-    return Consumer<AppUserProvider>(builder: (context,appUserProvider,child){
+    return Consumer2<AppUserProvider,OrganizationProvider>(builder: (context,appUserProvider,orgProvider,child){
       return Column(
         children: [
 
@@ -127,7 +159,9 @@ class _CommentCardState extends State<CommentCard> {
                     children: [
                       // user details and time
                       GestureDetector(
-                      onTap : (){
+                      onTap :isCommentOrg? (){
+                        Navigator.push(context, LeftToRight(OtherCompanyProfile(org: org ?? Organization()))) ;
+                        }  :(){
                         Navigator.push(context, LeftToRight(OtherUserProfileScreen(user: user ?? AppUser()))) ;
                       },
                         child: Row(
@@ -147,7 +181,15 @@ class _CommentCardState extends State<CommentCard> {
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    isCommentOrg ?
                                     CircleAvatar(
+                                      radius: 20,
+                                      backgroundImage: org?.logo == ""? AssetImage("assets/other_images/org_logo.png") :NetworkImage(org?.logo ?? ""),
+                                      backgroundColor: AppColors
+                                          .theme['primaryColor']
+                                          .withOpacity(0.1),
+                                     )
+                                         : CircleAvatar(
                                       radius: 20,
                                       backgroundImage: user?.profilePath == ""? AssetImage("assets/other_images/photo.png") :NetworkImage(user?.profilePath ?? ""),
                                       backgroundColor: AppColors
@@ -162,7 +204,7 @@ class _CommentCardState extends State<CommentCard> {
                                       children: [
                                         Row(
                                           children: [
-                                            Text(user?.userName ?? "",
+                                            Text(isCommentOrg ? (org?.name??"")  : (user?.userName ?? ""),
                                                 style: TextStyle(
                                                     fontSize: 12,
                                                     fontWeight: FontWeight.bold,
@@ -171,7 +213,7 @@ class _CommentCardState extends State<CommentCard> {
                                             SizedBox(
                                               width: 5,
                                             ),
-                                            if (user?.userID == widget.postCreater)
+                                            if ((isCommentOrg ? (org?.organizationId) : (user?.userID)) == widget.postCreater)
                                               Container(
                                                 height: 20,
                                                 width: 60,
@@ -193,7 +235,7 @@ class _CommentCardState extends State<CommentCard> {
                                           ],
                                         ),
                                         Text(
-                                          user?.headLine ?? "",
+                                          (isCommentOrg? (org?.domain ?? "")  : (user?.headLine ?? "")),
                                           style: TextStyle(
                                               fontSize: 12,
                                               color: AppColors
@@ -206,9 +248,10 @@ class _CommentCardState extends State<CommentCard> {
                                 ),
                               ),
                             ),
+
+                            if((isAuthIsOrg ? (orgProvider.organization?.organizationId) : (appUserProvider.user?.userID)) == widget.cm.userId)
                             Row(
                               children: [
-
                                 Padding(
                                   padding: const EdgeInsets.only(top: 15.0,),
                                   child: CustomPopup(
@@ -303,7 +346,7 @@ class _CommentCardState extends State<CommentCard> {
                                 GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      toggleLike(appUserProvider.user ?? AppUser(),widget.cm.likes?[appUserProvider.user?.userID] ?? false);
+                                      toggleLike(isAuthIsOrg? (orgProvider.organization?.organizationId ?? "") :(appUserProvider.user?.userID ?? ""), isAuthIsOrg ? (widget.cm.likes?[orgProvider.organization?.organizationId] ?? false)  : (widget.cm.likes?[appUserProvider.user?.userID] ?? false));
                                     });
                                   },
                                   child: Column(
@@ -315,16 +358,16 @@ class _CommentCardState extends State<CommentCard> {
                                           return ScaleTransition(
                                               scale: animation, child: child);
                                         },
-                                        child: widget.cm.likes?[appUserProvider.user?.userID] ?? false
+                                        child: (isAuthIsOrg ? (widget.cm.likes?[orgProvider.organization?.organizationId] ?? false)  : (widget.cm.likes?[appUserProvider.user?.userID] ?? false))
                                             ? FaIcon(
                                           FontAwesomeIcons.solidThumbsUp,
-                                          key: ValueKey<bool>(widget.cm.likes?[appUserProvider.user?.userID] ?? false),
+                                          key: ValueKey<bool>(isAuthIsOrg ? (widget.cm.likes?[orgProvider.organization?.organizationId] ?? false)  : (widget.cm.likes?[appUserProvider.user?.userID] ?? false)),
                                           color: Colors.blueAccent,
                                           size: 18,
                                         )
                                             : FaIcon(
                                           FontAwesomeIcons.thumbsUp,
-                                          key: ValueKey<bool>(widget.cm.likes?[appUserProvider.user?.userID] ?? false),
+                                          key: ValueKey<bool>(isAuthIsOrg ? (widget.cm.likes?[orgProvider.organization?.organizationId] ?? false)  : (widget.cm.likes?[appUserProvider.user?.userID] ?? false)),
                                           color: AppColors.theme['tertiaryColor']!
                                               .withOpacity(0.5),
                                           size: 18,
