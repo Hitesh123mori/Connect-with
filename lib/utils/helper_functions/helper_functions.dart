@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'package:connect_with/apis/common/auth_apis.dart';
 import 'package:connect_with/apis/common/post/post_api.dart';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
+import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/models/common/post_models/hashtag_model.dart';
+import 'package:connect_with/models/organization/organization.dart';
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/other_user_profile_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/hash_tag_screen.dart';
+import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/other_company_profile.dart';
 import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/gestures.dart';
@@ -165,8 +169,15 @@ class HelperFunctions{
             recognizer: TapGestureRecognizer()
               ..onTap = ()async{
                 print("Mention ID: ${match[1]}") ;
-               AppUser? user =  await fetchUser(match[1] ?? "") ;
-               Navigator.push(context, LeftToRight(OtherUserProfileScreen(user : user ?? AppUser())));
+                bool isOrg = await AuthApi.userExistsById(match[1] ?? "", true);
+                if(isOrg){
+                  Organization? org = await fetchOrganization(match[1] ?? "") ;
+                  Navigator.push(context, LeftToRight(OtherCompanyProfile(org : org ?? Organization())));
+                }else{
+                  AppUser? user =  await fetchUser(match[1] ?? "") ;
+                  Navigator.push(context, LeftToRight(OtherUserProfileScreen(user : user ?? AppUser())));
+                }
+
               },
           ),
         );
@@ -279,6 +290,14 @@ class HelperFunctions{
     final userData = await UserProfile.getUser(userId);
     if (userData is Map<String, dynamic>) {
       return AppUser.fromJson(userData);
+    }
+    return null;
+  }
+
+  static Future<Organization?> fetchOrganization(String orgID) async {
+    final orgData = await OrganizationProfile.getOrganizationById(orgID);
+    if (orgData is Map<String, dynamic>) {
+      return Organization.fromJson(orgData);
     }
     return null;
   }
