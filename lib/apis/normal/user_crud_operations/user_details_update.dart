@@ -156,6 +156,99 @@ class UserProfile {
 //   }
 // }
 
+  // add follower
+  static Future<bool> addFollower(String userId, String followerId) async {
+    try {
+      await _collectionRef.doc(userId).update({
+        'followers': FieldValue.arrayUnion([followerId]),
+      });
+      log("Added follower: $followerId to user: $userId");
+      return true;
+    } catch (error, stackTrace) {
+      log("Error adding follower: $error, $stackTrace");
+      return false;
+    }
+  }
+
+  // Add following
+  static Future<bool> addFollowing(String userId, String followingId) async {
+    try {
+      await _collectionRef.doc(userId).update({
+        'following': FieldValue.arrayUnion([followingId]),
+      });
+      log("Added following: $followingId to user: $userId");
+      return true;
+    } catch (error, stackTrace) {
+      log("Error adding following: $error, $stackTrace");
+      return false;
+    }
+  }
+
+  // Remove follower
+  static Future<bool> removeFollower(String userId, String followerId) async {
+    try {
+      await _collectionRef.doc(userId).update({
+        'followers': FieldValue.arrayRemove([followerId]),
+      });
+      log("Removed follower: $followerId from user: $userId");
+      return true;
+    } catch (error, stackTrace) {
+      log("Error removing follower: $error, $stackTrace");
+      return false;
+    }
+  }
+
+  // Remove following
+  static Future<bool> removeFollowing(String userId, String followingId) async {
+    try {
+      await _collectionRef.doc(userId).update({
+        'following': FieldValue.arrayRemove([followingId]),
+      });
+      log("Removed following: $followingId from user: $userId");
+      return true;
+    } catch (error, stackTrace) {
+      log("Error removing following: $error, $stackTrace");
+      return false;
+    }
+  }
+
+  // check isfollowing
+  static Future<bool> isFollowing(String currentUserId, String targetUserId) async {
+    try {
+      final docSnapshot = await _collectionRef.doc(currentUserId).get();
+
+      if (docSnapshot.exists) {
+        final userData = docSnapshot.data();
+        List<dynamic> followingList = userData?['following'] ?? [];
+
+        return followingList.contains(targetUserId);
+      }
+
+      return false;
+    } catch (e) {
+      log('Error checking following status: $e');
+      return false;
+    }
+  }
+
+  //check isfollower
+  static Future<bool> isFollower(String currentUserId, String targetUserId) async {
+    try {
+      final docSnapshot = await _collectionRef.doc(targetUserId).get();
+
+      if (docSnapshot.exists) {
+        final userData = docSnapshot.data();
+        List<dynamic> followerList = userData?['followers'] ?? [];
+
+        return followerList.contains(currentUserId);
+      }
+
+      return false;
+    } catch (e) {
+      log('Error checking followers status: $e');
+      return false;
+    }
+  }
 
 
 }

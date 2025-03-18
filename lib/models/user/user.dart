@@ -8,14 +8,12 @@ import 'package:connect_with/models/user/project.dart';
 import 'package:connect_with/models/user/skills.dart';
 import 'package:connect_with/models/user/speak_language_user.dart';
 import 'package:connect_with/models/user/test_score.dart';
-
-
 class AppUser {
   String? userID;
   String? email;
   bool? showProject;
-  bool?showScore;
-  bool? isOrganization ;
+  bool? showScore;
+  bool? isOrganization;
   bool? showEducation;
   bool? showSkill;
   String? userName;
@@ -24,11 +22,11 @@ class AppUser {
   String? profilePath;
   String? coverPath;
   String? headLine;
-  bool?showExperience;
+  bool? showExperience;
   Address? address;
   String? about;
-  int? followers;
-  int? following;
+  List<String>? followers;
+  List<String>? following;
   int? profileViews;
   int? searchCount;
   List<TestScores>? testScores;
@@ -78,13 +76,13 @@ class AppUser {
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['userID'] = userID;
-    map['showSkill']=showSkill;
-    map['showEducation'] =showEducation;
+    map['showSkill'] = showSkill;
+    map['showEducation'] = showEducation;
     map['showExperience'] = showExperience;
-    map['showLanguage']=showLanguage;
+    map['showLanguage'] = showLanguage;
     map['isOrganization'] = isOrganization;
     map['email'] = email;
-    map['showProject']=showProject;
+    map['showProject'] = showProject;
     map['userName'] = userName;
     map['showScore'] = showScore;
     map['pronoun'] = pronoun;
@@ -100,7 +98,6 @@ class AppUser {
     map['following'] = following;
     map['profileViews'] = profileViews;
     map['searchCount'] = searchCount;
-    map['showExperience']=showExperience;
     if (testScores != null) {
       map['testScores'] = testScores!.map((e) => e.toJson()).toList();
     }
@@ -134,15 +131,15 @@ class AppUser {
   factory AppUser.fromJson(dynamic json) {
     return AppUser(
       userID: json['userID'],
-      showEducation:json['showEducation'],
-      showProject:json['showProject'],
-      showExperience:json['showExperience'],
-      isOrganization : json['isOrganization'],
+      showEducation: json['showEducation'],
+      showProject: json['showProject'],
+      showExperience: json['showExperience'],
+      isOrganization: json['isOrganization'],
       email: json['email'],
-      showScore:json['showScore'],
-      showSkill:json['showSkill'],
+      showScore: json['showScore'],
+      showSkill: json['showSkill'],
       userName: json['userName'],
-      showLanguage:json['showLanguage'],
+      showLanguage: json['showLanguage'],
       pronoun: json['pronoun'],
       profilePath: json['profilePath'],
       coverPath: json['coverPath'],
@@ -150,16 +147,14 @@ class AppUser {
       createAt: json['create-at'],
       address: json['address'] != null ? Address.fromJson(json['address']) : null,
       about: json['about'],
-      followers: json['followers'],
-      following: json['following'],
+      followers: json['followers'] != null ? List<String>.from(json['followers']) : [],
+      following: json['following'] != null ? List<String>.from(json['following']) : [],
       profileViews: json['profileViews'],
       searchCount: json['searchCount'],
       info: json['info'] != null ? ContactInfo.fromJson(json['info']) : null,
       button: json['button'] != null ? CustomButton.fromJson(json['button']) : null,
       testScores: json['testScores'] != null
-          ? (json['testScores'] as List)
-          .map((e) => TestScores.fromJson(e))
-          .toList()
+          ? (json['testScores'] as List).map((e) => TestScores.fromJson(e)).toList()
           : null,
       skills: json['skills'] != null
           ? (json['skills'] as List).map((e) => Skill.fromJson(e)).toList()
@@ -177,9 +172,7 @@ class AppUser {
           ? (json['educations'] as List).map((e) => Education.fromJson(e)).toList()
           : [],
       lacertificate: json['lacertificate'] != null
-          ? (json['lacertificate'] as List)
-          .map((e) => LicenseAndCertificate.fromJson(e))
-          .toList()
+          ? (json['lacertificate'] as List).map((e) => LicenseAndCertificate.fromJson(e)).toList()
           : [],
     );
   }
