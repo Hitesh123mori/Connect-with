@@ -238,8 +238,11 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
-                      Row(
+                      if(widget.user.userID!=appUserProvider.user?.userID)
+                        SizedBox(height: 20),
+
+                      if(widget.user.userID!=appUserProvider.user?.userID)
+                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           CustomProfileButtonOrg(
@@ -248,15 +251,28 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                             onTap:isFollowing ? ()async{
 
                               await UserProfile.removeFollower(widget.user.userID ?? "",appUserProvider.user?.userID ?? "") ;
+                              await UserProfile.removeFollowing(appUserProvider.user?.userID ?? "", widget.user.userID ?? "") ;
+
                               setState(() {
                                 appUserProvider.initUser();
+                              });
+
+                              await checkIsFollowing(context) ;
+                              setState(() {
+
                               });
 
                              }  :  ()async{
 
                               await UserProfile.addFollower(widget.user.userID ?? "",appUserProvider.user?.userID ?? "") ;
+                              await UserProfile.addFollowing(appUserProvider.user?.userID ?? "", widget.user.userID ?? "");
                               setState(() {
                                 appUserProvider.initUser();
+                              });
+
+                              await checkIsFollowing(context) ;
+                              setState(() {
+
                               });
 
                             },
