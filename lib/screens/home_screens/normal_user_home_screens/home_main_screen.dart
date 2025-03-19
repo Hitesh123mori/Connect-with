@@ -107,11 +107,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Divider(),
                     DrawerContainer(
-                      data: appUserProvider.user?.followers.toString() ?? "0",
+                      data: appUserProvider.user?.followers?.length.toString() ?? "0",
                       label: 'Followers',
                     ),
                     DrawerContainer(
-                      data: appUserProvider.user?.following.toString() ?? "0",
+                      data: appUserProvider.user?.following?.length.toString() ?? "0",
                       label: 'Following',
                     ),
                     DrawerContainer(
