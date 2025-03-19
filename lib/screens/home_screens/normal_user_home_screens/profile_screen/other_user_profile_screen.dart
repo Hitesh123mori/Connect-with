@@ -38,6 +38,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
 
 
   bool isFollowing = false;
+  bool isConnected = false;
 
   Future<void> checkIsFollowing(BuildContext context) async {
     final userProvider = Provider.of<AppUserProvider>(context, listen: false);
@@ -45,6 +46,11 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
     isFollowing = await UserProfile.isFollower(
       userProvider.user?.userID ?? "",
       widget.user.userID ?? "",
+    );
+
+    isConnected  = isFollowing && await UserProfile.isFollower(
+      widget.user.userID ?? "",
+      userProvider.user?.userID ?? ""
     );
 
     setState(() {});
@@ -61,7 +67,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
-    print("isfollowing : ${isFollowing}");
+    // print("isfollowing : ${isFollowing}");
     return Consumer<AppUserProvider>(builder: (context,appUserProvider,child){
       return MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -188,7 +194,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                         softWrap: true,
                         overflow: TextOverflow.visible,
                       ),
-                      if (widget.user.info?.address != ",,.")
+                      if (widget.user.info?.address != "")
                         Column(
                           children: [
                             SizedBox(
@@ -280,8 +286,12 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                           ),
                           CustomProfileButtonOrg(
                             bgColor: AppColors.theme['primaryColor'],
-                            text: 'Connect',
-                            onTap: () {},
+                            text: isConnected ? 'Connected' : "Connect",
+                            onTap: () {
+
+                              // here send request for connection
+
+                            },
                             isBorder: false,
                           ),
                           InkWell(

@@ -205,7 +205,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         softWrap: true,
                         overflow: TextOverflow.visible,
                       ),
-                      if (appUserProvider.user!.info?.address != ",,.")
+                      if (appUserProvider.user!.info?.address != "")
                         Column(
                           children: [
                             SizedBox(
