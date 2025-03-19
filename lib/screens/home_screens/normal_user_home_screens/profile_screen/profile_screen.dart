@@ -235,7 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Row(
                         children: [
                           Text(
-                            (appUserProvider.user?.followers.toString() ??
+                            (appUserProvider.user?.followers?.length.toString() ??
                                     "0") +
                                 " Followers",
                             style: TextStyle(
@@ -251,7 +251,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           SizedBox(width: 5),
                           Text(
-                            (appUserProvider.user?.following.toString() ??
+                            (appUserProvider.user?.following?.length.toString() ??
                                     "0") +
                                 " Following",
                             style: TextStyle(
