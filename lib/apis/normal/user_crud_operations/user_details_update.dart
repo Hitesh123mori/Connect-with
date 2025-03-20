@@ -113,7 +113,14 @@ class UserProfile {
     return _collectionRef.snapshots();
   }
 
-   // list of all users
+  static Stream<List<AppUser>> getAllUsersList() {
+    return _collectionRef.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => AppUser.fromJson(doc.data())).toList();
+    });
+  }
+
+
+  // list of all users
   static Future<List<Map<String, dynamic>>> getAllAppUsersList() async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await _collectionRef.get();
     return snapshot.docs.map((doc) => doc.data()).toList();
