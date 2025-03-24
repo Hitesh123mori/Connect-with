@@ -105,7 +105,8 @@ class AuthApi {
           stateName: "",
           cityName: "",
         ),
-        followers: 0,
+        followings: [],
+        followers: [],
         employees: [],
         jobs: [],
         about: "We are using ConnectWith for making connections.",
@@ -124,6 +125,7 @@ class AuthApi {
     } else {
       final appUser = AppUser(
         isOrganization: false,
+        organizations : [],
         userID: userCredential.user!.uid,
         email: email,
         showScore: false,

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connect_with/apis/init/config.dart';
 import 'package:connect_with/models/organization/job_model.dart';
+import 'package:connect_with/models/organization/organization.dart';
 import 'package:connect_with/providers/organization_provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -262,6 +263,89 @@ class OrganizationProfile {
       return false;
     }
   }
+
+  // get all Organization
+  static Stream<List<Organization>> getAllOrganizationList() {
+    return _collectionRefOrg.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => Organization.fromJson(doc.data())).toList();
+    });
+  }
+
+  // add follower
+  static Future<bool> addFollowerToOrg(String orgId, String followerId) async {
+    try {
+      await _collectionRefOrg.doc(orgId).update({
+        'followers': FieldValue.arrayUnion([followerId]),
+      });
+      log("Added follower: $followerId to user: $orgId");
+      return true;
+    } catch (error, stackTrace) {
+      log("Error adding follower: $error, $stackTrace");
+      return false;
+    }
+  }
+
+  //remove follower
+  static Future<bool> removeFollowerFromOrg(String orgId, String followerId) async {
+    try {
+      await _collectionRefOrg.doc(orgId).update({
+        'followers': FieldValue.arrayRemove([followerId]),
+      });
+      log("Removed follower: $followerId from user: $orgId");
+      return true;
+    } catch (error, stackTrace) {
+      log("Error removing follower: $error, $stackTrace");
+      return false;
+    }
+  }
+
+  //check isfollower
+  static Future<bool> isFollowerOfOrg(String currentUserId, String targetUserId) async {
+    try {
+      final docSnapshot = await _collectionRefOrg.doc(targetUserId).get();
+
+      if (docSnapshot.exists) {
+        final userData = docSnapshot.data();
+        List<dynamic> followerList = userData?['followers'] ?? [];
+
+        return followerList.contains(currentUserId);
+      }
+
+      return false;
+    } catch (e) {
+      log('Error checking followers status: $e');
+      return false;
+    }
+  }
+
+  // add following
+  static Future<bool> addFollowingToOrg(String orgId, String followingId) async {
+    try {
+      await _collectionRefOrg.doc(orgId).update({
+        'followings': FieldValue.arrayUnion([followingId]),
+      });
+      log("Added following: $followingId to user: $orgId");
+      return true;
+    } catch (error, stackTrace) {
+      log("Error adding following: $error, $stackTrace");
+      return false;
+    }
+  }
+
+  // remove following
+  static Future<bool> removeFollowingFromOrg(String orgId, String followingId) async {
+    try {
+      await _collectionRefOrg.doc(orgId).update({
+        'followings': FieldValue.arrayRemove([followingId]),
+      });
+      log("Removed following: $followingId from user: $orgId");
+      return true;
+    } catch (error, stackTrace) {
+      log("Error removing following: $error, $stackTrace");
+      return false;
+    }
+  }
+
 
 
 }

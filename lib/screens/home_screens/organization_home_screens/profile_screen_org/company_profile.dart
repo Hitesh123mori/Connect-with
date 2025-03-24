@@ -180,7 +180,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
                                   isBold: false,
                                 ),
                                 Text14(
-                                  text: ((orgProvider.organization?.followers
+                                  text: ((orgProvider.organization?.followers?.length
                                       .toString() ??
                                       "0") +
                                       " Followers"),

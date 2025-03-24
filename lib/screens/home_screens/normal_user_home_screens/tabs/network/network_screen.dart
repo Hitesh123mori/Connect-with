@@ -1,9 +1,13 @@
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
+import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
+import 'package:connect_with/models/organization/organization.dart';
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/utils/shimmer_effects/common/connections/connection_user_card_shimmer_effect.dart';
 import 'package:connect_with/utils/theme/colors.dart';
+import 'package:connect_with/utils/widgets/common_widgets/connection_card/connection_organization_card.dart';
 import 'package:connect_with/utils/widgets/common_widgets/connection_card/connection_user_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +24,7 @@ class _NetWorkScreenState extends State<NetWorkScreen> {
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
 
-    return Consumer<AppUserProvider>(builder: (context, appUserProvider, child) {
+    return Consumer2<AppUserProvider,OrganizationProvider>(builder: (context, appUserProvider,organizationProvider ,child) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -140,7 +144,62 @@ class _NetWorkScreenState extends State<NetWorkScreen> {
                       ),
                     );
                   },
+                ),
+
+
+                StreamBuilder<List<Organization>>(
+                  stream: OrganizationProfile.getAllOrganizationList(),
+                  builder: (context, snapshot) {
+
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: 10,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                            childAspectRatio: 0.9,
+                          ),
+                          itemBuilder: (context, index) {
+                            return ConnectionUserCardShimmer(); // Show shimmer effect
+                          },
+                        ),
+                      );
+                    }
+
+                    if (!snapshot.hasData || snapshot.data == null || snapshot.data!.isEmpty) {
+                      return Center(child: Text("No orgs found"));
+                    }
+
+                    final orgs = snapshot.data!
+                        .where((org) => org.organizationId != organizationProvider.organization?.organizationId)
+                        .toList();
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: orgs.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 0.9,
+                        ),
+                        itemBuilder: (context, index) {
+                          return ConnectionOrganizationCard(org: orgs[index],);
+                        },
+                      ),
+                    );
+                  },
                 )
+
+
 
 
               ],

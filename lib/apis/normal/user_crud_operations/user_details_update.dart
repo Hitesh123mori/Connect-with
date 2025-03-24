@@ -205,6 +205,34 @@ class UserProfile {
     }
   }
 
+  // add organization following
+  static Future<bool> addFollowingOrg(String userId, String followingId) async {
+    try {
+      await _collectionRef.doc(userId).update({
+        'organizations': FieldValue.arrayUnion([followingId]),
+      });
+      log("Added following: $followingId to user: $userId");
+      return true;
+    } catch (error, stackTrace) {
+      log("Error adding following: $error, $stackTrace");
+      return false;
+    }
+  }
+
+  //remove organization following
+  static Future<bool> removeFollowingOrg(String userId, String followingId) async {
+    try {
+      await _collectionRef.doc(userId).update({
+        'organizations': FieldValue.arrayRemove([followingId]),
+      });
+      log("Removed following: $followingId from user: $userId");
+      return true;
+    } catch (error, stackTrace) {
+      log("Error removing following: $error, $stackTrace");
+      return false;
+    }
+  }
+
   // Remove following
   static Future<bool> removeFollowing(String userId, String followingId) async {
     try {

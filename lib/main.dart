@@ -1,5 +1,6 @@
 import 'package:connect_with/providers/buckets_provider.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/providers/general_provider.dart';
 import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/providers/post_provider.dart';
 import 'package:connect_with/screens/onboard_screens/splash_screen.dart';
@@ -25,6 +26,7 @@ void main()async{
         ChangeNotifierProvider(create: (context)=>OrganizationProvider()),
         ChangeNotifierProvider(create: (context) => PostProvider()),
         ChangeNotifierProvider(create: (context)=>BucketsProvider()),
+        ChangeNotifierProvider(create: (context)=>GeneralProvider()),
 
       ],
       child: MyApp()));

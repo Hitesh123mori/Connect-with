@@ -18,7 +18,11 @@ class AppUserProvider extends ChangeNotifier {
 
     // log("#authId: $uid");
     if (uid != null) {
-      user = AppUser.fromJson(await UserProfile.getUser(uid));
+      try{
+        user = AppUser.fromJson(await UserProfile.getUser(uid));
+      }catch(e){
+        print("error while init in appuserprovider : $e") ;
+      }
       // await NotificationApi.getFirebaseMessagingToken(uid);
     }
     notifyListeners();

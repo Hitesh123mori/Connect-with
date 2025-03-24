@@ -113,7 +113,7 @@ class _HomeOrganizationMainScreenState
                   ),
                   Divider(),
                   DrawerContainer(
-                    data: organizationProvider.organization?.followers
+                    data: organizationProvider.organization?.followers?.length
                             .toString() ??
                         "0",
                     label: 'Followers',

@@ -27,7 +27,7 @@ class EditExperience extends StatefulWidget {
 class _EditExperienceState extends State<EditExperience> {
   @override
   Widget build(BuildContext context) {
-    mq = MediaQuery.of(context).size ;
+    mq = MediaQuery.of(context).size;
     return Consumer<AppUserProvider>(
         builder: (context, appUserProvider, child) {
       return MaterialApp(
@@ -45,7 +45,8 @@ class _EditExperienceState extends State<EditExperience> {
             leading: IconButton(
               onPressed: () {
                 // Navigator.pop(context);
-                Navigator.pushReplacement(context, RightToLeft(ProfileScreen())) ;
+                Navigator.pushReplacement(
+                    context, RightToLeft(ProfileScreen()));
               },
               icon: Icon(
                 Icons.keyboard_arrow_left_rounded,
@@ -57,227 +58,245 @@ class _EditExperienceState extends State<EditExperience> {
           body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                child: appUserProvider.user?.experiences?.length !=0
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Edit experience",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        Text14(text: "Click to edit and long press to delete",isBold: false,),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: appUserProvider.user?.experiences?.length,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: (){
-                                Navigator.push(context, LeftToRight(EditScreenExperience(exp:appUserProvider.user?.experiences?[index] ?? Experience())));
-                              },
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    child: GestureDetector(
-                                      onLongPress: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => Dialog(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(10)),
-                                            child: Container(
-                                                height: 250,
-                                                decoration: BoxDecoration(
-                                                  color: AppColors
-                                                      .theme['secondaryColor'],
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                child: appUserProvider.user?.experiences?.length != 0
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Edit experience",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          Text14(
+                            text: "Click to edit and long press to delete",
+                            isBold: false,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount:
+                                appUserProvider.user?.experiences?.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      LeftToRight(EditScreenExperience(
+                                          exp: appUserProvider
+                                                  .user?.experiences?[index] ??
+                                              Experience())));
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      child: GestureDetector(
+                                        onLongPress: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => Dialog(
+                                              shape: RoundedRectangleBorder(
                                                   borderRadius:
-                                                  BorderRadius.circular(10),
-                                                ),
-                                                width: double.maxFinite,
-                                                child: Column(
-                                                  children: [
-                                                    SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Container(
-                                                      child: Column(
-                                                        children: [
-                                                          Center(
-                                                              child: HeadingText(
-                                                                  heading:
-                                                                  "Confirmation")),
-                                                          Divider(),
-                                                        ],
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: Container(
+                                                  height: 250,
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.theme[
+                                                        'secondaryColor'],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  width: double.maxFinite,
+                                                  child: Column(
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 10,
                                                       ),
-                                                    ),
-                                                    Center(
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                        children: [
-                                                          Center(
-                                                              child: Icon(
-                                                                Icons.cancel,
-                                                                color: Colors.red,
-                                                                size: 50,
-                                                              )),
-                                                          Padding(
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                horizontal:
-                                                                20.0,
-                                                                vertical: 5),
-                                                            child: Text16(
-                                                              text:
-                                                              "Are you sure you want to delete ? ",
-                                                              isBold: false,
+                                                      Container(
+                                                        child: Column(
+                                                          children: [
+                                                            Center(
+                                                                child: HeadingText(
+                                                                    heading:
+                                                                        "Confirmation")),
+                                                            Divider(),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Center(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Center(
+                                                                child: Icon(
+                                                              Icons.cancel,
+                                                              color: Colors.red,
+                                                              size: 50,
+                                                            )),
+                                                            Padding(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          20.0,
+                                                                      vertical:
+                                                                          5),
+                                                              child: Text16(
+                                                                text:
+                                                                    "Are you sure you want to delete ? ",
+                                                                isBold: false,
+                                                              ),
                                                             ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 20,
-                                                          ),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                            children: [
-                                                              InkWell(
-                                                                onTap: () async {
+                                                            SizedBox(
+                                                              height: 20,
+                                                            ),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                InkWell(
+                                                                  onTap:
+                                                                      () async {
+                                                                    await ExperienceCrud.deleteExperience(
+                                                                        appUserProvider
+                                                                            .user
+                                                                            ?.userID,
+                                                                        (appUserProvider.user?.experiences?[index].id ??
+                                                                            ""));
 
-                                                                  await ExperienceCrud.deleteExperience(appUserProvider.user?.userID, (appUserProvider.user?.experiences?[index].id ?? "")) ;
+                                                                    appUserProvider
+                                                                        .initUser();
+                                                                    setState(
+                                                                        () {});
+                                                                    Navigator.pop(
+                                                                        context);
 
-                                                                  appUserProvider.initUser() ;
-                                                                  setState(() {
-
-                                                                  });
-                                                                  Navigator.pop(context);
-
-                                                                  AppToasts.InfoToast(
-                                                                      context,
-                                                                      "Successfully Deleted!");
-                                                                },
-                                                                child: Container(
-                                                                  height: 40,
-                                                                  decoration:
-                                                                  BoxDecoration(
-                                                                    color: AppColors
-                                                                        .theme[
-                                                                    'primaryColor'],
-                                                                    borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                        10),
-                                                                  ),
-                                                                  child: Padding(
-                                                                    padding: EdgeInsets
-                                                                        .symmetric(
-                                                                        horizontal:
-                                                                        30.0),
-                                                                    child: Center(
-                                                                        child:
-                                                                        Text16(
-                                                                          text: "Yes",
-                                                                          isWhite: true,
-                                                                        )),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 20,
-                                                              ),
-                                                              InkWell(
-                                                                onTap: () {
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                },
-                                                                child: Container(
+                                                                    AppToasts.InfoToast(
+                                                                        context,
+                                                                        "Successfully Deleted!");
+                                                                  },
+                                                                  child:
+                                                                      Container(
                                                                     height: 40,
                                                                     decoration:
-                                                                    BoxDecoration(
-                                                                        borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            10),
-                                                                        border:
-                                                                        Border.all(
-                                                                          color:
-                                                                          Colors.red,
-                                                                        )),
-                                                                    child: Padding(
-                                                                      padding:
-                                                                      EdgeInsets
-                                                                          .symmetric(
-                                                                        horizontal:
-                                                                        30.0,
-                                                                      ),
+                                                                        BoxDecoration(
+                                                                      color: AppColors
+                                                                              .theme[
+                                                                          'primaryColor'],
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10),
+                                                                    ),
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: EdgeInsets.symmetric(
+                                                                          horizontal:
+                                                                              30.0),
                                                                       child: Center(
-                                                                        child: Text(
-                                                                          "No",
-                                                                          style:
-                                                                          TextStyle(
-                                                                            color: Colors
-                                                                                .red,
+                                                                          child: Text16(
+                                                                        text:
+                                                                            "Yes",
+                                                                        isWhite:
+                                                                            true,
+                                                                      )),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 20,
+                                                                ),
+                                                                InkWell(
+                                                                  onTap: () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  child: Container(
+                                                                      height: 40,
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(10),
+                                                                          border: Border.all(
+                                                                            color:
+                                                                                Colors.red,
+                                                                          )),
+                                                                      child: Padding(
+                                                                        padding:
+                                                                            EdgeInsets.symmetric(
+                                                                          horizontal:
+                                                                              30.0,
+                                                                        ),
+                                                                        child:
+                                                                            Center(
+                                                                          child:
+                                                                              Text(
+                                                                            "No",
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: Colors.red,
+                                                                            ),
                                                                           ),
                                                                         ),
-                                                                      ),
-                                                                    )),
-                                                              ),
-                                                            ],
-                                                          )
-                                                        ],
-                                                      ),
-                                                    )
-                                                  ],
-                                                )),
-                                          ),
-                                        );
-                                      },
-                                      child: ExperienceCard(
-                                          experience: appUserProvider
-                                              .user!.experiences![index]),
+                                                                      )),
+                                                                ),
+                                                              ],
+                                                            )
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  )),
+                                            ),
+                                          );
+                                        },
+                                        child: ExperienceCard(
+                                            experience: appUserProvider
+                                                .user!.experiences![index]),
+                                      ),
                                     ),
-                                  ),
-                                  Divider(),
-                                ],
+                                    Divider(),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      )
+                    : Center(
+                        child: Padding(
+                          padding:
+                              EdgeInsets.symmetric(vertical: mq.height * 0.25),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "assets/ils/no_items.png",
+                                height: 300,
+                                width: 300,
                               ),
-                            );
-                          },
-                        ),
-                      ],
-                    )
-                  :  Center(
-                  child: Padding(
-                    padding:  EdgeInsets.symmetric(vertical: mq.height*0.25),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset("assets/ils/no_items.png",height: 300,width: 300,),
-                        Text(
-                          "No Items",
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 26,
-                            color: Colors.grey,
+                              Text(
+                                "No Items",
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 26,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-
-                      ],
-                    ),
-                  ),
-                )
-            ),
+                      )),
           ),
         ),
       );

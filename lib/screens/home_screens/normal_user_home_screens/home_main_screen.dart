@@ -193,8 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 .withOpacity(0.3),
                             backgroundImage:
                                 appUserProvider.user?.profilePath != ""
-                                    ? NetworkImage(
-                                        appUserProvider.user!.profilePath ?? "")
+                                    ? NetworkImage(appUserProvider.user?.profilePath ?? "")
                                     : AssetImage("assets/other_images/photo.png"),
                             // backgroundColor: AppColors.theme['secondaryColor'].withOpacity(0.5),
                             radius: 20,
