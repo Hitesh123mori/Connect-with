@@ -10,10 +10,11 @@ class Organization {
   String? coverPath;
   String? logo;
   Address? address;
-  int? followers;
   int? searchCount;
   int? profileView;
   List<String>? employees;
+  List<String>? followers;
+  List<String>? followings;
   String? about;
   String? website;
   String? companySize;
@@ -42,6 +43,7 @@ class Organization {
     this.companySize,
     this.type,
     this.services,
+    this.followings,
   });
 
   Map<String, dynamic> toJson() {
@@ -60,6 +62,7 @@ class Organization {
       map['address'] = address!.toJson();
     }
     map['followers'] = followers;
+    map['followings'] = followings;
     if (employees != null) {
       map['employees'] = employees;
     }
@@ -90,10 +93,15 @@ class Organization {
       coverPath: json['coverPath'],
       logo: json['logo'],
       address: json['address'] != null ? Address.fromJson(json['address']) : null,
-      followers: json['followers'],
       employees: json['employees'] != null
           ? List<String>.from(json['employees'])
           : null,
+      followers:  json['followers'] != null
+          ? List<String>.from(json['followers'])
+          : null ,
+      followings :json['followings'] != null
+          ? List<String>.from(json['followings'])
+          : null ,
       about: json['about'],
       website: json['website'],
       companySize: json['companySize'],

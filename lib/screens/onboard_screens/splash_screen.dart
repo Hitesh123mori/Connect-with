@@ -5,6 +5,7 @@ import 'package:connect_with/apis/organization/organization_crud_operation/organ
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/providers/general_provider.dart';
 import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/screens/auth_screens/login_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/home_main_screen.dart';
@@ -13,6 +14,7 @@ import 'package:connect_with/side_transitions/left_right.dart';
 import 'package:connect_with/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   final AppUserProvider appUser;
@@ -27,6 +29,9 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
 
   late bool isOrganization ;
+
+
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +44,9 @@ class _SplashScreenState extends State<SplashScreen> {
           systemNavigationBarColor: Colors.black,
           systemNavigationBarIconBrightness: Brightness.dark,
         ));
+
+        final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
+        await generalProvider.checkUser() ;
 
         if (Config.auth.currentUser == null) {
           throw Exception("No user is logged in");

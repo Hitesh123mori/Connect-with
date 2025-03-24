@@ -1,9 +1,12 @@
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
+import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/project.dart';
 import 'package:connect_with/models/user/skills.dart';
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/providers/general_provider.dart';
+import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_education.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_experience_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_language_screen.dart';
@@ -41,17 +44,26 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   bool isConnected = false;
 
   Future<void> checkIsFollowing(BuildContext context) async {
+
+    final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
+
     final userProvider = Provider.of<AppUserProvider>(context, listen: false);
 
+    final orgProvider = Provider.of<OrganizationProvider>(context, listen: false);
+
     isFollowing = await UserProfile.isFollower(
-      userProvider.user?.userID ?? "",
+      generalProvider.isOrganization ? (orgProvider.organization?.organizationId ??"") :(userProvider.user?.userID ?? ""),
       widget.user.userID ?? "",
     );
 
-    isConnected  = isFollowing && await UserProfile.isFollower(
-      widget.user.userID ?? "",
-      userProvider.user?.userID ?? ""
-    );
+    if(generalProvider.isOrganization){
+      isConnected  = isFollowing && await UserProfile.isFollower(
+          widget.user.userID ?? "",
+          userProvider.user?.userID ?? ""
+      );
+    }
+
+
 
     setState(() {});
   }
@@ -68,7 +80,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
     // print("isfollowing : ${isFollowing}");
-    return Consumer<AppUserProvider>(builder: (context,appUserProvider,child){
+    return Consumer3<AppUserProvider,OrganizationProvider,GeneralProvider>(builder: (context,appUserProvider,organizationProvider,generalProvider,child){
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -254,26 +266,38 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                           CustomProfileButtonOrg(
                             bgColor: AppColors.theme['primaryColor'],
                             text: isFollowing ? 'Following' : "Follow",
-                            onTap:isFollowing ? ()async{
+                            onTap: isFollowing ? ()async{
 
-                              await UserProfile.removeFollower(widget.user.userID ?? "",appUserProvider.user?.userID ?? "") ;
-                              await UserProfile.removeFollowing(appUserProvider.user?.userID ?? "", widget.user.userID ?? "") ;
+                              if(generalProvider.isOrganization){
+                                await OrganizationProfile.removeFollowingFromOrg(organizationProvider.organization?.organizationId ?? "",widget.user.userID ?? "",) ;
+                                await UserProfile.removeFollower(widget.user.userID ?? "",organizationProvider.organization?.organizationId ?? "") ;
+                              }else{
+                                await UserProfile.removeFollower(widget.user.userID ?? "",appUserProvider.user?.userID ?? "") ;
+                                await UserProfile.removeFollowing(appUserProvider.user?.userID ?? "", widget.user.userID ?? "") ;
+                              }
 
                               setState(() {
-                                appUserProvider.initUser();
+                                generalProvider.isOrganization ? organizationProvider.initOrganization()  : appUserProvider.initUser();
                               });
 
                               await checkIsFollowing(context) ;
+
                               setState(() {
 
                               });
 
-                             }  :  ()async{
+                            }  :  ()async{
 
-                              await UserProfile.addFollower(widget.user.userID ?? "",appUserProvider.user?.userID ?? "") ;
-                              await UserProfile.addFollowing(appUserProvider.user?.userID ?? "", widget.user.userID ?? "");
+                              if(generalProvider.isOrganization){
+                                await OrganizationProfile.addFollowingToOrg(organizationProvider.organization?.organizationId ?? "",widget.user.userID ?? "") ;
+                                await UserProfile.addFollower(widget.user.userID ?? "",organizationProvider.organization?.organizationId ?? "");
+                              }else{
+                                await UserProfile.addFollower(widget.user.userID ?? "",appUserProvider.user?.userID ?? "") ;
+                                await UserProfile.addFollowing(appUserProvider.user?.userID ?? "", widget.user.userID ?? "");
+                              }
+
                               setState(() {
-                                appUserProvider.initUser();
+                                generalProvider.isOrganization ? organizationProvider.initOrganization()  : appUserProvider.initUser();
                               });
 
                               await checkIsFollowing(context) ;

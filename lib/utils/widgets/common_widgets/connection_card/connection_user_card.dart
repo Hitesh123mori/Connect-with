@@ -1,7 +1,10 @@
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
+import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/providers/general_provider.dart';
+import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/other_user_profile_screen.dart';
 import 'package:connect_with/side_transitions/bottom_top.dart';
 import 'package:connect_with/utils/theme/colors.dart';
@@ -21,12 +24,16 @@ class _ConnectionUserCardState extends State<ConnectionUserCard> {
 
   bool isFollowing = false;
 
-
   Future<void> checkIsFollowing(BuildContext context) async {
+
+    final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
+
     final userProvider = Provider.of<AppUserProvider>(context, listen: false);
 
+    final orgProvider = Provider.of<OrganizationProvider>(context, listen: false);
+
     isFollowing = await UserProfile.isFollower(
-      userProvider.user?.userID ?? "",
+      generalProvider.isOrganization ? (orgProvider.organization?.organizationId ??"") :(userProvider.user?.userID ?? ""),
       widget.appUser.userID ?? "",
     );
 
@@ -59,7 +66,7 @@ class _ConnectionUserCardState extends State<ConnectionUserCard> {
         );
       },
 
-      child: Consumer<AppUserProvider>(builder: (context,appUserProvider,child){
+      child: Consumer3<AppUserProvider,OrganizationProvider,GeneralProvider>(builder: (context,appUserProvider,organizationProvider,generalProvider,child){
         return Container(
           // width: 10,
           decoration: BoxDecoration(
@@ -91,7 +98,7 @@ class _ConnectionUserCardState extends State<ConnectionUserCard> {
                       child: widget.appUser.coverPath=="" ? Image.asset(
                         "assets/other_images/bg.png",
                         fit: BoxFit.fill,
-                      ) : Image.network(widget.appUser.coverPath ?? ""),
+                      ) : Image.network(widget.appUser.coverPath ?? "",fit: BoxFit.cover,),
                     ),
                   ),
                   Positioned(
@@ -128,26 +135,38 @@ class _ConnectionUserCardState extends State<ConnectionUserCard> {
               SizedBox(height: 20,),
 
               InkWell(
-                onTap:isFollowing ? ()async{
+                onTap: isFollowing ? ()async{
 
-                  await UserProfile.removeFollower(widget.appUser.userID ?? "",appUserProvider.user?.userID ?? "") ;
-                  await UserProfile.removeFollowing(appUserProvider.user?.userID ?? "", widget.appUser.userID ?? "") ;
+                  if(generalProvider.isOrganization){
+                    await OrganizationProfile.removeFollowingFromOrg(organizationProvider.organization?.organizationId ?? "",widget.appUser.userID ?? "",) ;
+                    await UserProfile.removeFollower(widget.appUser.userID ?? "",organizationProvider.organization?.organizationId ?? "") ;
+                  }else{
+                    await UserProfile.removeFollower(widget.appUser.userID ?? "",appUserProvider.user?.userID ?? "") ;
+                    await UserProfile.removeFollowing(appUserProvider.user?.userID ?? "", widget.appUser.userID ?? "") ;
+                  }
 
                   setState(() {
-                    appUserProvider.initUser();
+                    generalProvider.isOrganization ? organizationProvider.initOrganization()  : appUserProvider.initUser();
                   });
 
                   await checkIsFollowing(context) ;
+
                   setState(() {
 
                   });
 
                 }  :  ()async{
 
-                  await UserProfile.addFollower(widget.appUser.userID ?? "",appUserProvider.user?.userID ?? "") ;
-                  await UserProfile.addFollowing(appUserProvider.user?.userID ?? "", widget.appUser.userID ?? "");
+                  if(generalProvider.isOrganization){
+                    await OrganizationProfile.addFollowingToOrg(organizationProvider.organization?.organizationId ?? "",widget.appUser.userID ?? "") ;
+                    await UserProfile.addFollower(widget.appUser.userID ?? "",organizationProvider.organization?.organizationId ?? "");
+                  }else{
+                    await UserProfile.addFollower(widget.appUser.userID ?? "",appUserProvider.user?.userID ?? "") ;
+                    await UserProfile.addFollowing(appUserProvider.user?.userID ?? "", widget.appUser.userID ?? "");
+                  }
+
                   setState(() {
-                    appUserProvider.initUser();
+                    generalProvider.isOrganization ? organizationProvider.initOrganization()  : appUserProvider.initUser();
                   });
 
                   await checkIsFollowing(context) ;

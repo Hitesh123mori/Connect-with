@@ -8,6 +8,7 @@ import 'package:connect_with/models/user/project.dart';
 import 'package:connect_with/models/user/skills.dart';
 import 'package:connect_with/models/user/speak_language_user.dart';
 import 'package:connect_with/models/user/test_score.dart';
+
 class AppUser {
   String? userID;
   String? email;
@@ -27,6 +28,7 @@ class AppUser {
   String? about;
   List<String>? followers;
   List<String>? following;
+  List<String>? organizations;
   int? profileViews;
   int? searchCount;
   List<TestScores>? testScores;
@@ -53,6 +55,7 @@ class AppUser {
     this.showProject,
     this.showExperience,
     this.profilePath,
+    this.organizations,
     this.coverPath,
     this.headLine,
     this.address,
@@ -96,6 +99,7 @@ class AppUser {
     map['about'] = about;
     map['followers'] = followers;
     map['following'] = following;
+    map['organizations'] = organizations;
     map['profileViews'] = profileViews;
     map['searchCount'] = searchCount;
     if (testScores != null) {
@@ -131,6 +135,7 @@ class AppUser {
   factory AppUser.fromJson(dynamic json) {
     return AppUser(
       userID: json['userID'],
+      organizations: (json['organizations'] as List?)?.map((e) => e.toString()).toList() ?? [],
       showEducation: json['showEducation'],
       showProject: json['showProject'],
       showExperience: json['showExperience'],
@@ -147,33 +152,19 @@ class AppUser {
       createAt: json['create-at'],
       address: json['address'] != null ? Address.fromJson(json['address']) : null,
       about: json['about'],
-      followers: json['followers'] != null ? List<String>.from(json['followers']) : [],
-      following: json['following'] != null ? List<String>.from(json['following']) : [],
+      followers: (json['followers'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      following: (json['following'] as List?)?.map((e) => e.toString()).toList() ?? [],
       profileViews: json['profileViews'],
       searchCount: json['searchCount'],
       info: json['info'] != null ? ContactInfo.fromJson(json['info']) : null,
       button: json['button'] != null ? CustomButton.fromJson(json['button']) : null,
-      testScores: json['testScores'] != null
-          ? (json['testScores'] as List).map((e) => TestScores.fromJson(e)).toList()
-          : null,
-      skills: json['skills'] != null
-          ? (json['skills'] as List).map((e) => Skill.fromJson(e)).toList()
-          : [],
-      projects: json['projects'] != null
-          ? (json['projects'] as List).map((e) => Project.fromJson(e)).toList()
-          : [],
-      languages: json['languages'] != null
-          ? (json['languages'] as List).map((e) => SpeakLanguageUser.fromJson(e)).toList()
-          : [],
-      experiences: json['experiences'] != null
-          ? (json['experiences'] as List).map((e) => Experience.fromJson(e)).toList()
-          : [],
-      educations: json['educations'] != null
-          ? (json['educations'] as List).map((e) => Education.fromJson(e)).toList()
-          : [],
-      lacertificate: json['lacertificate'] != null
-          ? (json['lacertificate'] as List).map((e) => LicenseAndCertificate.fromJson(e)).toList()
-          : [],
+      testScores: (json['testScores'] as List?)?.map((e) => TestScores.fromJson(e)).toList() ?? [],
+      skills: (json['skills'] as List?)?.map((e) => Skill.fromJson(e)).toList() ?? [],
+      projects: (json['projects'] as List?)?.map((e) => Project.fromJson(e)).toList() ?? [],
+      languages: (json['languages'] as List?)?.map((e) => SpeakLanguageUser.fromJson(e)).toList() ?? [],
+      experiences: (json['experiences'] as List?)?.map((e) => Experience.fromJson(e)).toList() ?? [],
+      educations: (json['educations'] as List?)?.map((e) => Education.fromJson(e)).toList() ?? [],
+      lacertificate: (json['lacertificate'] as List?)?.map((e) => LicenseAndCertificate.fromJson(e)).toList() ?? [],
     );
   }
 }
