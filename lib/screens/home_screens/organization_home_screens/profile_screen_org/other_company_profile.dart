@@ -3,6 +3,8 @@ import 'package:connect_with/apis/organization/organization_crud_operation/organ
 import 'package:connect_with/models/organization/organization.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/providers/general_provider.dart';
+import 'package:connect_with/providers/post_provider.dart';
+import 'package:connect_with/screens/home_screens/organization_home_screens/all_followers_and_employee_org.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_other_company_view/about_content_other_company_profile.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_other_company_view/home_content_other_company_profile.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_other_company_view/other_company_job_screens/job_content_other_company.dart';
@@ -207,21 +209,31 @@ class _OtherCompanyProfileState extends State<OtherCompanyProfile> {
                               ),
                         Row(
                           children: [
-                            Text14(
-                              text: (widget.org.employees?.length.toString() ??
-                                      "0") +
-                                  " Employees",
-                              isBold: false,
+                            InkWell(
+                              onTap: (){
+                                Navigator.push(context, LeftToRight(AllFollowersAndEmpoyees(isFollowers: false, ids: widget.org.employees ??[],)));
+                              },
+                              child: Text14(
+                                text: (widget.org.employees?.length.toString() ??
+                                        "0") +
+                                    " Employees",
+                                isBold: false,
+                              ),
                             ),
                             Text14(
                               text: " • ",
                               isBold: false,
                             ),
-                            Text14(
-                              text: ((widget.org.followers?.length.toString() ??
-                                      "0") +
-                                  " Followers"),
-                              isBold: false,
+                            InkWell(
+                              onTap: (){
+                                Navigator.push(context, LeftToRight(AllFollowersAndEmpoyees(isFollowers: true, ids: widget.org.followers ??[],)));
+                              },
+                              child: Text14(
+                                text: ((widget.org.followers?.length.toString() ??
+                                        "0") +
+                                    " Followers"),
+                                isBold: false,
+                              ),
                             ),
                           ],
                         ),
@@ -258,16 +270,49 @@ class _OtherCompanyProfileState extends State<OtherCompanyProfile> {
                               },
                               isBorder: false,
                             ),
+                            if(orgProvider.organization?.organizationId != widget.org.organizationId)
                             CustomProfileButtonOrg(
                               bgColor: AppColors.theme['primaryColor'],
-                              text: 'Employees',
-                              onTap: () {
-                                if (widget.org.employees?.length == 0) {
-                                  AppToasts.InfoToast(
-                                      context, "No Employee till now!");
-                                } else {
-                                  // navigate to employee screen
+                              text: isFollowing ? 'UnFollow' : "Follow",
+                              onTap:isFollowing ? ()async{
+
+                                if(generalProvider.isOrganization){
+                                  await OrganizationProfile.removeFollowingFromOrg(orgProvider.organization?.organizationId ?? "",widget.org.organizationId ?? "",) ;
+                                  await OrganizationProfile.removeFollowerFromOrg(widget.org.organizationId ?? "",orgProvider.organization?.organizationId ?? "") ;
+                                }else{
+                                  await OrganizationProfile.removeFollowerFromOrg(widget.org.organizationId ?? "",appUserProvider.user?.userID ?? "") ;
+                                  await UserProfile.removeFollowingOrg(appUserProvider.user?.userID ?? "", widget.org.organizationId ?? "") ;
                                 }
+
+                                setState(() {
+                                  generalProvider.isOrganization ? orgProvider.initOrganization()  : appUserProvider.initUser();
+                                });
+
+                                await checkIsFollowing(context) ;
+                                setState(() {
+
+                                });
+
+                              }  :  ()async{
+
+                                if(generalProvider.isOrganization){
+                                  await OrganizationProfile.addFollowingToOrg(orgProvider.organization?.organizationId ?? "",widget.org.organizationId ?? "") ;
+                                  await OrganizationProfile.addFollowerToOrg(widget.org.organizationId ?? "",orgProvider.organization?.organizationId ?? "");
+                                }else{
+                                  await OrganizationProfile.addFollowerToOrg(widget.org.organizationId ?? "",appUserProvider.user?.userID ?? "") ;
+                                  await UserProfile.addFollowingOrg(appUserProvider.user?.userID ?? "", widget.org.organizationId ?? "");
+                                }
+
+
+                                setState(() {
+                                  generalProvider.isOrganization ? orgProvider.initOrganization()  : appUserProvider.initUser();
+                                });
+
+                                await checkIsFollowing(context) ;
+
+                                setState(() {
+
+                                });
                               },
                               isBorder: true,
                             ),
@@ -282,63 +327,6 @@ class _OtherCompanyProfileState extends State<OtherCompanyProfile> {
                           ],
                         ),
                         SizedBox(height: 10),
-
-                        if(orgProvider.organization?.organizationId != widget.org.organizationId)
-                        GestureDetector(
-                          onTap:isFollowing ? ()async{
-
-                            if(generalProvider.isOrganization){
-                              await OrganizationProfile.removeFollowingFromOrg(orgProvider.organization?.organizationId ?? "",widget.org.organizationId ?? "",) ;
-                              await OrganizationProfile.removeFollowerFromOrg(widget.org.organizationId ?? "",orgProvider.organization?.organizationId ?? "") ;
-                            }else{
-                              await OrganizationProfile.removeFollowerFromOrg(widget.org.organizationId ?? "",appUserProvider.user?.userID ?? "") ;
-                              await UserProfile.removeFollowingOrg(appUserProvider.user?.userID ?? "", widget.org.organizationId ?? "") ;
-                            }
-
-                            setState(() {
-                              generalProvider.isOrganization ? orgProvider.initOrganization()  : appUserProvider.initUser();
-                            });
-
-                            await checkIsFollowing(context) ;
-                            setState(() {
-
-                            });
-
-                          }  :  ()async{
-
-                            if(generalProvider.isOrganization){
-                              await OrganizationProfile.addFollowingToOrg(orgProvider.organization?.organizationId ?? "",widget.org.organizationId ?? "") ;
-                              await OrganizationProfile.addFollowerToOrg(widget.org.organizationId ?? "",orgProvider.organization?.organizationId ?? "");
-                            }else{
-                              await OrganizationProfile.addFollowerToOrg(widget.org.organizationId ?? "",appUserProvider.user?.userID ?? "") ;
-                              await UserProfile.addFollowingOrg(appUserProvider.user?.userID ?? "", widget.org.organizationId ?? "");
-                            }
-
-
-                            setState(() {
-                              generalProvider.isOrganization ? orgProvider.initOrganization()  : appUserProvider.initUser();
-                            });
-
-                            await checkIsFollowing(context) ;
-                            setState(() {
-
-                            });
-
-                          },
-                          child: Container(
-                            height: 40,
-                            child: Center(
-                                child: Text16(
-                              text: isFollowing ? "Unfollow" : "Follow",
-                              isWhite: true,
-                            )),
-                            width: mq.width * 1,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: AppColors.theme['primaryColor']
-                            ),
-                          ),
-                        )
                       ],
                     ),
                   ),

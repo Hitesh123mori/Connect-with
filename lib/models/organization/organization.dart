@@ -22,6 +22,7 @@ class Organization {
   List<String>? services;
   String? createAt;
   List<String>? jobs;
+  bool? isOrganization ;
 
   Organization({
     this.organizationId,
@@ -30,6 +31,7 @@ class Organization {
     this.email,
     this.domain,
     this.createAt,
+    this.isOrganization,
     this.coverPath,
     this.latestNews,
     this.profileView,
@@ -50,6 +52,7 @@ class Organization {
     final map = <String, dynamic>{};
     map['organizationId'] = organizationId;
     map['name'] = name;
+    map['isOrganization'] = isOrganization ;
     map['latestNews'] = latestNews;
     map['profileView'] = profileView ;
     map['searchCount'] = searchCount ;
@@ -84,6 +87,7 @@ class Organization {
     return Organization(
       organizationId: json['organizationId'],
       name: json['name'],
+      isOrganization : json['isOrganization'],
       latestNews : json['latestNews'],
       searchCount : json['searchCount'],
       profileView: json['profileView'],

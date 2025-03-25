@@ -86,6 +86,7 @@ class _PostCardState extends State<PostCard> {
               'logo': userData[isOrg ? 'logo' : 'profilePath'] ?? "",
               'headline': userData[isOrg ? 'domain' : 'headLine'] ?? "",
               'isOrg': isOrg,
+              'object' :isOrg  ? Organization.fromJson(userData) :AppUser.fromJson(userData) ,
             });
           }
         }
@@ -661,41 +662,52 @@ class _PostCardState extends State<PostCard> {
                                     shrinkWrap: true,
                                     itemCount: likeUsers.length,
                                     itemBuilder: (context, index) {
-                                      return Stack(
-                                        clipBehavior: Clip.none,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                                            child: CircleAvatar(
-                                              backgroundImage: likeUsers[index]['logo'] != ""
-                                                  ? NetworkImage(likeUsers[index]['logo']!)
-                                                  : const AssetImage("assets/other_images/photo.png")
-                                              as ImageProvider,
-                                              radius: 25,
-                                              backgroundColor:
-                                              AppColors.theme['primaryColor']!.withOpacity(0.1),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            bottom: 20,
-                                            right: 0,
-                                            child: Container(
-                                              height: 20,
-                                              width: 20,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(15),
-                                                color: Colors.blueAccent.withOpacity(0.6),
+                                      return InkWell(
+
+                                        onTap: (){
+                                          if(likeUsers[index]['isOrg']){
+                                            Navigator.push(context, BottomToTop(OtherCompanyProfile(org: likeUsers[index]['object'],)));
+                                          }else{
+                                            Navigator.push(context, BottomToTop(OtherUserProfileScreen(user: likeUsers[index]['object'],)));
+                                          }
+                                        },
+
+                                        child: Stack(
+                                          clipBehavior: Clip.none,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                                              child: CircleAvatar(
+                                                backgroundImage: likeUsers[index]['logo'] != ""
+                                                    ? NetworkImage(likeUsers[index]['logo']!)
+                                                    : const AssetImage("assets/other_images/photo.png")
+                                                as ImageProvider,
+                                                radius: 25,
+                                                backgroundColor:
+                                                AppColors.theme['primaryColor']!.withOpacity(0.1),
                                               ),
-                                              child: const Center(
-                                                child: FaIcon(
-                                                  FontAwesomeIcons.thumbsUp,
-                                                  size: 12,
-                                                  color: Colors.white,
+                                            ),
+                                            Positioned(
+                                              bottom: 20,
+                                              right: 0,
+                                              child: Container(
+                                                height: 20,
+                                                width: 20,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(15),
+                                                  color: Colors.blueAccent.withOpacity(0.6),
+                                                ),
+                                                child: const Center(
+                                                  child: FaIcon(
+                                                    FontAwesomeIcons.thumbsUp,
+                                                    size: 12,
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       );
                                     },
                                   )
