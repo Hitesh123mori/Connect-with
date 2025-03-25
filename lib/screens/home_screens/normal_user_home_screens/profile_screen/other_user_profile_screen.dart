@@ -29,6 +29,8 @@ import 'package:connect_with/utils/widgets/organization_widgets/custom_container
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'all_followers_and_followings_user.dart';
+
 class OtherUserProfileScreen extends StatefulWidget {
   final AppUser user;
   const OtherUserProfileScreen({super.key, required this.user});
@@ -56,14 +58,12 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
       widget.user.userID ?? "",
     );
 
-    if(generalProvider.isOrganization){
+    if(!generalProvider.isOrganization){
       isConnected  = isFollowing && await UserProfile.isFollower(
           widget.user.userID ?? "",
           userProvider.user?.userID ?? ""
       );
     }
-
-
 
     setState(() {});
   }
@@ -233,11 +233,16 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                       SizedBox(height: 20),
                       Row(
                         children: [
-                          Text(
-                            (widget.user.followers?.length.toString() ?? "0") +
-                                " Followers",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, LeftToRight(AllFollowersAndFollowingsUser(isFollowers: true, ids:widget.user.followers ?? [] ,)));
+                            },
+                            child: Text(
+                              (widget.user.followers?.length.toString() ?? "0") +
+                                  " Followers",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
                           ),
                           SizedBox(width: 5),
                           Text(
@@ -248,11 +253,16 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                                 fontWeight: FontWeight.bold),
                           ),
                           SizedBox(width: 5),
-                          Text(
-                            (widget.user.following?.length.toString() ?? "0") +
-                                " Following",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, LeftToRight(AllFollowersAndFollowingsUser(isFollowers: false, ids:widget.user.following ?? [] ,)));
+                            },
+                            child: Text(
+                              (widget.user.following?.length.toString() ?? "0") +
+                                  " Following",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ],
                       ),

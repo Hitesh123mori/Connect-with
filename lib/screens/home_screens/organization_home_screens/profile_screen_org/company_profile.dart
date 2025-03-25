@@ -1,3 +1,4 @@
+import 'package:connect_with/screens/home_screens/organization_home_screens/all_followers_and_employee_org.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_profile_tabs/about_content_company_profile.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_profile_tabs/edit_company_profile.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_profile_tabs/home_content_company_profile.dart';
@@ -167,24 +168,34 @@ class _CompanyProfileState extends State<CompanyProfile> {
 
                             Row(
                               children: [
-                                Text14(
-                                  text: (orgProvider.organization?.employees
-                                      ?.length
-                                      .toString() ??
-                                      "0") +
-                                      " Employees",
-                                  isBold: false,
+                                InkWell(
+                                  onTap: (){
+                                    Navigator.push(context, LeftToRight(AllFollowersAndEmpoyees(isFollowers: false, ids: orgProvider.organization?.employees ??[],)));
+                                  },
+                                  child: Text14(
+                                    text: (orgProvider.organization?.employees
+                                        ?.length
+                                        .toString() ??
+                                        "0") +
+                                        " Employees",
+                                    isBold: false,
+                                  ),
                                 ),
                                 Text14(
                                   text: " • ",
                                   isBold: false,
                                 ),
-                                Text14(
-                                  text: ((orgProvider.organization?.followers?.length
-                                      .toString() ??
-                                      "0") +
-                                      " Followers"),
-                                  isBold: false,
+                                InkWell(
+                                  onTap: (){
+                                    Navigator.push(context, LeftToRight(AllFollowersAndEmpoyees(isFollowers: true, ids: orgProvider.organization?.followers ??[],)));
+                                  },
+                                  child: Text14(
+                                    text: ((orgProvider.organization?.followers?.length
+                                        .toString() ??
+                                        "0") +
+                                        " Followers"),
+                                    isBold: false,
+                                  ),
                                 ),
                               ],
                             ),

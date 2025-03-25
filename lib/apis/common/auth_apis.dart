@@ -106,6 +106,7 @@ class AuthApi {
           cityName: "",
         ),
         followings: [],
+        isOrganization :true,
         followers: [],
         employees: [],
         jobs: [],

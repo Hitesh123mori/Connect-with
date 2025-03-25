@@ -33,6 +33,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import 'all_followers_and_followings_user.dart';
 import 'edit_screens/Education/edit_education.dart';
 import 'edit_screens/Projects/edit_project.dart';
 import 'edit_screens/Skills/edit_skill.dart';
@@ -234,12 +235,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(height: 20),
                       Row(
                         children: [
-                          Text(
-                            (appUserProvider.user?.followers?.length.toString() ??
-                                    "0") +
-                                " Followers",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, LeftToRight(AllFollowersAndFollowingsUser(isFollowers: true, ids:appUserProvider.user?.followers ?? [] ,)));
+                            },
+                            child: Text(
+                              (appUserProvider.user?.followers?.length.toString() ??
+                                      "0") +
+                                  " Followers",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
                           ),
                           SizedBox(width: 5),
                           Text(
@@ -250,12 +256,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 fontWeight: FontWeight.bold),
                           ),
                           SizedBox(width: 5),
-                          Text(
-                            (appUserProvider.user?.following?.length.toString() ??
-                                    "0") +
-                                " Following",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, LeftToRight(AllFollowersAndFollowingsUser(isFollowers: false, ids:appUserProvider.user?.following ?? [] ,)));
+                            },
+                            child: Text(
+                              (appUserProvider.user?.following?.length.toString() ??
+                                      "0") +
+                                  " Following",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ],
                       ),
