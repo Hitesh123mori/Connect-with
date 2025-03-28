@@ -177,6 +177,25 @@ class UserProfile {
     }
   }
 
+  // add search count
+  static Future<bool> addSearchUserInUserProfile(String viewerId,String userId)async{
+
+    try{
+
+      await _collectionRef.doc(userId).update({
+        'profileViews' : FieldValue.arrayUnion([viewerId]),
+      });
+      log("Added Viewer : $viewerId to user $userId}") ;
+
+      return true;
+
+    }catch(error, stackTrace){
+      log("Error adding viewer: $error, $stackTrace");
+      return false;
+    }
+
+  }
+
   // Add following
   static Future<bool> addFollowing(String userId, String followingId) async {
     try {

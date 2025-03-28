@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/main.dart';
@@ -68,10 +70,34 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
     setState(() {});
   }
 
+  Future<void> addViewer(String userId,String viewerId)async{
+    try{
+        await UserProfile.addSearchUserInUserProfile(viewerId, userId);
+        print("added") ;
+    }catch(e){
+      log("Error while adding viewer : $e") ;
+    }
+  }
+
 
   @override
   void initState() {
+
     super.initState();
+
+    final userProvider = Provider.of<AppUserProvider>(context, listen: false);
+
+    final orgProvider = Provider.of<OrganizationProvider>(context, listen: false);
+
+
+    final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
+
+    if(generalProvider.isOrganization){
+      addViewer(orgProvider.organization?.organizationId ?? "",widget.user.userID??"") ;
+    }else{
+      addViewer(userProvider.user?.userID ?? "",widget.user.userID??"") ;
+    }
+
     checkIsFollowing(context);
   }
 
@@ -367,7 +393,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                           Icons.group,
                           size: 22,
                         ),
-                        heading: (widget.user.profileViews.toString() ?? "0") +
+                        heading: (widget.user.profileViews?.length.toString() ?? "0") +
                             ' Profile Views',
                         subheading: "Discover who's viewed your profile",
                         ontap: () {},
@@ -380,7 +406,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                           Icons.search_rounded,
                           size: 22,
                         ),
-                        heading: (widget.user.searchCount.toString() ?? "0") +
+                        heading: (widget.user.searchCount?.length.toString() ?? "0") +
                             ' search appearances',
                         subheading: "See how often you appear in search results",
                         ontap: () {},

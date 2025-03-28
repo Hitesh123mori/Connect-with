@@ -279,7 +279,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
                       ),
 
                       SizedBox(
-                        height:mq.width*1,
+                        height:mq.height*1,
                         child: TabBarView(
                           children: [
                             HomeContentCompanyProfile(),
