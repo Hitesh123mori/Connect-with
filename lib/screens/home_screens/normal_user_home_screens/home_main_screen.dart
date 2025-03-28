@@ -115,11 +115,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       label: 'Following',
                     ),
                     DrawerContainer(
-                      data: appUserProvider.user?.searchCount.toString() ?? "0",
+                      data: appUserProvider.user?.searchCount?.length.toString() ?? "0",
                       label: 'Search Count',
                     ),
                     DrawerContainer(
-                      data: appUserProvider.user?.profileViews.toString() ?? "0",
+                      data: appUserProvider.user?.profileViews?.length.toString() ?? "0",
                       label: 'Profile Views',
                     ),
                     Expanded(child: Container()),

@@ -11,6 +11,7 @@ import 'package:connect_with/screens/home_screens/normal_user_home_screens/profi
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/add_screens/add_testscore.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_profile.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_screens/Experience/edit_experience.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/profile_tabs/user_posts.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_education.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_experience_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_language_screen.dart';
@@ -47,9 +48,15 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen>  {
   bool isfirst = true;
   bool showMore = false;
+
+  @override
+  void initState(){
+    super.initState() ;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -300,7 +307,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           size: 22,
                         ),
                         heading:
-                            (appUserProvider.user?.profileViews.toString() ??
+                            (appUserProvider.user?.profileViews?.length.toString() ??
                                     "0") +
                                 ' Profile Views',
                         subheading: "Discover who's viewed your profile",
@@ -315,8 +322,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           size: 22,
                         ),
                         heading:
-                            (appUserProvider.user?.searchCount.toString() ??
-                                    "0") +
+                          (appUserProvider.user?.searchCount?.length.toString() ??
+                            "0") +
                                 ' search appearances',
                         subheading:
                             "See how often you appear in search results",
@@ -1072,6 +1079,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                   ],
                 ),
+
                 SizedBox(
                   height: 40,
                 ),
