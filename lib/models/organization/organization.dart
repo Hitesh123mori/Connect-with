@@ -1,5 +1,6 @@
 import 'package:connect_with/models/common/address_info.dart';
 import 'package:connect_with/models/common/custom_button.dart';
+import 'package:connect_with/models/user/user.dart';
 
 class Organization {
   String? organizationId;
@@ -10,8 +11,8 @@ class Organization {
   String? coverPath;
   String? logo;
   Address? address;
-  List<String>? searchCount;
-  List<String>? profileView;
+  List<Views>? searchCount;
+  List<Views>? profileView;
   List<String>? employees;
   List<String>? followers;
   List<String>? followings;
@@ -54,8 +55,14 @@ class Organization {
     map['name'] = name;
     map['isOrganization'] = isOrganization;
     map['latestNews'] = latestNews;
-    map['profileView'] = profileView;
-    map['searchCount'] = searchCount;
+    if (searchCount != null) {
+      map['searchCount'] = searchCount!.map((e) => e.toJson()).toList();
+    }
+
+    if (profileView != null) {
+      map['profileViews'] = profileView!.map((e) => e.toJson()).toList();
+    }
+
     map['email'] = email;
     map['createAt'] = createAt;
     map['domain'] = domain;
@@ -88,8 +95,25 @@ class Organization {
       name: json['name'],
       isOrganization: json['isOrganization'],
       latestNews: json['latestNews'],
-      searchCount: json['searchCount'] != null ? List<String>.from(json['searchCount']) : null,
-      profileView: json['profileView'] != null ? List<String>.from(json['profileView']) : null,
+
+      profileView: (json['profileView'] is List)
+          ? (json['profileView'] as List).map((e) {
+        if (e is Map<String, dynamic>) {
+          return Views.fromJson(e);
+        } else {
+          return Views(userID: e.toString());
+        }
+      }).toList()
+          : [],
+      searchCount: (json['searchCount'] is List)
+          ? (json['searchCount'] as List).map((e) {
+        if (e is Map<String, dynamic>) {
+          return Views.fromJson(e);
+        } else {
+          return Views(userID: e.toString());
+        }
+      }).toList()
+          : [],
       email: json['email'],
       domain: json['domain'],
       createAt: json['createAt'],

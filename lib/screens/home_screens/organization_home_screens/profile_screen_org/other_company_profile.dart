@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/models/organization/organization.dart';
+import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/providers/general_provider.dart';
 import 'package:connect_with/providers/post_provider.dart';
@@ -66,9 +67,15 @@ class _OtherCompanyProfileState extends State<OtherCompanyProfile> {
     setState(() {});
   }
 
-  Future<void> addViewer(String viewerId,String userId)async{
+  Future<void> addViewer(String viewerId,String orgId)async{
+
+    Views view = Views(
+      userID: viewerId,
+      time: DateTime.now().toString(),
+    );
+
     try{
-      await OrganizationProfile.addSearchUserInOrgProfile(userId, viewerId);
+      await OrganizationProfile.addSearchUserInOrgProfile(orgId, view);
     }catch(e){
       log("Error while adding viewer : $e") ;
     }
@@ -84,9 +91,10 @@ class _OtherCompanyProfileState extends State<OtherCompanyProfile> {
     await generalProvider.checkUser() ;
 
     if(generalProvider.isOrganization){
-      addViewer(orgProvider.organization?.organizationId ?? "",widget.org.organizationId??"") ;
+      if(widget.org.organizationId!=orgProvider.organization?.organizationId){
+        addViewer(orgProvider.organization?.organizationId ?? "",widget.org.organizationId??"") ;
+      }
     }else{
-      print("here") ;
       addViewer(userProvider.user?.userID ?? "",widget.org.organizationId??"") ;
     }
 

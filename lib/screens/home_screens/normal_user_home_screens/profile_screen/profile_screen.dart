@@ -12,6 +12,7 @@ import 'package:connect_with/screens/home_screens/normal_user_home_screens/profi
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_profile.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/edit_screens/Experience/edit_experience.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/profile_tabs/user_posts.dart';
+import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/profile_view_user.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_education.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_experience_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/show_more_screens/show_more_language_screen.dart';
@@ -307,11 +308,13 @@ class _ProfileScreenState extends State<ProfileScreen>  {
                           size: 22,
                         ),
                         heading:
-                            (appUserProvider.user?.profileViews?.length.toString() ??
+                          " " + (appUserProvider.user?.profileViews?.length.toString() ??
                                     "0") +
                                 ' Profile Views',
                         subheading: "Discover who's viewed your profile",
-                        ontap: () {},
+                        ontap: () {
+                          Navigator.push(context, LeftToRight(ProfileViewUser(views:appUserProvider.user?.profileViews ??[],)));
+                        },
                       ),
                       SizedBox(
                         height: 10,
@@ -322,7 +325,7 @@ class _ProfileScreenState extends State<ProfileScreen>  {
                           size: 22,
                         ),
                         heading:
-                          (appUserProvider.user?.searchCount?.length.toString() ??
+                         " " + (appUserProvider.user?.searchCount?.length.toString() ??
                             "0") +
                                 ' search appearances',
                         subheading:

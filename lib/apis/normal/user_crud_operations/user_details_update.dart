@@ -178,22 +178,36 @@ class UserProfile {
   }
 
   // add search count
-  static Future<bool> addSearchUserInUserProfile(String userId,String viewerId)async{
+  static Future<bool> addSearchUserInUserProfile(String userId, Views view) async {
+    try {
+      DocumentSnapshot userDoc = await _collectionRef.doc(userId).get();
+      if (userDoc.exists) {
+        var profileViews = userDoc['profileViews'] ?? [];
 
-    try{
+        bool viewerExists = profileViews.any((viewer) => viewer['userID'] == view.userID);
 
-      await _collectionRef.doc(userId).update({
-        'profileViews' : FieldValue.arrayUnion([viewerId]),
-      });
-      log("Added Viewer : $viewerId to user $userId}") ;
-
-      return true;
-
-    }catch(error, stackTrace){
+        if (viewerExists) {
+          int index = profileViews.indexWhere((viewer) => viewer['userID'] == view.userID);
+          profileViews[index] = view.toJson();
+          await _collectionRef.doc(userId).update({
+            'profileViews': profileViews,
+          });
+          log("Updated time for Viewer: ${view.userID} in user $userId");
+        } else {
+          await _collectionRef.doc(userId).update({
+            'profileViews': FieldValue.arrayUnion([view.toJson()]),
+          });
+          log("Added Viewer: ${view.userID} to user $userId");
+        }
+        return true;
+      } else {
+        log("User not found: $userId");
+        return false;
+      }
+    } catch (error, stackTrace) {
       log("Error adding viewer: $error, $stackTrace");
       return false;
     }
-
   }
 
   // Add following

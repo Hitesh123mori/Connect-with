@@ -9,6 +9,27 @@ import 'package:connect_with/models/user/skills.dart';
 import 'package:connect_with/models/user/speak_language_user.dart';
 import 'package:connect_with/models/user/test_score.dart';
 
+class Views {
+  String? userID;
+  String? time;
+
+  Views({this.userID, this.time});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'userID': userID,
+      'time': time,
+    };
+  }
+
+  factory Views.fromJson(Map<String, dynamic> json) {
+    return Views(
+      userID: json['userID'],
+      time: json['time'],
+    );
+  }
+}
+
 class AppUser {
   String? userID;
   String? email;
@@ -29,8 +50,8 @@ class AppUser {
   List<String>? followers;
   List<String>? following;
   List<String>? organizations;
-  List<String>? profileViews ;
-  List<String>?searchCount;
+  List<Views>? profileViews;
+  List<Views>? searchCount;
   List<TestScores>? testScores;
   List<Skill>? skills;
   List<Project>? projects;
@@ -100,8 +121,15 @@ class AppUser {
     map['followers'] = followers;
     map['following'] = following;
     map['organizations'] = organizations;
-    map['profileViews'] = profileViews;
-    map['searchCount'] = searchCount;
+
+    if (searchCount != null) {
+      map['searchCount'] = searchCount!.map((e) => e.toJson()).toList();
+    }
+
+    if (profileViews != null) {
+      map['profileViews'] = profileViews!.map((e) => e.toJson()).toList();
+    }
+
     if (testScores != null) {
       map['testScores'] = testScores!.map((e) => e.toJson()).toList();
     }
@@ -133,7 +161,6 @@ class AppUser {
   }
 
   factory AppUser.fromJson(dynamic json) {
-    // print("JSON received: $json");
     return AppUser(
       userID: json['userID'],
       organizations: (json['organizations'] is List)
@@ -153,44 +180,103 @@ class AppUser {
       coverPath: json['coverPath'],
       headLine: json['headLine'],
       createAt: json['create-at'],
-      address: json['address'] != null ? Address.fromJson(json['address']) : null,
+      address: json['address'] != null && json['address'] is Map<String, dynamic>
+          ? Address.fromJson(json['address'])
+          : null,
       about: json['about'],
       followers: (json['followers'] is List)
           ? (json['followers'] as List).map((e) => e.toString()).toList()
-          : [], // Ensure it's a list
+          : [],
       following: (json['following'] is List)
           ? (json['following'] as List).map((e) => e.toString()).toList()
           : [],
       profileViews: (json['profileViews'] is List)
-          ? (json['profileViews'] as List).map((e) => e.toString()).toList()
+          ? (json['profileViews'] as List).map((e) {
+        if (e is Map<String, dynamic>) {
+          return Views.fromJson(e);
+        } else {
+          return Views(userID: e.toString());
+        }
+      }).toList()
           : [],
       searchCount: (json['searchCount'] is List)
-          ? (json['searchCount'] as List).map((e) => e.toString()).toList()
+          ? (json['searchCount'] as List).map((e) {
+        if (e is Map<String, dynamic>) {
+          return Views.fromJson(e);
+        } else {
+          return Views(userID: e.toString());
+        }
+      }).toList()
           : [],
-      info: json['info'] != null ? ContactInfo.fromJson(json['info']) : null,
-      button: json['button'] != null ? CustomButton.fromJson(json['button']) : null,
+      info: json['info'] != null && json['info'] is Map<String, dynamic>
+          ? ContactInfo.fromJson(json['info'])
+          : null,
+      button: json['button'] != null && json['button'] is Map<String, dynamic>
+          ? CustomButton.fromJson(json['button'])
+          : null,
       testScores: (json['testScores'] is List)
-          ? (json['testScores'] as List).map((e) => TestScores.fromJson(e)).toList()
+          ? (json['testScores'] as List).map((e) {
+        if (e is Map<String, dynamic>) {
+          return TestScores.fromJson(e);
+        } else {
+          return TestScores();
+        }
+      }).toList()
           : [],
       skills: (json['skills'] is List)
-          ? (json['skills'] as List).map((e) => Skill.fromJson(e)).toList()
+          ? (json['skills'] as List).map((e) {
+        if (e is Map<String, dynamic>) {
+          return Skill.fromJson(e);
+        } else {
+          return Skill();
+        }
+      }).toList()
           : [],
       projects: (json['projects'] is List)
-          ? (json['projects'] as List).map((e) => Project.fromJson(e)).toList()
+          ? (json['projects'] as List).map((e) {
+        if (e is Map<String, dynamic>) {
+          return Project.fromJson(e);
+        } else {
+          return Project();
+        }
+      }).toList()
           : [],
       languages: (json['languages'] is List)
-          ? (json['languages'] as List).map((e) => SpeakLanguageUser.fromJson(e)).toList()
+          ? (json['languages'] as List).map((e) {
+        if (e is Map<String, dynamic>) {
+          return SpeakLanguageUser.fromJson(e);
+        } else {
+          return SpeakLanguageUser();
+        }
+      }).toList()
           : [],
       experiences: (json['experiences'] is List)
-          ? (json['experiences'] as List).map((e) => Experience.fromJson(e)).toList()
+          ? (json['experiences'] as List).map((e) {
+        if (e is Map<String, dynamic>) {
+          return Experience.fromJson(e);
+        } else {
+          return Experience();
+        }
+      }).toList()
           : [],
       educations: (json['educations'] is List)
-          ? (json['educations'] as List).map((e) => Education.fromJson(e)).toList()
+          ? (json['educations'] as List).map((e) {
+        if (e is Map<String, dynamic>) {
+          return Education.fromJson(e);
+        } else {
+          return Education();
+        }
+      }).toList()
           : [],
       lacertificate: (json['licensesAndCertificates'] is List)
-          ? (json['licensesAndCertificates'] as List).map((e) => LicenseAndCertificate.fromJson(e)).toList()
+          ? (json['licensesAndCertificates'] as List).map((e) {
+        if (e is Map<String, dynamic>) {
+          return LicenseAndCertificate.fromJson(e);
+        } else {
+          return LicenseAndCertificate();
+        }
+      }).toList()
           : [],
     );
   }
-
 }
