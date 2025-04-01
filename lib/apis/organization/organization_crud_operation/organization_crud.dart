@@ -347,5 +347,25 @@ class OrganizationProfile {
   }
 
 
+  //add profile view user
+  static Future<bool> addSearchUserInOrgProfile(String orgId,String viewerId)async{
+
+    try{
+
+      await _collectionRefOrg.doc(orgId).update({
+        'profileView' : FieldValue.arrayUnion([viewerId]),
+      });
+      log("Added Viewer : $viewerId to user $orgId}") ;
+
+      return true;
+
+    }catch(error, stackTrace){
+      log("Error adding viewer: $error, $stackTrace");
+      return false;
+    }
+
+  }
+
+
 
 }

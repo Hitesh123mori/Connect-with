@@ -115,8 +115,8 @@ class AuthApi {
         companySize: "",
         type: "",
         services: [],
-        searchCount: 0,
-        profileView: 0,
+        searchCount: [],
+        profileView: [],
       );
 
       return await Config.firestore

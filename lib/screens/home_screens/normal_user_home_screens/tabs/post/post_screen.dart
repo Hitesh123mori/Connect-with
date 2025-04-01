@@ -1,5 +1,6 @@
 import 'package:connect_with/models/common/post_models/post_model.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/providers/general_provider.dart';
 import 'package:connect_with/providers/post_provider.dart';
 import 'package:connect_with/utils/shimmer_effects/common/posts/post_card_shimmer_effect.dart';
 import 'package:connect_with/utils/theme/colors.dart';
@@ -28,6 +29,9 @@ class _PostScreenState extends State<PostScreen> {
 
   Future<void> _fetchPosts() async {
     final postProvider = Provider.of<PostProvider>(context, listen: false);
+    final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
+
+    await generalProvider.checkUser() ;
     setState(() {
       postProvider.postsFuture = postProvider.getPosts();
     });

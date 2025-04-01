@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:connect_with/apis/normal/user_crud_operations/user_details_update.dart';
 import 'package:connect_with/apis/organization/organization_crud_operation/organization_crud.dart';
 import 'package:connect_with/models/organization/organization.dart';
@@ -64,10 +66,37 @@ class _OtherCompanyProfileState extends State<OtherCompanyProfile> {
     setState(() {});
   }
 
+  Future<void> addViewer(String viewerId,String userId)async{
+    try{
+      await OrganizationProfile.addSearchUserInOrgProfile(userId, viewerId);
+    }catch(e){
+      log("Error while adding viewer : $e") ;
+    }
+  }
+
+  Future<void> initUserOrg()async {
+    final userProvider = Provider.of<AppUserProvider>(context, listen: false);
+
+    final orgProvider = Provider.of<OrganizationProvider>(context, listen: false);
+
+    final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
+
+    await generalProvider.checkUser() ;
+
+    if(generalProvider.isOrganization){
+      addViewer(orgProvider.organization?.organizationId ?? "",widget.org.organizationId??"") ;
+    }else{
+      print("here") ;
+      addViewer(userProvider.user?.userID ?? "",widget.org.organizationId??"") ;
+    }
+
+  }
+
 
   @override
   void initState() {
     super.initState();
+    initUserOrg();
     checkIsFollowing(context);
   }
 

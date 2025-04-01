@@ -1,5 +1,6 @@
 import 'package:connect_with/main.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
+import 'package:connect_with/providers/general_provider.dart';
 import 'package:connect_with/screens/auth_screens/login_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post/create_post_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/post_screen.dart';
@@ -44,6 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void init(AppUserProvider appUserProvider) async {
     await appUserProvider.initUser();
+
+    final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
+
+    await generalProvider.checkUser() ;
+
   }
 
   bool isFirst = true;

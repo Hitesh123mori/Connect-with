@@ -1,4 +1,5 @@
 import 'package:connect_with/main.dart';
+import 'package:connect_with/providers/general_provider.dart';
 import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/screens/auth_screens/login_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/profile_screen.dart';
@@ -51,6 +52,9 @@ class _HomeOrganizationMainScreenState
 
   void init(OrganizationProvider orgProvider) async {
     await orgProvider.initOrganization();
+    final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
+
+    await generalProvider.checkUser() ;
   }
 
   bool isFirst = true;
@@ -125,13 +129,13 @@ class _HomeOrganizationMainScreenState
                     label: 'Employees',
                   ),
                   DrawerContainer(
-                    data: organizationProvider.organization?.searchCount
+                    data: organizationProvider.organization?.searchCount?.length
                             .toString() ??
                         "0",
                     label: 'Search Count',
                   ),
                   DrawerContainer(
-                    data: organizationProvider.organization?.profileView
+                    data: organizationProvider.organization?.profileView?.length
                             .toString() ??
                         "0",
                     label: 'Profile Views',

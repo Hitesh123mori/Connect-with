@@ -10,8 +10,8 @@ class Organization {
   String? coverPath;
   String? logo;
   Address? address;
-  int? searchCount;
-  int? profileView;
+  List<String>? searchCount;
+  List<String>? profileView;
   List<String>? employees;
   List<String>? followers;
   List<String>? followings;
@@ -22,7 +22,7 @@ class Organization {
   List<String>? services;
   String? createAt;
   List<String>? jobs;
-  bool? isOrganization ;
+  bool? isOrganization;
 
   Organization({
     this.organizationId,
@@ -52,10 +52,10 @@ class Organization {
     final map = <String, dynamic>{};
     map['organizationId'] = organizationId;
     map['name'] = name;
-    map['isOrganization'] = isOrganization ;
+    map['isOrganization'] = isOrganization;
     map['latestNews'] = latestNews;
-    map['profileView'] = profileView ;
-    map['searchCount'] = searchCount ;
+    map['profileView'] = profileView;
+    map['searchCount'] = searchCount;
     map['email'] = email;
     map['createAt'] = createAt;
     map['domain'] = domain;
@@ -82,30 +82,23 @@ class Organization {
     return map;
   }
 
-  // Create an Organization object from JSON
   factory Organization.fromJson(dynamic json) {
     return Organization(
       organizationId: json['organizationId'],
       name: json['name'],
-      isOrganization : json['isOrganization'],
-      latestNews : json['latestNews'],
-      searchCount : json['searchCount'],
-      profileView: json['profileView'],
+      isOrganization: json['isOrganization'],
+      latestNews: json['latestNews'],
+      searchCount: json['searchCount'] != null ? List<String>.from(json['searchCount']) : null,
+      profileView: json['profileView'] != null ? List<String>.from(json['profileView']) : null,
       email: json['email'],
       domain: json['domain'],
       createAt: json['createAt'],
       coverPath: json['coverPath'],
       logo: json['logo'],
       address: json['address'] != null ? Address.fromJson(json['address']) : null,
-      employees: json['employees'] != null
-          ? List<String>.from(json['employees'])
-          : null,
-      followers:  json['followers'] != null
-          ? List<String>.from(json['followers'])
-          : null ,
-      followings :json['followings'] != null
-          ? List<String>.from(json['followings'])
-          : null ,
+      employees: json['employees'] != null ? List<String>.from(json['employees']) : null,
+      followers: json['followers'] != null ? List<String>.from(json['followers']) : null,
+      followings: json['followings'] != null ? List<String>.from(json['followings']) : null,
       about: json['about'],
       website: json['website'],
       companySize: json['companySize'],
