@@ -70,11 +70,16 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
     setState(() {});
   }
 
-  Future<void> addViewer(String viewerId,String userId)async{
-    try{
-        await UserProfile.addSearchUserInUserProfile(userId, viewerId);
-    }catch(e){
-      log("Error while adding viewer : $e") ;
+  Future<void> addViewer(String viewerId, String userId) async {
+    Views view = Views(
+      userID: viewerId,
+      time: DateTime.now().toString(),
+    );
+
+    try {
+      await UserProfile.addSearchUserInUserProfile(userId, view);
+    } catch (e) {
+      log("Error while adding viewer : $e");
     }
   }
 
@@ -85,13 +90,14 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
 
     final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
 
-     await generalProvider.checkUser() ;
+    await generalProvider.checkUser() ;
 
     if(generalProvider.isOrganization){
       addViewer(orgProvider.organization?.organizationId ?? "",widget.user.userID??"") ;
     }else{
-      print("here") ;
-      addViewer(userProvider.user?.userID ?? "",widget.user.userID??"") ;
+        if(userProvider.user?.userID !=widget.user.userID){
+         addViewer(userProvider.user?.userID ?? "",widget.user.userID??"") ;
+       }
     }
 
   }

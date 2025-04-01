@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connect_with/apis/init/config.dart';
 import 'package:connect_with/models/organization/job_model.dart';
 import 'package:connect_with/models/organization/organization.dart';
+import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/organization_provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -348,23 +349,38 @@ class OrganizationProfile {
 
 
   //add profile view user
-  static Future<bool> addSearchUserInOrgProfile(String orgId,String viewerId)async{
+  static Future<bool> addSearchUserInOrgProfile(String orgId, Views view) async {
+    try {
+      DocumentSnapshot userDoc = await _collectionRefOrg.doc(orgId).get();
+      if (userDoc.exists) {
+        var profileViews = userDoc['profileView'] ?? [];
 
-    try{
+        bool viewerExists = profileViews.any((viewer) => viewer['userID'] == view.userID);
 
-      await _collectionRefOrg.doc(orgId).update({
-        'profileView' : FieldValue.arrayUnion([viewerId]),
-      });
-      log("Added Viewer : $viewerId to user $orgId}") ;
-
-      return true;
-
-    }catch(error, stackTrace){
+        if (viewerExists) {
+          int index = profileViews.indexWhere((viewer) => viewer['userID'] == view.userID);
+          profileViews[index] = view.toJson();
+          await _collectionRefOrg.doc(orgId).update({
+            'profileView': profileViews,
+          });
+          log("Updated time for Viewer: ${view.userID} in user $orgId");
+        } else {
+          await _collectionRefOrg.doc(orgId).update({
+            'profileView': FieldValue.arrayUnion([view.toJson()]),
+          });
+          log("Added Viewer: ${view.userID} to user $orgId");
+        }
+        return true;
+      } else {
+        log("User not found: $orgId");
+        return false;
+      }
+    } catch (error, stackTrace) {
       log("Error adding viewer: $error, $stackTrace");
       return false;
     }
-
   }
+
 
 
 

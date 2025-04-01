@@ -1,4 +1,5 @@
 import 'package:connect_with/screens/home_screens/organization_home_screens/all_followers_and_employee_org.dart';
+import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/profile_view_org.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_profile_tabs/about_content_company_profile.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_profile_tabs/edit_company_profile.dart';
 import 'package:connect_with/screens/home_screens/organization_home_screens/profile_screen_org/tabs_profile_tabs/home_content_company_profile.dart';
@@ -197,6 +198,24 @@ class _CompanyProfileState extends State<CompanyProfile> {
                                     isBold: false,
                                   ),
                                 ),
+
+                                Text14(
+                                  text: " • ",
+                                  isBold: false,
+                                ),
+                                InkWell(
+                                  onTap: (){
+                                    Navigator.push(context, LeftToRight(ProfileViewOrg(views: orgProvider.organization?.profileView ??[],)));
+                                  },
+                                  child: Text14(
+                                    text: ((orgProvider.organization?.profileView?.length
+                                        .toString() ??
+                                        "0") +
+                                        " Profile views"),
+                                    isBold: false,
+                                  ),
+                                ),
+
                               ],
                             ),
 
