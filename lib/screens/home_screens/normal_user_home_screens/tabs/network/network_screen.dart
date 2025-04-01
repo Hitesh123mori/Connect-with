@@ -94,112 +94,130 @@ class _NetWorkScreenState extends State<NetWorkScreen> {
 
                 SizedBox(height: 10),
 
-                StreamBuilder<List<AppUser>>(
-                  stream: UserProfile.getAllUsersList(),
-                  builder: (context, snapshot) {
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal:10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Suggested People",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+                      SizedBox(height: 10,),
+                      StreamBuilder<List<AppUser>>(
+                        stream: UserProfile.getAllUsersList(),
+                        builder: (context, snapshot) {
 
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: GridView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: 10,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                            childAspectRatio: 0.9,
-                          ),
-                          itemBuilder: (context, index) {
-                            return ConnectionUserCardShimmer(); // Show shimmer effect
-                          },
-                        ),
-                      );
-                    }
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 5),
+                              child: GridView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: 10,
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                  childAspectRatio: 0.9,
+                                ),
+                                itemBuilder: (context, index) {
+                                  return ConnectionUserCardShimmer(); // Show shimmer effect
+                                },
+                              ),
+                            );
+                          }
 
-                    if (!snapshot.hasData || snapshot.data == null || snapshot.data!.isEmpty) {
-                      return Center(child: Text("No users found"));
-                    }
+                          if (!snapshot.hasData || snapshot.data == null || snapshot.data!.isEmpty) {
+                            return Center(child: Text("No users found"));
+                          }
 
-                    final users = snapshot.data!
-                        .where((user) => user.userID != appUserProvider.user?.userID)
-                        .toList();
+                          final users = snapshot.data!
+                              .where((user) => user.userID != appUserProvider.user?.userID)
+                              .toList();
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: users.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          childAspectRatio: 0.9,
-                        ),
-                        itemBuilder: (context, index) {
-                          return ConnectionUserCard(appUser: users[index]);
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: users.length,
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                                childAspectRatio: 0.9,
+                              ),
+                              itemBuilder: (context, index) {
+                                return ConnectionUserCard(appUser: users[index]);
+                              },
+                            ),
+                          );
                         },
                       ),
-                    );
-                  },
+                    ],
+                  ),
                 ),
 
 
-                StreamBuilder<List<Organization>>(
-                  stream: OrganizationProfile.getAllOrganizationList(),
-                  builder: (context, snapshot) {
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Suggested Companies",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+                      SizedBox(height: 10,),
+                      StreamBuilder<List<Organization>>(
+                        stream: OrganizationProfile.getAllOrganizationList(),
+                        builder: (context, snapshot) {
 
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: GridView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: 10,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                            childAspectRatio: 0.9,
-                          ),
-                          itemBuilder: (context, index) {
-                            return ConnectionUserCardShimmer(); // Show shimmer effect
-                          },
-                        ),
-                      );
-                    }
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 5),
+                              child: GridView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: 10,
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                  childAspectRatio: 0.9,
+                                ),
+                                itemBuilder: (context, index) {
+                                  return ConnectionUserCardShimmer();
+                                },
+                              ),
+                            );
+                          }
 
-                    if (!snapshot.hasData || snapshot.data == null || snapshot.data!.isEmpty) {
-                      return Center(child: Text("No orgs found"));
-                    }
+                          if (!snapshot.hasData || snapshot.data == null || snapshot.data!.isEmpty) {
+                            return Center(child: Text("No orgs found"));
+                          }
 
-                    final orgs = snapshot.data!
-                        .where((org) => org.organizationId != organizationProvider.organization?.organizationId)
-                        .toList();
+                          final orgs = snapshot.data!
+                              .where((org) => org.organizationId != organizationProvider.organization?.organizationId)
+                              .toList();
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: orgs.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          childAspectRatio: 0.9,
-                        ),
-                        itemBuilder: (context, index) {
-                          return ConnectionOrganizationCard(org: orgs[index],);
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: orgs.length,
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                                childAspectRatio: 0.9,
+                              ),
+                              itemBuilder: (context, index) {
+                                return ConnectionOrganizationCard(org: orgs[index],);
+                              },
+                            ),
+                          );
                         },
                       ),
-                    );
-                  },
+                    ],
+                  ),
                 )
-
-
 
 
               ],
