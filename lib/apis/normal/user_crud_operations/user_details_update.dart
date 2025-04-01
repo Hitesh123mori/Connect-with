@@ -178,7 +178,7 @@ class UserProfile {
   }
 
   // add search count
-  static Future<bool> addSearchUserInUserProfile(String viewerId,String userId)async{
+  static Future<bool> addSearchUserInUserProfile(String userId,String viewerId)async{
 
     try{
 

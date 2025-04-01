@@ -70,13 +70,30 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
     setState(() {});
   }
 
-  Future<void> addViewer(String userId,String viewerId)async{
+  Future<void> addViewer(String viewerId,String userId)async{
     try{
-        await UserProfile.addSearchUserInUserProfile(viewerId, userId);
-        print("added") ;
+        await UserProfile.addSearchUserInUserProfile(userId, viewerId);
     }catch(e){
       log("Error while adding viewer : $e") ;
     }
+  }
+
+  Future<void> initUserOrg()async {
+    final userProvider = Provider.of<AppUserProvider>(context, listen: false);
+
+    final orgProvider = Provider.of<OrganizationProvider>(context, listen: false);
+
+    final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
+
+     await generalProvider.checkUser() ;
+
+    if(generalProvider.isOrganization){
+      addViewer(orgProvider.organization?.organizationId ?? "",widget.user.userID??"") ;
+    }else{
+      print("here") ;
+      addViewer(userProvider.user?.userID ?? "",widget.user.userID??"") ;
+    }
+
   }
 
 
@@ -85,19 +102,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
 
     super.initState();
 
-    final userProvider = Provider.of<AppUserProvider>(context, listen: false);
-
-    final orgProvider = Provider.of<OrganizationProvider>(context, listen: false);
-
-
-    final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
-
-    if(generalProvider.isOrganization){
-      addViewer(orgProvider.organization?.organizationId ?? "",widget.user.userID??"") ;
-    }else{
-      addViewer(userProvider.user?.userID ?? "",widget.user.userID??"") ;
-    }
-
+    initUserOrg() ;
     checkIsFollowing(context);
   }
 
@@ -364,53 +369,6 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                           ),
                         ],
                       )
-                    ],
-                  ),
-                ),
-
-                Divider(
-                  thickness: 1,
-                  color: AppColors.theme['primaryColor'].withOpacity(0.2),
-                ),
-
-                // analitics and tools
-                Padding(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Analytics & Tools",
-                        style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      AnalyticsToolContainer(
-                        icon: Icon(
-                          Icons.group,
-                          size: 22,
-                        ),
-                        heading: (widget.user.profileViews?.length.toString() ?? "0") +
-                            ' Profile Views',
-                        subheading: "Discover who's viewed your profile",
-                        ontap: () {},
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      AnalyticsToolContainer(
-                        icon: Icon(
-                          Icons.search_rounded,
-                          size: 22,
-                        ),
-                        heading: (widget.user.searchCount?.length.toString() ?? "0") +
-                            ' search appearances',
-                        subheading: "See how often you appear in search results",
-                        ontap: () {},
-                      ),
                     ],
                   ),
                 ),
