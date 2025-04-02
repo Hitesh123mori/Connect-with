@@ -7,13 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../graph_alogrithms/init/graph_class.dart';
-
 class AppUserProvider extends ChangeNotifier {
   AppUser? user;
-
-  Graph gp = Graph() ;
-
 
   void notify() {
     notifyListeners();
