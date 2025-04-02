@@ -69,6 +69,13 @@ class PostApis {
     return snapshot.docs.map((doc) => doc.data()).toList();
   }
 
+
+  // get list of all hashtags for graph
+  static Future<List<HashTagsModel>> getHashTags() async {
+    final snapshot = await _collectionRefHashTags.get();
+    return snapshot.docs.map((doc) => HashTagsModel.fromJson(doc.data())).toList();
+  }
+
   // get hashtage
   static Future<dynamic> getHashTag(String hid, String name) async {
     try {

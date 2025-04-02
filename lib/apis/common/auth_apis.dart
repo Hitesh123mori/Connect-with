@@ -113,7 +113,7 @@ class AuthApi {
         about: "We are using ConnectWith for making connections.",
         website: "",
         companySize: "",
-        type: "",
+        ctype: "",
         services: [],
         searchCount: [],
         profileView: [],
