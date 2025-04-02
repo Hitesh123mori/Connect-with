@@ -119,6 +119,13 @@ class UserProfile {
     });
   }
 
+  // get list of all user for graph
+  static Future<List<AppUser>> getUsers() async {
+    final snapshot = await _collectionRef.get();
+    return snapshot.docs.map((doc) => AppUser.fromJson(doc.data())).toList();
+  }
+
+
 
   // list of all users
   static Future<List<Map<String, dynamic>>> getAllAppUsersList() async {

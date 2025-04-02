@@ -148,6 +148,13 @@ class OrganizationProfile {
     return _collectionRefOrg.snapshots();
   }
 
+
+  // get list of all organization for graph
+  static Future<List<Organization>> getOrganizations() async {
+    final snapshot = await _collectionRefOrg.get();
+    return snapshot.docs.map((doc) => Organization.fromJson(doc.data())).toList();
+  }
+
   // update company profile details
   static Future<bool> updateOrganizationProfile(
       String? organizationId, Map<String, dynamic> fields) async {

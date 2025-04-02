@@ -124,7 +124,7 @@ class _AboutContentOtherCompanyProfileState
                   children: [
                     Text16(text: "Type",),
                     widget.org.type=="" ?  Text14(text :"No Type",isBold: false,) :  Text14(
-                      text: widget.org.type ?? "type",
+                      text: widget.org.ctype ?? "type",
                       isBold: false,
                     ),
                   ],

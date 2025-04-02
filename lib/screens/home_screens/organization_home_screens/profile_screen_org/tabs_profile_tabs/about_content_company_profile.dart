@@ -130,7 +130,7 @@ class _AboutContentCompanyProfileState
                     children: [
                       Text16(text: "Type",),
                       orgProvider.organization?.type=="" ?  Text14(text :"No Type",isBold: false,) :  Text14(
-                        text: orgProvider.organization?.type ?? "type",
+                        text: orgProvider.organization?.ctype ?? "type",
                         isBold: false,
                       ),
                     ],

@@ -6,6 +6,7 @@ import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/providers/general_provider.dart';
+import 'package:connect_with/providers/graph_provider.dart';
 import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/screens/auth_screens/login_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/home_main_screen.dart';
@@ -55,6 +56,11 @@ class _SplashScreenState extends State<SplashScreen> {
         isOrganization = await AuthApi.userExistsById(Config.auth.currentUser!.uid, true);
 
         print("User exists as organization: $isOrganization");
+
+        final graphProvider = Provider.of<GraphProvider>(context, listen: false);
+        
+        graphProvider.createGraph(context) ;
+
 
         if (isOrganization) {
           await widget.orgizationProvider.initOrganization();

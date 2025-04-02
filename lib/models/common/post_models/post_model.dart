@@ -1,6 +1,8 @@
 
 
-class PostModel {
+import 'package:connect_with/graph_alogrithms/init/graph_node.dart';
+
+class PostModel extends GraphNode {
 
   String? postId;
   String? userId;
@@ -32,7 +34,7 @@ class PostModel {
     this.attachmentName,
     this.time,
     this.comments,
-  });
+  }): super( postId ?? "", NodeType.POST);
 
   factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
     postId: json['postId'],

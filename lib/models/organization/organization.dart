@@ -1,8 +1,8 @@
+import 'package:connect_with/graph_alogrithms/init/graph_node.dart';
 import 'package:connect_with/models/common/address_info.dart';
-import 'package:connect_with/models/common/custom_button.dart';
 import 'package:connect_with/models/user/user.dart';
 
-class Organization {
+class Organization extends GraphNode{
   String? organizationId;
   String? name;
   String? email;
@@ -19,7 +19,7 @@ class Organization {
   String? about;
   String? website;
   String? companySize;
-  String? type;
+  String? ctype;
   List<String>? services;
   String? createAt;
   List<String>? jobs;
@@ -44,10 +44,10 @@ class Organization {
     this.about,
     this.website,
     this.companySize,
-    this.type,
+    this.ctype,
     this.services,
     this.followings,
-  });
+  }): super(organizationId ?? "", NodeType.ORGANIZATION);
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -79,7 +79,7 @@ class Organization {
     map['about'] = about;
     map['website'] = website;
     map['companySize'] = companySize;
-    map['type'] = type;
+    map['ctype'] = ctype;
     if (services != null) {
       map['services'] = services;
     }
@@ -126,7 +126,7 @@ class Organization {
       about: json['about'],
       website: json['website'],
       companySize: json['companySize'],
-      type: json['type'],
+      ctype: json['ctype'],
       services: json['services'] != null ? List<String>.from(json['services']) : null,
       jobs: json['jobs'] != null ? List<String>.from(json['jobs']) : null,
     );

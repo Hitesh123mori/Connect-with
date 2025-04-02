@@ -1,3 +1,4 @@
+import 'package:connect_with/graph_alogrithms/init/graph_node.dart';
 import 'package:connect_with/models/common/address_info.dart';
 import 'package:connect_with/models/user/contact_info.dart';
 import 'package:connect_with/models/user/course_and_liecence.dart';
@@ -30,7 +31,7 @@ class Views {
   }
 }
 
-class AppUser {
+class AppUser extends GraphNode {
   String? userID;
   String? email;
   bool? showProject;
@@ -95,7 +96,7 @@ class AppUser {
     this.lacertificate,
     this.info,
     this.createAt,
-  });
+  }) : super(userID ?? "",NodeType.USER);
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
