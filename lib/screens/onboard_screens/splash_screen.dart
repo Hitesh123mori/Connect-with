@@ -58,12 +58,10 @@ class _SplashScreenState extends State<SplashScreen> {
         print("User exists as organization: $isOrganization");
 
         final graphProvider = Provider.of<GraphProvider>(context, listen: false);
-        
-        graphProvider.createGraph(context) ;
-
 
         if (isOrganization) {
           await widget.orgizationProvider.initOrganization();
+
           if (widget.orgizationProvider.isLoggedIn()) {
             Navigator.pushReplacement(context, LeftToRight(HomeOrganizationMainScreen()));
           } else {
@@ -71,6 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
           }
         } else {
           await widget.appUser.initUser();
+
           if (widget.appUser.isLoggedIn()) {
             Navigator.pushReplacement(context, LeftToRight(HomeScreen()));
           } else {

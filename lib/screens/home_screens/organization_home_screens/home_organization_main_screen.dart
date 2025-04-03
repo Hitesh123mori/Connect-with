@@ -1,5 +1,6 @@
 import 'package:connect_with/main.dart';
 import 'package:connect_with/providers/general_provider.dart';
+import 'package:connect_with/providers/graph_provider.dart';
 import 'package:connect_with/providers/organization_provider.dart';
 import 'package:connect_with/screens/auth_screens/login_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/profile_screen/profile_screen.dart';
@@ -55,6 +56,9 @@ class _HomeOrganizationMainScreenState
     final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
 
     await generalProvider.checkUser() ;
+
+    final graphProvider = Provider.of<GraphProvider>(context, listen: false);
+    await graphProvider.createGraph(context);
   }
 
   bool isFirst = true;
@@ -79,7 +83,7 @@ class _HomeOrganizationMainScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   InkWell(
-                    onTap: () {
+                    onTap: ()  {
                       Navigator.push(context, LeftToRight(CompanyProfile()));
                     },
                     child: Container(

@@ -1,6 +1,7 @@
 import 'package:connect_with/models/common/post_models/post_model.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/providers/general_provider.dart';
+import 'package:connect_with/providers/graph_provider.dart';
 import 'package:connect_with/providers/post_provider.dart';
 import 'package:connect_with/utils/shimmer_effects/common/posts/post_card_shimmer_effect.dart';
 import 'package:connect_with/utils/theme/colors.dart';
@@ -28,8 +29,12 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   Future<void> _fetchPosts() async {
+
     final postProvider = Provider.of<PostProvider>(context, listen: false);
     final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
+
+    final graphProvider = Provider.of<GraphProvider>(context, listen: false);
+    await graphProvider.createGraph(context);
 
     await generalProvider.checkUser() ;
     setState(() {
@@ -39,12 +44,14 @@ class _PostScreenState extends State<PostScreen> {
 
   void _onRefresh() async {
     await _fetchPosts();
-    _refreshController.refreshCompleted();
+    final graphProvider = Provider.of<GraphProvider>(context, listen: false);
+    await graphProvider.createGraph(context);
+    // _refreshController.refreshCompleted();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PostProvider>(builder: (context,postProvider,child){
+    return Consumer2<PostProvider,GraphProvider>(builder: (context,postProvider,graphProvider,child){
       return Scaffold(
         backgroundColor: AppColors.theme['secondaryColor'].withOpacity(0.9),
         body: FutureBuilder<List<PostModel>>(

@@ -2,6 +2,7 @@ import 'package:connect_with/main.dart';
 import 'package:connect_with/models/user/user.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/providers/general_provider.dart';
+import 'package:connect_with/providers/graph_provider.dart';
 import 'package:connect_with/screens/auth_screens/login_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/create_post/create_post_screen.dart';
 import 'package:connect_with/screens/home_screens/normal_user_home_screens/tabs/post/post_screen.dart';
@@ -51,6 +52,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     await generalProvider.checkUser() ;
 
+    final graphProvider = Provider.of<GraphProvider>(context, listen: false);
+
+    await graphProvider.createGraph(context);
+
+
   }
 
   bool isFirst = true;
@@ -76,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     InkWell(
-                      onTap: () {
+                      onTap: (){
                         Navigator.push(context, LeftToRight(ProfileScreen()));
                       },
                       child: Container(
