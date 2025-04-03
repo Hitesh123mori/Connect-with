@@ -2,12 +2,18 @@
 enum NodeType { USER, ORGANIZATION, POST, HASHTAG ,COMMENT}
 
 class GraphNode {
-
-  String? nid;
-  NodeType type;
+  final String nid;
+  final NodeType type;
 
   GraphNode(this.nid, this.type);
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          (other is GraphNode && other.nid == nid && other.type == type);
+
+  @override
+  int get hashCode => nid.hashCode ^ type.hashCode;
 }
 
 
