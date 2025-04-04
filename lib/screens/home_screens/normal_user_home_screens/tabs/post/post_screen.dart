@@ -20,8 +20,6 @@ class PostScreen extends StatefulWidget {
 }
 
 class _PostScreenState extends State<PostScreen> {
-  List<PostModel> posts = [];
-  bool isLoading = false;
 
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
@@ -32,87 +30,75 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   Future<void> _fetchPosts() async {
+    final postProvider = Provider.of<PostProvider>(context, listen: false);
     setState(() {
-      isLoading = true;
-    });
-
-    final graphProvider = Provider.of<GraphProvider>(context, listen: false);
-    await graphProvider.createGraph(context);
-
-    try {
-      for (String id in graphProvider.suggestedPosts) {
-        PostModel p = PostModel.fromJson(await PostApis.getPost(id) ?? {});
-        posts.add(p);
-      }
-    } catch (e) {
-      print(e);
-    }
-
-
-    if(posts.isEmpty){
-      final postProvider = Provider.of<PostProvider>(context, listen: false);
-      await postProvider.getPosts() ;
-      posts = postProvider.posts ;
-    }
-    setState(() {
-      isLoading = false;
+      postProvider.postsFuture = postProvider.getPosts();
     });
   }
 
   void _onRefresh() async {
     await _fetchPosts();
     _refreshController.refreshCompleted();
-
   }
-
   @override
   Widget build(BuildContext context) {
     return Consumer2<PostProvider, GraphProvider>(
         builder: (context, postProvider, graphProvider, child) {
-      return Scaffold(
-        backgroundColor: AppColors.theme['secondaryColor'].withOpacity(0.9),
-        body: SmartRefresher(
-          header: WaterDropMaterialHeader(
-            backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.9),
-            color: Colors.white,
-          ),
-          controller: _refreshController,
-          enablePullDown: true,
-          onRefresh: _onRefresh,
-          child: isLoading ? PostCardShimmerEffect() :
-           ( posts.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset("assets/ils/no_posts.png",
-                          height: 250, width: 250),
-                      const SizedBox(height: 20),
-                      Text(
-                        "Create first post!",
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
+          return Scaffold(
+            backgroundColor: AppColors.theme['secondaryColor'].withOpacity(0.9),
+            body: FutureBuilder<List<PostModel>>(
+              future: postProvider.postsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: PostCardShimmerEffect());
+                }
+                if (snapshot.hasError) {
+                  return const Center(child: Text("Error loading posts"));
+                }
+
+                final posts = snapshot.data ?? [];
+
+                return SmartRefresher(
+                  header: WaterDropMaterialHeader(
+                    backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.9),
+                    color: Colors.white,
                   ),
-                )
-              : ListView.builder(
-                  shrinkWrap: false,
-                  physics: BouncingScrollPhysics(),
-                  itemCount: posts.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 5.0, horizontal: 10),
-                      child: PostCard(post: posts[index]),
-                    );
-                  },
-                ) ),
-        ),
-      );
+                  controller: _refreshController,
+                  enablePullDown: true,
+                  onRefresh: _onRefresh,
+                  child: posts.isEmpty
+                      ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset("assets/ils/no_posts.png", height: 250, width: 250),
+                        const SizedBox(height: 20),
+                        Text(
+                          "Create first post!",
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                      : ListView.builder(
+                    shrinkWrap: false,
+                    physics: BouncingScrollPhysics(),
+                    itemCount: posts.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
+                        child: PostCard(post: posts[index]),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          );
     });
   }
 }
