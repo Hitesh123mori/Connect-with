@@ -1,3 +1,4 @@
+import 'package:connect_with/apis/common/post/post_api.dart';
 import 'package:connect_with/models/common/post_models/post_model.dart';
 import 'package:connect_with/providers/current_user_provider.dart';
 import 'package:connect_with/providers/general_provider.dart';
@@ -19,8 +20,11 @@ class PostScreen extends StatefulWidget {
 }
 
 class _PostScreenState extends State<PostScreen> {
+  List<PostModel> posts = [];
+  bool isLoading = false;
 
-  final RefreshController _refreshController = RefreshController(initialRefresh: false);
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -29,85 +33,80 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   Future<void> _fetchPosts() async {
-
-    final postProvider = Provider.of<PostProvider>(context, listen: false);
-    final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
+    setState(() {
+      isLoading = true;
+    });
 
     final graphProvider = Provider.of<GraphProvider>(context, listen: false);
     await graphProvider.createGraph(context);
 
-    await generalProvider.checkUser() ;
+    try {
+      for (String id in graphProvider.suggestedPosts) {
+        PostModel p = PostModel.fromJson(await PostApis.getPost(id) ?? {});
+        posts.add(p);
+      }
+    } catch (e) {
+      print(e);
+    }
     setState(() {
-      postProvider.postsFuture = postProvider.getPosts();
+      isLoading = false;
     });
   }
 
   void _onRefresh() async {
     await _fetchPosts();
-    final graphProvider = Provider.of<GraphProvider>(context, listen: false);
-    await graphProvider.createGraph(context);
-    // _refreshController.refreshCompleted();
+    _refreshController.refreshCompleted();
+
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<PostProvider,GraphProvider>(builder: (context,postProvider,graphProvider,child){
+    return Consumer2<PostProvider, GraphProvider>(
+        builder: (context, postProvider, graphProvider, child) {
       return Scaffold(
         backgroundColor: AppColors.theme['secondaryColor'].withOpacity(0.9),
-        body: FutureBuilder<List<PostModel>>(
-          future: postProvider.postsFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: PostCardShimmerEffect());
-            }
-            if (snapshot.hasError) {
-              return const Center(child: Text("Error loading posts"));
-            }
-
-            final posts = snapshot.data ?? [];
-
-            return SmartRefresher(
-              header: WaterDropMaterialHeader(
-                backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.9),
-                color: Colors.white,
-              ),
-              controller: _refreshController,
-              enablePullDown: true,
-              onRefresh: _onRefresh,
-              child: posts.isEmpty
-                  ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset("assets/ils/no_posts.png", height: 250, width: 250),
-                    const SizedBox(height: 20),
-                    Text(
-                      "Create first post!",
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Colors.grey,
+        body: SmartRefresher(
+          header: WaterDropMaterialHeader(
+            backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.9),
+            color: Colors.white,
+          ),
+          controller: _refreshController,
+          enablePullDown: true,
+          onRefresh: _onRefresh,
+          child: isLoading ? PostCardShimmerEffect() :
+           ( posts.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset("assets/ils/no_posts.png",
+                          height: 250, width: 250),
+                      const SizedBox(height: 20),
+                      Text(
+                        "Create first post!",
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.grey,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              )
-                  : ListView.builder(
-                shrinkWrap: false,
-                physics: BouncingScrollPhysics(),
-                itemCount: posts.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
-                    child: PostCard(post: posts[index]),
-                  );
-                },
-              ),
-            );
-          },
+                    ],
+                  ),
+                )post
+              : ListView.builder(
+                  shrinkWrap: false,
+                  physics: BouncingScrollPhysics(),
+                  itemCount: posts.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5.0, horizontal: 10),
+                      child: PostCard(post: posts[index]),
+                    );
+                  },
+                ) ),
         ),
       );
-    }
-    );
+    });
   }
 }

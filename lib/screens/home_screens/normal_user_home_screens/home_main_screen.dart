@@ -52,11 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     await generalProvider.checkUser() ;
 
-    final graphProvider = Provider.of<GraphProvider>(context, listen: false);
-
-    await graphProvider.createGraph(context);
-
-
   }
 
   bool isFirst = true;
