@@ -146,7 +146,7 @@ class _NetWorkScreenState extends State<NetWorkScreen> {
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 10,
                                     mainAxisSpacing: 10,
-                                    childAspectRatio: 0.9,
+                                    childAspectRatio: 0.8,
                                   ),
                                   itemBuilder: (context, index) {
                                     return ConnectionUserCard(appUser: users[index]);
@@ -182,7 +182,7 @@ class _NetWorkScreenState extends State<NetWorkScreen> {
                                       crossAxisCount: 2,
                                       crossAxisSpacing: 10,
                                       mainAxisSpacing: 10,
-                                      childAspectRatio: 0.9,
+                                      childAspectRatio: 0.8,
                                     ),
                                     itemBuilder: (context, index) {
                                       return ConnectionUserCardShimmer();

@@ -105,7 +105,7 @@ class _ConnectionOrganizationCardState extends State<ConnectionOrganizationCard>
                     ),
                     Positioned(
                         top: 30,
-                        left: 73,
+                        left: mq.width*.15,
                         child: widget.org.logo == ""
                             ? CircleAvatar(radius: 25,backgroundImage: AssetImage("assets/other_images/photo.png"), backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.2))
                             :CircleAvatar(radius: 25,backgroundImage: NetworkImage(widget.org.logo ?? ""),backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.2))),
