@@ -23,8 +23,7 @@ class _PostScreenState extends State<PostScreen> {
   List<PostModel> posts = [];
   bool isLoading = false;
 
-  final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -47,6 +46,13 @@ class _PostScreenState extends State<PostScreen> {
       }
     } catch (e) {
       print(e);
+    }
+
+
+    if(posts.isEmpty){
+      final postProvider = Provider.of<PostProvider>(context, listen: false);
+      await postProvider.getPosts() ;
+      posts = postProvider.posts ;
     }
     setState(() {
       isLoading = false;
@@ -92,7 +98,7 @@ class _PostScreenState extends State<PostScreen> {
                       ),
                     ],
                   ),
-                )post
+                )
               : ListView.builder(
                   shrinkWrap: false,
                   physics: BouncingScrollPhysics(),

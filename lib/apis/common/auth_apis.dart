@@ -201,4 +201,14 @@ class AuthApi {
     return docSnapshot.exists;
   }
 
+  static Future<bool> checkIdIsUser(String userId) async {
+
+    final userDoc = await Config.firestore.collection('users').doc(userId).get();
+    if (userDoc.exists) return true;
+
+    final orgDoc = await Config.firestore.collection('organizations').doc(userId).get();
+    return orgDoc.exists;
+  }
+
+
 }
