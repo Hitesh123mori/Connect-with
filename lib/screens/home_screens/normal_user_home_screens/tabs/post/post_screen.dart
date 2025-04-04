@@ -47,6 +47,13 @@ class _PostScreenState extends State<PostScreen> {
     } catch (e) {
       print(e);
     }
+
+
+    if(posts.isEmpty){
+      final postProvider = Provider.of<PostProvider>(context, listen: false);
+      await postProvider.getPosts() ;
+      posts = postProvider.posts ;
+    }
     setState(() {
       isLoading = false;
     });
