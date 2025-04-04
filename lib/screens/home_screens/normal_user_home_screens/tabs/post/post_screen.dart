@@ -92,7 +92,7 @@ class _PostScreenState extends State<PostScreen> {
                       ),
                     ],
                   ),
-                )post
+                )
               : ListView.builder(
                   shrinkWrap: false,
                   physics: BouncingScrollPhysics(),
