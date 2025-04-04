@@ -190,7 +190,7 @@ class GraphProvider extends ChangeNotifier {
       }
     }
 
-    // printGraph();
+    printGraph();
 
 
     /// friends recommendations

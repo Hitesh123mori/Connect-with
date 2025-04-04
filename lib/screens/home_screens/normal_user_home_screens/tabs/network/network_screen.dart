@@ -22,211 +22,212 @@ class NetWorkScreen extends StatefulWidget {
 }
 
 class _NetWorkScreenState extends State<NetWorkScreen> {
-  List<AppUser> sUsers = [];
-  List<Organization> sOrganization = [];
-
-  bool isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    fetchUsers();
-  }
-
-  Future<void> fetchUsers() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    final graphProvider = Provider.of<GraphProvider>(context, listen: false);
-
-    try {
-      for (String id in graphProvider.suggestedUsers) {
-
-        print("network screen") ;
-        print(id);
-
-        if(await AuthApi.checkIdIsUser(id)){
-          bool isOrganization = await AuthApi.userExistsById(id, true);
-
-          if (isOrganization) {
-            Organization org = Organization.fromJson(
-                await OrganizationProfile.getOrganizationById(id) ?? {});
-            sOrganization.add(org);
-          } else {
-            AppUser user = AppUser.fromJson(await UserProfile.getUser(id) ?? {});
-            sUsers.add(user);
-          }
-        }else{
-          continue;
-        }
-      }
-    } catch (e) {
-      print(e);
-    }
-    setState(() {
-      isLoading = false;
-    });
-  }
 
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
 
     return Consumer2<AppUserProvider, OrganizationProvider>(
         builder: (context, appUserProvider, organizationProvider, child) {
-      return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          backgroundColor: AppColors.theme['secondaryColor'],
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Invitations Section
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    width: mq.width,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade300.withOpacity(0.7)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 5),
-                          child: Text(
-                            "Invitations",
-                            style: TextStyle(
-                              color: Colors.grey.shade800,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: Scaffold(
+              backgroundColor: AppColors.theme['secondaryColor'],
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    // Invitations Section
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                        width: mq.width,
+                        decoration: BoxDecoration(color: Colors.grey.shade300.withOpacity(0.7)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
+                              child: Text(
+                                "Invitations",
+                                style: TextStyle(
+                                  color: Colors.grey.shade800,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
+                              child: Icon(Icons.arrow_right_alt_outlined, color: Colors.grey.shade800, size: 28),
+                            )
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 5),
-                          child: Icon(Icons.arrow_right_alt_outlined,
-                              color: Colors.grey.shade800, size: 28),
-                        )
-                      ],
+                      ),
                     ),
-                  ),
-                ),
 
-                SizedBox(height: 5),
+                    SizedBox(height: 5),
 
-                // Connections Section
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    width: mq.width,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade300.withOpacity(0.7)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 5),
-                          child: Text(
-                            "Connections",
-                            style: TextStyle(
-                              color: Colors.grey.shade800,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                    // Connections Section
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                        width: mq.width,
+                        decoration: BoxDecoration(color: Colors.grey.shade300.withOpacity(0.7)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
+                              child: Text(
+                                "Connections",
+                                style: TextStyle(
+                                  color: Colors.grey.shade800,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
+                              child: Icon(Icons.arrow_right_alt_outlined, color: Colors.grey.shade800, size: 28),
+                            )
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 5),
-                          child: Icon(Icons.arrow_right_alt_outlined,
-                              color: Colors.grey.shade800, size: 28),
-                        )
-                      ],
+                      ),
                     ),
-                  ),
-                ),
 
-                SizedBox(height: 10),
+                    SizedBox(height: 10),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Suggested People",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: GridView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: sUsers.length,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                            childAspectRatio: 0.9,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal:10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Suggested People",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+                          SizedBox(height: 10,),
+                          StreamBuilder<List<AppUser>>(
+                            stream: UserProfile.getAllUsersList(),
+                            builder: (context, snapshot) {
+
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                                  child: GridView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: 10,
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 10,
+                                      mainAxisSpacing: 10,
+                                      childAspectRatio: 0.9,
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      return ConnectionUserCardShimmer(); // Show shimmer effect
+                                    },
+                                  ),
+                                );
+                              }
+
+                              if (!snapshot.hasData || snapshot.data == null || snapshot.data!.isEmpty) {
+                                return Center(child: Text("No users found"));
+                              }
+
+                              final users = snapshot.data!
+                                  .where((user) => user.userID != appUserProvider.user?.userID)
+                                  .toList();
+
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 5),
+                                child: GridView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: users.length,
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                    childAspectRatio: 0.9,
+                                  ),
+                                  itemBuilder: (context, index) {
+                                    return ConnectionUserCard(appUser: users[index]);
+                                  },
+                                ),
+                              );
+                            },
                           ),
-                          itemBuilder: (context, index) {
-                            return ConnectionUserCard(appUser: sUsers[index]);
-                          },
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Suggested Companies",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: GridView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: sOrganization.length,
-                          gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                            childAspectRatio: 0.9,
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Suggested Companies",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+                          SizedBox(height: 10,),
+                          StreamBuilder<List<Organization>>(
+                            stream: OrganizationProfile.getAllOrganizationList(),
+                            builder: (context, snapshot) {
+
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                                  child: GridView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: 10,
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 10,
+                                      mainAxisSpacing: 10,
+                                      childAspectRatio: 0.9,
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      return ConnectionUserCardShimmer();
+                                    },
+                                  ),
+                                );
+                              }
+
+                              if (!snapshot.hasData || snapshot.data == null || snapshot.data!.isEmpty) {
+                                return Center(child: Text("No orgs found"));
+                              }
+
+                              final orgs = snapshot.data!
+                                  .where((org) => org.organizationId != organizationProvider.organization?.organizationId)
+                                  .toList();
+
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 5),
+                                child: GridView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: orgs.length,
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                    childAspectRatio: 0.9,
+                                  ),
+                                  itemBuilder: (context, index) {
+                                    return ConnectionOrganizationCard(org: orgs[index],);
+                                  },
+                                ),
+                              );
+                            },
                           ),
-                          itemBuilder: (context, index) {
-                            return ConnectionOrganizationCard(
-                              org: sOrganization[index],
-                            );
-                          },
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                )
-              ],
+                    )
+
+
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
-      );
+          );
     });
   }
 }
