@@ -271,7 +271,6 @@ class GraphProvider extends ChangeNotifier {
     }
 
   }
-
   void bfsFriendSuggestions() {
     if (targetUser.userID == null || targetUser.userID!.isEmpty) {
       print("No target user set for BFS suggestion.");
@@ -317,7 +316,9 @@ class GraphProvider extends ChangeNotifier {
     // Get direct friends of target user
     if (adjList.containsKey(startNode)) {
       for (GraphEdge edge in adjList[startNode]!) {
-        directFriends.add(edge.to);
+        if (edge.to.type == NodeType.USER) {
+          directFriends.add(edge.to);
+        }
       }
     }
 
@@ -327,7 +328,10 @@ class GraphProvider extends ChangeNotifier {
         for (GraphEdge edge in adjList[friend]!) {
           GraphNode potentialFriend = edge.to;
 
-          if (potentialFriend == startNode || directFriends.contains(potentialFriend)) {
+          // Ensure only users are considered (not hashtags)
+          if (potentialFriend.type != NodeType.USER ||
+              potentialFriend == startNode ||
+              directFriends.contains(potentialFriend)) {
             continue;
           }
 
@@ -338,23 +342,22 @@ class GraphProvider extends ChangeNotifier {
             score += 1 / (degree > 1 ? log(degree) : 1);
           }
 
-          similarityScore[potentialFriend] = (similarityScore[potentialFriend] ?? 0) + score;
+          similarityScore[potentialFriend] =
+              (similarityScore[potentialFriend] ?? 0) + score;
         }
       }
     }
 
-    List<MapEntry<GraphNode, double>> sortedSuggestions = similarityScore.entries.toList();
+    List<MapEntry<GraphNode, double>> sortedSuggestions =
+    similarityScore.entries.toList();
     sortedSuggestions.sort((a, b) => b.value.compareTo(a.value));
 
-    // print("\n Suggested Friends for ${targetUser.userID} Using Adamic-Adar Index:");
+    // Add only users with a high similarity score
     for (var entry in sortedSuggestions) {
-      // print("${entry.key.nid}: Score ${entry.value.toStringAsFixed(2)}");
-
-      if (entry.value >= 0.5) {
+      if (entry.key.type == NodeType.USER && entry.value >= 0.5) {
         suggestedUsers.add(entry.key.nid);
       }
     }
-
   }
 
 
@@ -529,8 +532,6 @@ class GraphProvider extends ChangeNotifier {
     suggestedPosts = relevantPosts.toList();
 
   }
-
-
   void recommendPostsByUserInteraction() {
 
     GraphNode targetUserNode = GraphNode(targetUser.userID ?? "", NodeType.USER);

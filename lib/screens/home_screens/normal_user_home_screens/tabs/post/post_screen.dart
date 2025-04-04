@@ -23,8 +23,7 @@ class _PostScreenState extends State<PostScreen> {
   List<PostModel> posts = [];
   bool isLoading = false;
 
-  final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   @override
   void initState() {
