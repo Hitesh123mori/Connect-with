@@ -209,6 +209,9 @@ class GraphProvider extends ChangeNotifier {
     recommendPostsByHashtags();
     recommendPostsByUserInteraction();
 
+    print(suggestedPosts) ;
+    print(suggestedUsers) ;
+
 
     notifyListeners();
 

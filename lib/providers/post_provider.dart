@@ -36,6 +36,8 @@ class PostProvider extends ChangeNotifier {
     }
   }
 
+
+
   void washPost() {
     post = PostModel();
     images = [] ;
