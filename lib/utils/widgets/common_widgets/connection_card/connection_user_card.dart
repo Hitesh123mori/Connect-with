@@ -68,132 +68,134 @@ class _ConnectionUserCardState extends State<ConnectionUserCard> {
 
       child: Consumer3<AppUserProvider,OrganizationProvider,GeneralProvider>(builder: (context,appUserProvider,organizationProvider,generalProvider,child){
         return Container(
-          // width: 10,
+          // width: 100,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: Colors.grey.shade400.withOpacity(0.6),
               )),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: 60,
-                    width: mq.width*1,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(8),
-                        topLeft: Radius.circular(8),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      height: 60,
+                      width: mq.width*1,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(8),
+                          topLeft: Radius.circular(8),
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(8),
+                          topLeft: Radius.circular(8),
+                        ),
+                        child: widget.appUser.coverPath=="" ? Image.asset(
+                          "assets/other_images/bg.png",
+                          fit: BoxFit.fill,
+                        ) : Image.network(widget.appUser.coverPath ?? "",fit: BoxFit.cover,),
                       ),
                     ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(8),
-                        topLeft: Radius.circular(8),
-                      ),
-                      child: widget.appUser.coverPath=="" ? Image.asset(
-                        "assets/other_images/bg.png",
-                        fit: BoxFit.fill,
-                      ) : Image.network(widget.appUser.coverPath ?? "",fit: BoxFit.cover,),
-                    ),
-                  ),
-                  Positioned(
-                      top: 30,
-                      left: 73,
-                      child: widget.appUser.profilePath == ""
-                          ? CircleAvatar(radius: 25,backgroundImage: AssetImage("assets/other_images/photo.png"), backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.2))
-                          :CircleAvatar(radius: 25,backgroundImage: NetworkImage(widget.appUser.profilePath ?? ""),backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.2))),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                widget.appUser.userName ??"",
-                style: TextStyle(fontWeight: FontWeight.bold),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Text(
-                  widget.appUser.headLine ?? "",
-                  style: TextStyle(fontSize: 12),
+                    Positioned(
+                        top: 30,
+                        left: mq.width*0.15,
+                        child: widget.appUser.profilePath == ""
+                            ? CircleAvatar(radius: 25,backgroundImage: AssetImage("assets/other_images/photo.png"), backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.2))
+                            :CircleAvatar(radius: 25,backgroundImage: NetworkImage(widget.appUser.profilePath ?? ""),backgroundColor: AppColors.theme['primaryColor'].withOpacity(0.2))),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  widget.appUser.userName ??"",
+                  style: TextStyle(fontWeight: FontWeight.bold),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              Text(
-                "6 Mutual friends",
-                style: TextStyle(fontSize: 12),
-              ),
-
-              SizedBox(height: 20,),
-
-              InkWell(
-                onTap: isFollowing ? ()async{
-
-                  if(generalProvider.isOrganization){
-                    await OrganizationProfile.removeFollowingFromOrg(organizationProvider.organization?.organizationId ?? "",widget.appUser.userID ?? "",) ;
-                    await UserProfile.removeFollower(widget.appUser.userID ?? "",organizationProvider.organization?.organizationId ?? "") ;
-                  }else{
-                    await UserProfile.removeFollower(widget.appUser.userID ?? "",appUserProvider.user?.userID ?? "") ;
-                    await UserProfile.removeFollowing(appUserProvider.user?.userID ?? "", widget.appUser.userID ?? "") ;
-                  }
-
-                  setState(() {
-                    generalProvider.isOrganization ? organizationProvider.initOrganization()  : appUserProvider.initUser();
-                  });
-
-                  await checkIsFollowing(context) ;
-
-                  setState(() {
-
-                  });
-
-                }  :  ()async{
-
-                  if(generalProvider.isOrganization){
-                    await OrganizationProfile.addFollowingToOrg(organizationProvider.organization?.organizationId ?? "",widget.appUser.userID ?? "") ;
-                    await UserProfile.addFollower(widget.appUser.userID ?? "",organizationProvider.organization?.organizationId ?? "");
-                  }else{
-                    await UserProfile.addFollower(widget.appUser.userID ?? "",appUserProvider.user?.userID ?? "") ;
-                    await UserProfile.addFollowing(appUserProvider.user?.userID ?? "", widget.appUser.userID ?? "");
-                  }
-
-                  setState(() {
-                    generalProvider.isOrganization ? organizationProvider.initOrganization()  : appUserProvider.initUser();
-                  });
-
-                  await checkIsFollowing(context) ;
-                  setState(() {
-
-                  });
-
-                },
-                child: Container(
-                  height: 30,
-                  width: mq.width * 0.35,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.white,
-                      border: Border.all(
-                        color: Colors.black,
-                      )),
-                  child: Center(
-                    child: Text16(text: isFollowing ? "Unfollow" :"Follow", isWhite: false),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Text(
+                    widget.appUser.headLine ?? "",
+                    style: TextStyle(fontSize: 12),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-
-            ],
+                Text(
+                  "6 Mutual friends",
+                  style: TextStyle(fontSize: 12),
+                ),
+            
+                SizedBox(height: 20,),
+            
+                InkWell(
+                  onTap: isFollowing ? ()async{
+            
+                    if(generalProvider.isOrganization){
+                      await OrganizationProfile.removeFollowingFromOrg(organizationProvider.organization?.organizationId ?? "",widget.appUser.userID ?? "",) ;
+                      await UserProfile.removeFollower(widget.appUser.userID ?? "",organizationProvider.organization?.organizationId ?? "") ;
+                    }else{
+                      await UserProfile.removeFollower(widget.appUser.userID ?? "",appUserProvider.user?.userID ?? "") ;
+                      await UserProfile.removeFollowing(appUserProvider.user?.userID ?? "", widget.appUser.userID ?? "") ;
+                    }
+            
+                    setState(() {
+                      generalProvider.isOrganization ? organizationProvider.initOrganization()  : appUserProvider.initUser();
+                    });
+            
+                    await checkIsFollowing(context) ;
+            
+                    setState(() {
+            
+                    });
+            
+                  }  :  ()async{
+            
+                    if(generalProvider.isOrganization){
+                      await OrganizationProfile.addFollowingToOrg(organizationProvider.organization?.organizationId ?? "",widget.appUser.userID ?? "") ;
+                      await UserProfile.addFollower(widget.appUser.userID ?? "",organizationProvider.organization?.organizationId ?? "");
+                    }else{
+                      await UserProfile.addFollower(widget.appUser.userID ?? "",appUserProvider.user?.userID ?? "") ;
+                      await UserProfile.addFollowing(appUserProvider.user?.userID ?? "", widget.appUser.userID ?? "");
+                    }
+            
+                    setState(() {
+                      generalProvider.isOrganization ? organizationProvider.initOrganization()  : appUserProvider.initUser();
+                    });
+            
+                    await checkIsFollowing(context) ;
+                    setState(() {
+            
+                    });
+            
+                  },
+                  child: Container(
+                    height: 30,
+                    width: mq.width * 0.35,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Colors.black,
+                        )),
+                    child: Center(
+                      child: Text16(text: isFollowing ? "Unfollow" :"Follow", isWhite: false),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+            
+              ],
+            ),
           ),
         );
       })
